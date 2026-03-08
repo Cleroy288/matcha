@@ -1,0 +1,81 @@
+Stack : Flask + PostgreSQL + React + Tailwind CSS
+Infra : Docker + .env
+Sync : 1 appel / semaine — 2 semaines par sprint
+
+══════════════════════════════════════════════════════════════
+  PHASE 0 — Setup (ensemble, 1-2 jours)
+══════════════════════════════════════════════════════════════
+
+- [ ] Docker compose (PostgreSQL, Flask, React)
+- [ ] .env + .gitignore
+- [ ] Structure projet (dossiers front / back)
+- [ ] Schema DB complet (toutes les tables)
+- [ ] Infrastructure WebSocket (Socket.IO)
+
+══════════════════════════════════════════════════════════════
+  SPRINT 1 — Fondations (pas de dependance)
+══════════════════════════════════════════════════════════════
+
+[Pierre] AUTH
+- [ ] Table users
+- [ ] Register (email, username, nom, prenom, mdp securise)
+- [ ] Validation mdp (rejet mots courants anglais)
+- [ ] Verification email (lien unique)
+- [ ] Login (username + mdp)
+- [ ] Logout (depuis toute page, 1 clic)
+- [ ] Mot de passe oublie (email de reset)
+- [ ] Front : pages register, login, reset password
+
+[Charles] PROFIL
+- [ ] Tables profiles, tags, user_tags, photos
+- [ ] CRUD profil (genre, preference sexuelle, bio, date naissance)
+- [ ] Gestion tags (creation, ajout, suppression — reutilisables)
+- [ ] Upload photos (max 5, dont 1 photo de profil)
+- [ ] Geolocalisation (GPS avec consentement + saisie manuelle ville/quartier)
+- [ ] Front : page edition profil complet
+
+══════════════════════════════════════════════════════════════
+  SPRINT 2 — Interactions sociales
+══════════════════════════════════════════════════════════════
+
+  !! Sync debut de sprint : se mettre d'accord sur les API contracts !!
+
+[Pierre] LIKES + NOTIFICATIONS
+- [ ] Table likes : like / unlike
+- [ ] Detection match (like mutuel = "connectes")
+- [ ] Table profile_views : historique visites
+- [ ] Table blocks : bloquer un utilisateur
+- [ ] Table reports : signaler un faux compte
+- [ ] Table notifications : temps reel via WebSocket
+      (like, visite, message, match, unlike)
+- [ ] Front : indicateur notifs non lues (toutes pages)
+- [ ] Front : page "qui m'a like" + "qui a vu mon profil"
+
+[Charles] NAVIGATION + RECHERCHE
+- [ ] Algo suggestions (preferences sexuelles, geo, tags, popularite)
+- [ ] Page navigation : liste profils suggeres
+- [ ] Tri (age, localisation, popularite, tags communs)
+- [ ] Filtres (memes criteres)
+- [ ] Recherche avancee (tranche age, popularite, localisation, tags)
+- [ ] Consultation de profil (toutes infos sauf email/mdp)
+- [ ] Boutons like / unlike / block / report sur profil
+- [ ] Statut en ligne / derniere connexion
+
+══════════════════════════════════════════════════════════════
+  SPRINT 3 — Communication + Polish
+══════════════════════════════════════════════════════════════
+
+[Pierre] SCORE + SEED + SECURITE
+- [ ] Systeme fame_rating (calcul auto sur evenements)
+- [ ] Script seed : 500 profils realistes
+- [ ] Audit securite (XSS, SQL injection, CSRF, uploads)
+- [ ] Tests back
+
+[Charles] CHAT + RESPONSIVE
+- [ ] Table messages
+- [ ] Chat temps reel (WebSocket, delai < 10s)
+- [ ] Condition : uniquement entre users "connectes" (match)
+- [ ] Notification nouveau message (toutes pages)
+- [ ] Front : interface chat
+- [ ] Responsive final (mobile)
+- [ ] Tests front
