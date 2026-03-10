@@ -8,6 +8,8 @@ services:
       - db
     volumes:
       - ./backend:/app
+    env_file:
+      - .env
 
   db:
     image: postgres:16
@@ -21,6 +23,7 @@ services:
       - "5432:5432" #on enlevera les port en prod
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   nginx:
     image: nginx:latest
