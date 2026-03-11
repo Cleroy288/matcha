@@ -44,4 +44,13 @@ def login_user(username, password):
         raise Exception("Invalid password")
 
     token = generate_token(user["id"])
-    return token
+
+    user_data = {
+        "id": user["id"],
+        "username": user["username"],
+        "email": user["email"],
+        "first_name": user["first_name"],
+        "last_name": user["last_name"]
+    }
+
+    return token, user_data

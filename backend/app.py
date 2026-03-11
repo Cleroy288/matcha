@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_socketio import SocketIO
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from database.db import get_connection
@@ -8,6 +9,8 @@ from routes.auth_routes import auth_routes
 load_dotenv()
 
 app = Flask(__name__)
+
+CORS(app)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 socketio = SocketIO(app, cors_allowed_origins="*")

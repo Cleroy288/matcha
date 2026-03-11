@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from services.auth_service import register_user, login_user
 from utils.jwt_required import jwt_required
+from models.user_model import get_user_by_id
 
 
 def register():
@@ -27,12 +28,28 @@ def login():
     password = data["password"]
 
     try:
-        token = login_user(username, password)
-        return jsonify({"token": token})
+        token, user_data = login_user(username, password)
+        return jsonify({
+            "token": token,
+            "user": user_data
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-@jwt_required
-def testmiddleware(payload):
+
+# TEST ca va disparaitre
+@jwt_required # A mettre au dessus d'un controller pour proteger sa route
+def testmiddleware(payload): 
     user_id = payload["user_id"]
-    return jsonify({"message": f"Hello user {user_id}"})
+    user = get_user_by_id(user_id) 
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+        
+    return jsonify({
+        "user": {
+            "id": user["id"],
+            "username": user["username"],
+            "email": user["email"]
+        }
+    })

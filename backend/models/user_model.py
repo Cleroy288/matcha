@@ -1,5 +1,5 @@
+import psycopg2.extras
 from database.db import get_connection
-
 
 def create_user(email, username, password_hash, first_name, last_name):
 
@@ -52,7 +52,7 @@ def get_user_by_username(username):
     cur = conn.cursor()
 
     query = """
-    SELECT id, email, username, password_hash FROM users
+    SELECT id, email, username, password_hash, first_name, last_name FROM users
     WHERE username = %s
     """
     cur.execute(query, (username,))
@@ -67,7 +67,21 @@ def get_user_by_username(username):
             "id": user[0],
             "email": user[1],
             "username": user[2],
-            "password_hash": user[3]
+            "password_hash": user[3],
+            "first_name": user[4],
+            "last_name": user[5]
         }
 
     return None
+
+def get_user_by_id(id):
+    conn = get_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    
+    cur.execute("SELECT id, email, username, first_name, last_name FROM users WHERE id = %s", (id,))
+    user = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return user

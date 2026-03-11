@@ -1,0 +1,56 @@
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    height: 70px;
+    background-color: var(--matcha);
+    border-bottom: var(--border-width) solid var(--black);
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.topbar-logo a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--black);
+    text-decoration: none;
+    text-transform:  uppercase;
+    letter-spacing: 1px;
+}
+
+.topbar-links {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    display: flex;
+    color: var(--black);
+    gap: 2rem;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: color 0.3s;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+}
+
+.nav-item {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--black);
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    background-color: var(--accent);
+    border: 2px solid var(--black);
+    transform: translate(-2px, -2px);
+    box-shadow: 2px 2px 0px var(--black);
+}

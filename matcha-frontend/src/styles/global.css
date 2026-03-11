@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  /* Palette Matcha */
+  --matcha-light: #d0f0c0;
+  --matcha: #98c379;
+  --matcha-dark: #6a8e5c;
+  --text-color: #2f3e2f;
+  --border-radius: 8px;
+  --transition: 0.3s;
+
+  /*Palette Neo-brutalisme */
+  --bg-color: #FDF6E3;
+  --primary: #FF5C8A;
+  --accent: #BEF264;
+  --black: #000000;
+  --purple: #9717ff;
+  --border-width: 3px;
+  --brutal-shadow: 4px 4px 0px 0px var(--black);
+  --brutal-shadow-hover: 8px 8px 0px 0px var(--black);
+  --font-title: 'Archivo Black', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width:  100%;
+  font-family: var(--font-body);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+h1 {
+  font-family: var(--font-title);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  color: var(--matcha-dark);
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+h2, h3 {
+  color: var(--matcha-dark);
+  margin-bottom: 1rem;
+}
+
+
+form {
+  background: white;
+  padding: 2rem;
+  border: var(--border-width) solid var(--black);
+  box-shadow: var(--brutal-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.brutal-card {
+  min-width: 20rem;
+  min-height: 300px;
+  background: var(--accent);
+  border: var(--border-width) solid var(--black);
+  box-shadow: var(--brutal-shadow);
+  padding: 2rem;
+  transition: all 0.2s;
+}
+
+/* Optionnel : une carte qui s'anime au survol */
+.brutal-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: var(--brutal-shadow-hover);
+}
+/* Button on bas du container */
+form.brutal-card button {
+  margin-top: auto;
+}
