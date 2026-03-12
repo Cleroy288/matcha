@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext.tsx"
 import Button from "../components/Button.tsx"
 import Input from "../components/Input.tsx"
 import Topbar from "../components/Topbar.tsx"
+import { Link } from "react-router-dom"
 
 export default function Login() {
   const { setToken, setUser } = useAuth()
@@ -40,16 +41,19 @@ export default function Login() {
           type="text"
           placeholder="Username"
           value={username}
+          autoComplete="username"
           onChange={(e) => setUsername(e.target.value)}
         />
         <Input
           type="password"
           placeholder="Password"
           value={password}
+          autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button type="submit"> Login </Button>
       </form>
+      <Link to="/reset-password" className="link">Reset Password</Link>
     </div>
   )
 }

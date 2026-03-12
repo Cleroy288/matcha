@@ -79,12 +79,32 @@ form {
   transition: all 0.2s;
 }
 
-/* Optionnel : une carte qui s'anime au survol */
+.link {
+    font-family: var(--font-body);
+    font-weight: 200;
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: var(--matcha-light);
+    border: var(--border-width) solid var(--black);
+    display: flex;
+    color: var(--black);
+    align-items: center;
+    justify-content: center;
+    min-width: 10rem;
+  box-shadow: var(--brutal-shadow);
+  padding: 1;
+  transition: all 0.2s;
+}
+
+.link:hover {
+    color: var(--purple);
+    transform: translate(2px, 2px);
+}
+
 .brutal-card:hover {
   transform: translate(-4px, -4px);
   box-shadow: var(--brutal-shadow-hover);
 }
-/* Button on bas du container */
 form.brutal-card button {
   margin-top: auto;
 }

@@ -34,38 +34,39 @@ export default function Register(){
             <h1>Register</h1>
             <Topbar></Topbar>
             <form onSubmit={handleSubmit} className="brutal-card">
-                    <Input
-                      type="text"
-                      placeholder="First name"
-                      value={first_name}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="Last name"
-                      value={last_name}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                    <Input
-                        type="email"
-                        placeholder="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Button type="submit"> Register </Button>
-                  </form>
+                <Input
+                    type="text"
+                    placeholder="First name"
+                    value={first_name}
+                    onChange={(e) => setFirstName(e.target.value)}
+                />
+                <Input
+                    type="text"
+                    placeholder="Last name"
+                    value={last_name}
+                    onChange={(e) => setLastName(e.target.value)}
+                />
+                <Input
+                    type="email"
+                    placeholder="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <Input
+                    type="text"
+                    placeholder="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    autoComplete="new-password"
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button type="submit"> Register </Button>
+                </form>
         </div>
     )
 }

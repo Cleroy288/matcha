@@ -17,14 +17,14 @@ Sync : 1 appel / semaine — 2 semaines par sprint
 ══════════════════════════════════════════════════════════════
 
 [Pierre] AUTH
-- [ ] Table users
-- [ ] Register (email, username, nom, prenom, mdp securise)
-- [ ] Validation mdp (rejet mots courants anglais)
-- [ ] Verification email (lien unique)
-- [ ] Login (username + mdp)
-- [ ] Logout (depuis toute page, 1 clic)
-- [ ] Mot de passe oublie (email de reset)
-- [ ] Front : pages register, login, reset password
+- [ok] Table users
+- [ok] Register (email, username, nom, prenom, mdp securise)
+- [ok] Validation mdp (rejet mots courants anglais)
+- [ok] Verification email (lien unique)
+- [ok] Login (username + mdp)
+- [ok] Logout (depuis toute page, 1 clic)
+- [ok] Mot de passe oublie (email de reset)
+- [ok] Front : pages register, login, reset password
 
 [Charles] PROFIL
 - [ ] Tables profiles, tags, user_tags, photos
