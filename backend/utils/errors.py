@@ -1,0 +1,24 @@
+from utils.constants import (
+    BIO_MIN_LENGTH, BIO_MAX_LENGTH,
+    MIN_AGE, TAG_NAME_MAX_LENGTH,
+    LATITUDE_MIN, LATITUDE_MAX, LONGITUDE_MIN, LONGITUDE_MAX,
+    CITY_MIN_LENGTH, CITY_MAX_LENGTH
+)
+
+ERR_INVALID_GENDER = "Gender must be male, female, or other"
+ERR_INVALID_PREFERENCE = "Preference must be male, female, or bisexual"
+ERR_INVALID_BIO = f"Biography must be between {BIO_MIN_LENGTH} and {BIO_MAX_LENGTH} characters"
+ERR_INVALID_BIRTH_DATE_FORMAT = "Birth date must be in YYYY-MM-DD format"
+ERR_TOO_YOUNG = f"You must be at least {MIN_AGE} years old"
+ERR_INVALID_BIRTH_DATE = "Invalid birth date"
+ERR_INVALID_TAG_LENGTH = f"Tag must be between 1 and {TAG_NAME_MAX_LENGTH} characters"
+ERR_INVALID_TAG_FORMAT = "Tag must start with # and contain only letters, numbers, and hyphens"
+ERR_INVALID_COORDINATES = "Latitude and longitude must be numbers"
+ERR_INVALID_LATITUDE = f"Latitude must be between {LATITUDE_MIN} and {LATITUDE_MAX}"
+ERR_INVALID_LONGITUDE = f"Longitude must be between {LONGITUDE_MIN} and {LONGITUDE_MAX}"
+ERR_INVALID_CITY = f"City must be between {CITY_MIN_LENGTH} and {CITY_MAX_LENGTH} characters"
+
+ERR_NO_FILE = "No file provided"
+ERR_INVALID_IMAGE = "File is not a valid image"
+ERR_INVALID_IMAGE_FORMAT = "Image format must be JPEG, PNG, or WEBP"
+ERR_IMAGE_TOO_LARGE = "Image must be under {}MB"

@@ -1,0 +1,15 @@
+.PhotosSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: white;
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--black);
+  box-shadow: var(--brutal-shadow);
+}
+
+.PhotosSection-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
