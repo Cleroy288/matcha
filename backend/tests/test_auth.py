@@ -10,7 +10,7 @@ def client():
     with app.test_client() as client:
         yield client
 
-@patch("services.auth_service.send_verification_email")  # neutralise l'envoi mail
+@patch("services.auth_service.send_verification_email")
 def test_register_login(mock_mail, client):
     unique = uuid.uuid4().hex[:8]
     email = f"test_{unique}@test.com"
