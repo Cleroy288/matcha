@@ -16,7 +16,7 @@ def test_register_login(mock_mail, client):
     email = f"test_{unique}@test.com"
     username = f"user_{unique}"
     
-    client.post("/register", json={
+    response = client.post("/register", json={
         "username": username,
         "email": email,
         "password": "Password123*",
