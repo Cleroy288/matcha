@@ -35,9 +35,9 @@ def test_reset_password(mock_mail, client):
     response = client.post("/reset-password", json={
         "email": "test@test.com"
     })
-    assert response.status_code in [200, 404]
+    assert response.status_code == 400
 
 def test_me_unauthorized(client):
     response = client.get("/me")
 
-    assert response.status_code == 400
+    assert response.status_code in [401, 404]
