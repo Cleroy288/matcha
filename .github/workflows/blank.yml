@@ -65,7 +65,7 @@ jobs:
           SECRET_KEY: supersecretfortesting
         run: |
           cd backend
-          pytest -x --disable-warnings -q
+          PYTHONPATH=. pytest -x --disable-warnings -q
 
       # ---------------- FRONTEND ----------------
       - name: Setup Node
