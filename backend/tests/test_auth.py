@@ -40,4 +40,4 @@ def test_reset_password(mock_mail, client):
 def test_me_unauthorized(client):
     response = client.get("/me")
 
-    assert response.status_code in [401, 403]
+    assert response.status_code == 400
