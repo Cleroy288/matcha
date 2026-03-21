@@ -19,7 +19,7 @@ def test_register_login(client):
     client.post("/register", json={
         "username": username,
         "email": email,
-        "password": "Password123*",
+        "password": "Password123",
         "first_name": "Test",
         "last_name": "test"
     })
