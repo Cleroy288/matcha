@@ -11,7 +11,7 @@ def client():
         yield client
 
 @patch("services.auth_service.send_verification_email")  # neutralise l'envoi mail
-def test_register_login(client):
+def test_register_login(mock_mail, client):
     unique = uuid.uuid4().hex[:8]
     email = f"test_{unique}@test.com"
     username = f"user_{unique}"
@@ -19,7 +19,7 @@ def test_register_login(client):
     client.post("/register", json={
         "username": username,
         "email": email,
-        "password": "Password123",
+        "password": "z",
         "first_name": "Test",
         "last_name": "test"
     })
