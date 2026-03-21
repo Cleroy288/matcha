@@ -19,7 +19,7 @@ def test_register_login(mock_mail, client):
     client.post("/register", json={
         "username": username,
         "email": email,
-        "password": "z",
+        "password": "Password123*",
         "first_name": "Test",
         "last_name": "test"
     })
