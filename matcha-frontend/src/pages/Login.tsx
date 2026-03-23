@@ -4,16 +4,20 @@ import Button from "../components/Button.tsx"
 import Input from "../components/Input.tsx"
 import Topbar from "../components/Topbar.tsx"
 import { Link } from "react-router-dom"
+import { API_ROUTES } from "../config/api.ts"
+import StatusMessage from "../components/StatusMessage.tsx"
 
 export default function Login() {
   const { setToken, setUser } = useAuth()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null) 
+  const [success, setSucces] = useState<string | null>(null) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch(`${API_ROUTES.login}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -23,9 +27,9 @@ export default function Login() {
         console.log("login success")
         setToken(data.token)
         setUser(data.user)
+        setSucces(data.message)
       } else {
-        console.log("error")
-        alert(data.error)
+        setError(data.error)
       }
     } catch (err) {
       console.error(err)
@@ -36,6 +40,8 @@ export default function Login() {
     <div className="app-container">
         <Topbar></Topbar>
       <h1>Connexion</h1>
+      {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
+      {success && <StatusMessage type="success" message={success} onClose={() => setSucces(null)}/>} 
       <form onSubmit={handleSubmit} className="brutal-card">
         <Input
           type="text"

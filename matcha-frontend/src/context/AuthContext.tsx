@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { API_ROUTES } from "../config/api"
 /* eslint-disable react-refresh/only-export-components */
 
 interface User {
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (token && !user) {
-      fetch("http://localhost:5000/me", {
+      fetch(`${API_ROUTES.me}`, {
         headers: { "Authorization": `Bearer ${token}` }
       })
       .then(res => {

@@ -3,6 +3,8 @@ import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+frontend_url = os.getenv("FRONTEND_URL")
+
 def get_email_template(title, body_text, button_text, link):
     return f"""
     <html>
@@ -33,8 +35,9 @@ def send_verification_email(user_email, token):
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_from = os.getenv("SMTP_FROM")
 
+
     # Le lien qui pointe vers ton FRONTEND (Vite)
-    verification_link = f"http://localhost:5173/verify-email?token={token}"
+    verification_link = f"{frontend_url}/verify-email?token={token}"
 
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
@@ -67,7 +70,7 @@ def send_reset_password_email(user_email, token):
     smtp_from = os.getenv("SMTP_FROM")
 
     # Le lien qui pointe vers ton FRONTEND (Vite)
-    verification_link = f"http://localhost:5173/verify-reset-password?token={token}"
+    verification_link = f"{frontend_url}/verify-reset-password?token={token}"
 
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from

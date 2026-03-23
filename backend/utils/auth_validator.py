@@ -1,12 +1,5 @@
 import re
-
-COMMON_PASSWORDS = {
-    "password",
-    "password123",
-    "123456",
-    "qwerty",
-    "letmein"
-} #trouver une liste des mot basique en anglais (sujet)
+from utils.constants import AuthMessages 
 
 EMAIL_REGEX = re.compile(
     r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -25,18 +18,15 @@ def validate_username(username):
 def validate_password(password):
 
     if len(password) < 8:
-        return False, "Password must be at least 8 characters"
+        return False, AuthMessages.PASSWORD_INVALID_LEN
 
     if not re.search(r"[A-Z]", password):
-        return False, "Password must contain an uppercase letter"
+        return False, AuthMessages.PASSWORD_INVALID_UP
 
     if not re.search(r"[0-9]", password):
-        return False, "Password must contain a number"
+        return False, AuthMessages.PASSWORD_INVALID_NUMBER
 
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        return False, "Password must contain a special character"
-
-    if password.lower() in COMMON_PASSWORDS:
-        return False, "Password too common"
+        return False, AuthMessages.PASSWORD_INVALID_SPECIAL
 
     return True, None

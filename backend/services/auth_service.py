@@ -2,23 +2,24 @@ import bcrypt
 import secrets
 from models.user_model import create_user, get_user_by_email, get_user_by_username, set_token_reset_password_user_email, get_user_by_verification_token, set_new_password, confirm_user_email
 from utils.auth_validator import validate_password, validate_email, validate_username
+from utils.constants import AuthMessages
 from services.jwt_service import generate_token
 from services.email_service import send_verification_email, send_reset_password_email
 
 def register_user(email, username, password, first_name, last_name):
 
     if validate_email(email) is False:
-        raise Exception("Invalid email format")
+        raise Exception(AuthMessages.INVALID_EMAIL_FORMAT)
     if validate_username(username) is False:
-        raise Exception("Username limited to 32 characters")
+        raise Exception(AuthMessages.USERNAME_NOT_VALID)
 
     user_email =  get_user_by_email(email)
     if user_email:	
-        raise Exception("Email already registered")
+        raise Exception(AuthMessages.EMAIL_ALREADY_EXISTS)
 
     user_username =  get_user_by_username(username)
     if user_username:	
-        raise Exception("Username already taken")
+        raise Exception(AuthMessages.USERNAME_ALREADY_EXISTS)
         
     valid, error = validate_password(password)
 
@@ -46,13 +47,13 @@ def register_user(email, username, password, first_name, last_name):
 def login_user(username, password):
     user =  get_user_by_username(username)
     if not user:	
-        raise Exception("Username not registered")
+        raise Exception(AuthMessages.USER_NOT_FOUND)
 
     
     if not bcrypt.checkpw(password.encode(), user["password_hash"].encode()):
-        raise Exception("Invalid password")
+        raise Exception(AuthMessages.PASSWORD_INVALID)
     if not user["email_verified"]:
-        raise Exception("Email is not verified")
+        raise Exception(AuthMessages.EMAIL_NOT_VERIFIED)
     
     token = generate_token(user["id"])
 
@@ -70,7 +71,7 @@ def login_user(username, password):
 def verify_email_user(token):
     user = get_user_by_verification_token(token)
     if not user:
-        raise Exception("Lien invalide ou expiré")
+        raise Exception(AuthMessages.USER_NOT_FOUND)
 
     confirm_user_email(user['id'])
 
@@ -78,12 +79,12 @@ def verify_email_user(token):
 def reset_password_user(email):
 
     if validate_email(email) is False:
-        raise Exception("Invalid email format")
+        raise Exception(AuthMessages.INVALID_EMAIL_FORMAT)
     user =  get_user_by_email(email)
     if not user:	
-        raise Exception("Email not registered")
+        raise Exception(AuthMessages.USER_NOT_FOUND)
     if not user["email_verified"]:
-        raise Exception("Email not verified")
+        raise Exception(AuthMessages.EMAIL_NOT_VERIFIED)
     
     verification_token = secrets.token_urlsafe(32)
     set_token_reset_password_user_email(email, verification_token)
@@ -99,4 +100,4 @@ def verify_reset_password_user(token, password):
 
         user = set_new_password(hashed.decode(), token)
         if not user:
-            raise Exception("Lien invalide ou expiré")
+            raise Exception(AuthMessages.USER_NOT_FOUND)
