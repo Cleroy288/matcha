@@ -1,6 +1,7 @@
+import type { InputHTMLAttributes } from "react"
 import "./Input.css"
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+type InputProps = InputHTMLAttributes<HTMLInputElement>
 
 export default function Input({ children, ...props }: InputProps) {
   return (

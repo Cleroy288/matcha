@@ -13,7 +13,7 @@ export default function Topbar() {
         {isAuthenticated ? (
           <>
             <span>Welcome, {user?.username}</span>
-            <Link to="/profile" className="nav-item">Profil</Link>
+            <Link to="/profile/edit" className="nav-item">Profil</Link>
             <Button onClick={logout} className="btn-logout">Logout</Button>
           </>
         ) : (

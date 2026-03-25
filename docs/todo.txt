@@ -27,12 +27,12 @@ Sync : 1 appel / semaine — 2 semaines par sprint
 - [ok] Front : pages register, login, reset password
 
 [Charles] PROFIL
-- [ ] Tables profiles, tags, user_tags, photos
-- [ ] CRUD profil (genre, preference sexuelle, bio, date naissance)
-- [ ] Gestion tags (creation, ajout, suppression — reutilisables)
-- [ ] Upload photos (max 5, dont 1 photo de profil)
-- [ ] Geolocalisation (GPS avec consentement + saisie manuelle ville/quartier)
-- [ ] Front : page edition profil complet
+- [ok] Tables profiles, tags, user_tags, photos
+- [ok] CRUD profil (genre, preference sexuelle, bio, date naissance)
+- [ok] Gestion tags (creation, ajout, suppression — reutilisables)
+- [ok] Upload photos (max 5, dont 1 photo de profil)
+- [ok] Geolocalisation (GPS avec consentement + saisie manuelle ville/quartier)
+- [ok] Front : page edition profil complet
 
 ══════════════════════════════════════════════════════════════
   SPRINT 2 — Interactions sociales

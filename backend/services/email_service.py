@@ -33,8 +33,8 @@ def send_verification_email(user_email, token):
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_from = os.getenv("SMTP_FROM")
 
-    # Le lien qui pointe vers ton FRONTEND (Vite)
-    verification_link = f"http://localhost:5173/verify-email?token={token}"
+    from services.constants import FRONTEND_URL
+    verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
 
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
@@ -66,8 +66,8 @@ def send_reset_password_email(user_email, token):
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_from = os.getenv("SMTP_FROM")
 
-    # Le lien qui pointe vers ton FRONTEND (Vite)
-    verification_link = f"http://localhost:5173/verify-reset-password?token={token}"
+    from services.constants import FRONTEND_URL
+    verification_link = f"{FRONTEND_URL}/verify-reset-password?token={token}"
 
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
