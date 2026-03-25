@@ -88,7 +88,7 @@ def get_user_by_id(id):
     cur.close()
     conn.close()
 
-    return user
+    return dict(user) if user else None
 
 def get_user_by_verification_token(token):
     conn = get_connection()

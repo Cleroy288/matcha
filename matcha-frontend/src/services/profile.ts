@@ -8,8 +8,12 @@ function authHeaders(): HeadersInit {
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const err = await res.json()
-    throw new Error(err.error || "An error occurred")
+    let message = "An error occurred"
+    try {
+      const err = await res.json()
+      message = err.error || message
+    } catch { /* non-JSON body */ }
+    throw new Error(message)
   }
   return res.json()
 }

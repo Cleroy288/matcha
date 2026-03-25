@@ -7,3 +7,4 @@ export const BIO_MAX_LENGTH = 500
 export const SEARCH_DEBOUNCE_MS = 300
 export const ACCEPTED_IMAGE_TYPES = "image/jpeg,image/png,image/webp"
 export const COORDINATE_DECIMALS = 4
+export const MIN_SEARCH_LENGTH = 1

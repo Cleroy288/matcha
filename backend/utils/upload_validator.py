@@ -31,7 +31,7 @@ def validate_image_size(file_storage, max_bytes=MAX_FILE_SIZE):
     file_storage.stream.seek(0)
 
     if size > max_bytes:
-        return False, ERR_IMAGE_TOO_LARGE.format(max_bytes // (1024 * 1024))
+        return False, ERR_IMAGE_TOO_LARGE
 
     return True, None
 

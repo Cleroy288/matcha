@@ -15,7 +15,7 @@ interface ProfileInfoFormProps {
 
 export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormProps) {
   const [gender, setGender] = useState<Gender | "">(profile.gender || "")
-  const [preference, setPreference] = useState<SexualPreference | "">(profile.sexual_preference || "bisexual")
+  const [preference, setPreference] = useState<SexualPreference | "">(profile.sexual_preference || "")
   const [biography, setBiography] = useState(profile.biography || "")
   const [birthDate, setBirthDate] = useState(profile.birth_date || "")
   const [error, setError] = useState("")
@@ -53,6 +53,7 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
 
       <label>Attirance</label>
       <Select value={preference} onChange={(e) => setPreference(e.target.value as SexualPreference)}>
+        <option value="">-- Choisir --</option>
         <option value="male">Hommes</option>
         <option value="female">Femmes</option>
         <option value="bisexual">Les deux</option>

@@ -1,5 +1,6 @@
 import psycopg2.extras
 from database.db import get_connection
+from services.constants import TAG_SEARCH_LIMIT
 
 
 def create_tag(name):
@@ -26,8 +27,8 @@ def search_tags(query):
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cur.execute(
-        "SELECT * FROM tags WHERE name ILIKE %s ORDER BY name LIMIT 20",
-        (f"%{query}%",)
+        "SELECT * FROM tags WHERE name ILIKE %s ORDER BY name LIMIT %s",
+        (f"%{query}%", TAG_SEARCH_LIMIT)
     )
     tags = cur.fetchall()
 

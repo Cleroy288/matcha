@@ -17,7 +17,7 @@ def create_profile(user_id):
     cur.close()
     conn.close()
 
-    return dict(profile)
+    return dict(profile) if profile else None
 
 
 def get_profile_by_user_id(user_id):

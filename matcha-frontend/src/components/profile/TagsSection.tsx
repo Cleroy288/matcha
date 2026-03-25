@@ -3,7 +3,7 @@ import TagChip from "../TagChip"
 import Input from "../Input"
 import { addTag, removeTag, searchTags } from "../../services/profile"
 import type { Tag } from "../../types/profile"
-import { MAX_TAGS, SEARCH_DEBOUNCE_MS } from "../../constants/profile"
+import { MAX_TAGS, SEARCH_DEBOUNCE_MS, MIN_SEARCH_LENGTH } from "../../constants/profile"
 import "./TagsSection.css"
 
 interface TagsSectionProps {
@@ -20,7 +20,7 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
-    if (query.length < 1) {
+    if (query.length < MIN_SEARCH_LENGTH) {
       setSuggestions([])
       return
     }
@@ -41,6 +41,10 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
 
   async function handleAdd(tagName: string) {
     setError("")
+    if (tags.length >= MAX_TAGS) {
+      setError(`Maximum ${MAX_TAGS} tags`)
+      return
+    }
     try {
       const result = await addTag(tagName)
       onUpdate(result.tags)

@@ -16,7 +16,7 @@ def create_photo(user_id, file_path, is_profile, sort_order):
     cur.close()
     conn.close()
 
-    return dict(photo)
+    return dict(photo) if photo else None
 
 
 def get_photos_by_user(user_id):

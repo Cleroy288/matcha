@@ -2,7 +2,8 @@ from utils.constants import (
     BIO_MIN_LENGTH, BIO_MAX_LENGTH,
     MIN_AGE, TAG_NAME_MAX_LENGTH,
     LATITUDE_MIN, LATITUDE_MAX, LONGITUDE_MIN, LONGITUDE_MAX,
-    CITY_MIN_LENGTH, CITY_MAX_LENGTH
+    CITY_MIN_LENGTH, CITY_MAX_LENGTH,
+    PASSWORD_MIN_LENGTH, MAX_FILE_SIZE
 )
 
 ERR_INVALID_GENDER = "Gender must be male, female, or other"
@@ -21,4 +22,15 @@ ERR_INVALID_CITY = f"City must be between {CITY_MIN_LENGTH} and {CITY_MAX_LENGTH
 ERR_NO_FILE = "No file provided"
 ERR_INVALID_IMAGE = "File is not a valid image"
 ERR_INVALID_IMAGE_FORMAT = "Image format must be JPEG, PNG, or WEBP"
-ERR_IMAGE_TOO_LARGE = "Image must be under {}MB"
+ERR_IMAGE_TOO_LARGE = f"Image must be under {MAX_FILE_SIZE // (1024 * 1024)}MB"
+
+ERR_PASSWORD_TOO_SHORT = f"Password must be at least {PASSWORD_MIN_LENGTH} characters"
+ERR_PASSWORD_NO_UPPERCASE = "Password must contain an uppercase letter"
+ERR_PASSWORD_NO_NUMBER = "Password must contain a number"
+ERR_PASSWORD_NO_SPECIAL = "Password must contain a special character"
+ERR_PASSWORD_TOO_COMMON = "Password too common"
+
+ERR_INVALID_EMAIL = "Invalid email format"
+ERR_USERNAME_TOO_LONG = "Username too long"
+
+ERR_TOKEN_MISSING = "Token missing"

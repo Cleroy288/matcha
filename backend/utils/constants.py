@@ -3,6 +3,15 @@ import re
 VALID_GENDERS = {"male", "female", "other"}
 VALID_PREFERENCES = {"male", "female", "bisexual"}
 TAG_REGEX = re.compile(r"^#[a-zA-Z0-9-]+$")
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+
+COMMON_PASSWORDS = {
+    "password", "password123", "123456", "qwerty", "letmein"
+}
+
+EMAIL_MAX_LENGTH = 254
+USERNAME_MAX_LENGTH = 32
+PASSWORD_MIN_LENGTH = 8
 
 BIO_MIN_LENGTH = 1
 BIO_MAX_LENGTH = 500
