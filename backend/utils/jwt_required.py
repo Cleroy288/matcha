@@ -1,6 +1,7 @@
 from functools import wraps
 from flask import request, jsonify
 from services.jwt_service import decode_token
+from utils.errors import ERR_TOKEN_MISSING
 
 
 def jwt_required(f):
@@ -9,7 +10,7 @@ def jwt_required(f):
         token = request.cookies.get("auth_token")
 
         if not token:
-            return jsonify({"error": "Token missing"}), 401
+            return jsonify({"error": ERR_TOKEN_MISSING}), 401
 
         try:
             payload = decode_token(token)

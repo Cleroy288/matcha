@@ -3,6 +3,7 @@ from services.auth_service import register_user, login_user, reset_password_user
 from utils.jwt_required import jwt_required
 from models.user_model import get_user_by_id
 from utils.constants import AuthMessages
+from controllers.constants import HTTP_OK, HTTP_CREATED, HTTP_BAD_REQUEST, HTTP_NOT_FOUND
 
 def register():
 
@@ -17,10 +18,10 @@ def register():
 			data["last_name"]
 		)
 
-		return jsonify({"message": AuthMessages.REGISTER_SUCCES}), 201
+		return jsonify({"message": AuthMessages.REGISTER_SUCCES}), HTTP_CREATED
 
 	except Exception as e:
-		return jsonify({"error": str(e)}), 400
+		return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 	
 def login():
     data = request.json
@@ -33,7 +34,7 @@ def login():
         response = make_response(jsonify({
             "message": AuthMessages.LOGIN_SUCCESS,
             "user": user_data
-        }), 200)
+        }), HTTP_OK)
 
         response.set_cookie(
             "auth_token",
@@ -47,48 +48,48 @@ def login():
         return response
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
     
 def logout():
-    response = make_response(jsonify({"message": "Logged out"}), 200)
+    response = make_response(jsonify({"message": "Logged out"}), HTTP_OK)
     response.delete_cookie("auth_token")
     return response
     
 def verify_email():
     token = request.args.get('token')
     if not token:
-        return jsonify({"error": AuthMessages.NOT_TOKEN}), 400
+        return jsonify({"error": AuthMessages.NOT_TOKEN}), HTTP_BAD_REQUEST
 
     try:
         verify_email_user(token)
-        return jsonify({"message": AuthMessages.EMAIL_VERIFIED}), 200
+        return jsonify({"message": AuthMessages.EMAIL_VERIFIED}), HTTP_OK
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
     
 def verify_reset_password():
     data = request.json
     password = data["password"]
     token = request.args.get('token')
     if not token:
-        return jsonify({"error": AuthMessages.NOT_TOKEN}), 400
+        return jsonify({"error": AuthMessages.NOT_TOKEN}), HTTP_BAD_REQUEST
 
     try:
         verify_reset_password_user(token, password)
-        return jsonify({"message": AuthMessages.PASSWORD_RESET_OK}), 200
+        return jsonify({"message": AuthMessages.PASSWORD_RESET_OK}), HTTP_OK
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 
 def reset_password():
     data = request.json
     email = data["email"]
     if not email:
-         return jsonify({"error": AuthMessages.NOT_EMAIL}), 400
+         return jsonify({"error": AuthMessages.NOT_EMAIL}), HTTP_BAD_REQUEST
 
     try:
         reset_password_user(email)
-        return jsonify({"message": AuthMessages.EMAIL_SEND_SUCCESS}), 200
+        return jsonify({"message": AuthMessages.EMAIL_SEND_SUCCESS}), HTTP_OK
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 
 # TEST ca va disparaitre
 @jwt_required # A mettre au dessus d'un controller pour proteger sa route
@@ -97,7 +98,7 @@ def testmiddleware(payload):
     user = get_user_by_id(user_id) 
     
     if not user:
-        return jsonify({"error": AuthMessages.USER_NOT_FOUND}), 404
+        return jsonify({"error": AuthMessages.USER_NOT_FOUND}), HTTP_NOT_FOUND
         
     return jsonify({
         "user": {

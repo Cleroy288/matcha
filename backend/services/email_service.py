@@ -36,7 +36,6 @@ def send_verification_email(user_email, token):
     smtp_from = os.getenv("SMTP_FROM")
 
 
-    # Le lien qui pointe vers ton FRONTEND (Vite)
     verification_link = f"{frontend_url}/verify-email?token={token}"
 
     message = MIMEMultipart("alternative")
@@ -54,7 +53,7 @@ def send_verification_email(user_email, token):
 
     try:
         with smtplib.SMTP(smtp_host, int(smtp_port)) as server:
-            server.starttls() # Sécurise la connexion
+            server.starttls()
             server.login(smtp_user, smtp_pass)
             server.send_message(message)
         return True
@@ -69,7 +68,6 @@ def send_reset_password_email(user_email, token):
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_from = os.getenv("SMTP_FROM")
 
-    # Le lien qui pointe vers ton FRONTEND (Vite)
     verification_link = f"{frontend_url}/verify-reset-password?token={token}"
 
     message = MIMEMultipart("alternative")
@@ -87,7 +85,7 @@ def send_reset_password_email(user_email, token):
 
     try:
         with smtplib.SMTP(smtp_host, int(smtp_port)) as server:
-            server.starttls() # Sécurise la connexion
+            server.starttls()
             server.login(smtp_user, smtp_pass)
             server.send_message(message)
         return True

@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 from database.db import get_connection
 from routes.auth_routes import auth_routes
+from routes.profile_routes import profile_routes
 
 load_dotenv()
 
@@ -12,6 +13,7 @@ app = Flask(__name__)
 
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -34,6 +36,7 @@ def test_db():
     return {"db": result}
 
 app.register_blueprint(auth_routes)
+app.register_blueprint(profile_routes)
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5000, debug=True)

@@ -1,0 +1,30 @@
+.LocationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: white;
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--black);
+  box-shadow: var(--brutal-shadow);
+}
+
+.LocationSection label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.LocationSection-coords {
+  font-weight: 600;
+  font-family: monospace;
+  margin: 0;
+  padding: 8px;
+  background: var(--matcha-light);
+  border: 2px solid var(--black);
+}
+
+.LocationSection-error {
+  color: var(--primary);
+  font-weight: 700;
+  margin: 0;
+}
