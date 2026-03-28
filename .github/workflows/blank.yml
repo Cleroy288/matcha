@@ -62,7 +62,7 @@ jobs:
           DB_NAME: matcha_test_db
           DB_USER: postgres
           DB_PASSWORD: postgres
-          SECRET_KEY: supersecretfortesting
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           cd backend
           PYTHONPATH=. pytest -x --disable-warnings -q
