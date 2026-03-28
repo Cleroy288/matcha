@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from services.auth_service import register_user, login_user, reset_password_user, verify_reset_password_user, verify_email_user
 from utils.jwt_required import jwt_required
 from models.user_model import get_user_by_id
@@ -29,13 +29,30 @@ def login():
 
     try:
         token, user_data = login_user(username, password)
-        return jsonify({
-            "token": token,
-            "user": user_data,
-            "message": AuthMessages.LOGIN_SUCCESS
-        })
+        
+        response = make_response(jsonify({
+            "message": AuthMessages.LOGIN_SUCCESS,
+            "user": user_data
+        }), 200)
+
+        response.set_cookie(
+            "auth_token",
+            value=token,
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=3600
+        )
+
+        return response
+
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+def logout():
+    response = make_response(jsonify({"message": "Logged out"}), 200)
+    response.delete_cookie("auth_token")
+    return response
     
 def verify_email():
     token = request.args.get('token')

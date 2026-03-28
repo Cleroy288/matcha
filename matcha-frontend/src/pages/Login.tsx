@@ -4,11 +4,11 @@ import Button from "../components/Button.tsx"
 import Input from "../components/Input.tsx"
 import Topbar from "../components/Topbar.tsx"
 import { Link } from "react-router-dom"
-import { API_ROUTES } from "../config/api.ts"
+import { API_ROUTES, fetchWithCredentials } from "../config/api.ts"
 import StatusMessage from "../components/StatusMessage.tsx"
 
 export default function Login() {
-  const { setToken, setUser } = useAuth()
+  const { setUser } = useAuth()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null) 
@@ -17,7 +17,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const res = await fetch(`${API_ROUTES.login}`, {
+      const res = await fetchWithCredentials(`${API_ROUTES.login}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -25,7 +25,6 @@ export default function Login() {
       const data = await res.json()
       if (res.ok) {
         console.log("login success")
-        setToken(data.token)
         setUser(data.user)
         setSucces(data.message)
       } else {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import { API_ROUTES } from "../config/api"
+import { API_ROUTES, fetchWithCredentials } from "../config/api"
 /* eslint-disable react-refresh/only-export-components */
 
 interface User {
@@ -11,8 +11,6 @@ interface User {
 }
 
 interface AuthContextType {
-  token: string | null
-  setToken: (token: string | null) => void
   user: User | null
   setUser: (user: User | null) => void
   logout: () => void
@@ -22,47 +20,29 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // 1. Initialisation avec le localStorage
-  const [token, setTokenState] = useState<string | null>(localStorage.getItem("matcha_token"))
+
   const [user, setUser] = useState<User | null>(null)
 
-  // 2. Fonction pour mettre à jour le token partout
-  const setToken = (newToken: string | null) => {
-    setTokenState(newToken)
-    if (newToken) {
-      localStorage.setItem("matcha_token", newToken)
-    } else {
-      localStorage.removeItem("matcha_token")
-    }
-  }
-
-  const logout = () => {
-    setToken(null)
+  const logout = async () => {
+    await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
     setUser(null)
   }
 
   useEffect(() => {
-    if (token && !user) {
-      fetch(`${API_ROUTES.me}`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
-      .then(res => {
-        if (res.ok) return res.json()
-        throw new Error("Token invalide")
-      })
-      .then(data => setUser(data.user))
-      .catch(() => logout())
-    }
-  }, [token])
+    fetchWithCredentials(API_ROUTES.me)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+            if (data) setUser(data.user)
+        })
+        .catch(() => {})
+  }, [])
 
   return (
     <AuthContext.Provider value={{ 
-      token, 
-      setToken, 
       user, 
       setUser, 
-      logout, 
-      isAuthenticated: !!token 
+      logout,
+      isAuthenticated: user !== null,
     }}>
       {children}
     </AuthContext.Provider>

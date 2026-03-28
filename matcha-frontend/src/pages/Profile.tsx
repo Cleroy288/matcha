@@ -2,7 +2,7 @@ import { useAuth } from "../context/AuthContext"
 import Topbar from "../components/Topbar"
 
 export default function Profile() {
-  const { user, token, isAuthenticated } = useAuth()
+  const { user, isAuthenticated } = useAuth()
 
   if (!isAuthenticated) {
     return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
@@ -23,12 +23,6 @@ export default function Profile() {
           <p><strong>Nom :</strong> {user?.last_name || "Non renseigné"}</p>
         </div>
 
-        <div style={{ marginTop: "20px", background: "white", padding: "10px", border: "2px solid black" }}>
-          <p style={{ fontSize: "0.8rem", wordBreak: "break-all" }}>
-            <strong>JWT Actuel :</strong> <br />
-            {token?.substring(0, 50)}...
-          </p>
-        </div>
       </div>
     </div>
   )

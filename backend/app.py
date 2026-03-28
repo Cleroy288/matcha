@@ -10,7 +10,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 socketio = SocketIO(app, cors_allowed_origins="*")
