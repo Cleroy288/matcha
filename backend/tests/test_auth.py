@@ -1,6 +1,5 @@
 import pytest
 import uuid
-from unittest.mock import patch
 from app import app
 
 @pytest.fixture
@@ -10,8 +9,8 @@ def client():
     with app.test_client() as client:
         yield client
 
-@patch("services.auth_service.send_verification_email")
-def test_register_login(client, mock_mail):
+def test_register_login(client, mocker):
+    mocker.patch("services.auth_service.send_verification_email")
     unique = uuid.uuid4().hex[:8]
     email = f"test_{unique}@test.com"
     username = f"user_{unique}"
@@ -30,8 +29,8 @@ def test_register_login(client, mock_mail):
     })
     assert response.status_code == 400 #email not verified
 
-@patch("services.auth_service.send_reset_password_email")
-def test_reset_password(client, mock_mail):
+def test_reset_password(client, mocker):
+    mocker.patch("services.auth_service.send_reset_password_email")
     response = client.post("/reset-password", json={
         "email": "test@test.com"
     })
