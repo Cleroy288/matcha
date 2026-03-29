@@ -7,7 +7,7 @@ def add_view(viewer_id, viewed_id):
     cur = conn.cursor()
 
     cur.execute("""
-        INSERT INTO profile_views (viewer_id; viewed_id)
+        INSERT INTO profile_views (viewer_id, viewed_id)
         VALUES (%s, %s)
     """, (viewer_id, viewed_id))
 

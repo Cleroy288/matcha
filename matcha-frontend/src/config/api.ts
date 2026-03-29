@@ -8,6 +8,12 @@ export const API_ROUTES = {
     verifyEmail:         `${API_BASE_URL}/verify-email`,
     resetPassword:       `${API_BASE_URL}/reset-password`,
     verifyResetPassword: `${API_BASE_URL}/verify-reset-password`,
+    notifications:       `${API_BASE_URL}/notifications`,
+    notificationsRead:   `${API_BASE_URL}/notifications/read`,
+    notificationsUnread: `${API_BASE_URL}/notifications/unread`,
+    like:    `${API_BASE_URL}/like`,
+    visit:   `${API_BASE_URL}/visit`,
+    block:   `${API_BASE_URL}/block`,
     me:                  `${API_BASE_URL}/me`,
 }
 

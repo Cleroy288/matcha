@@ -4,8 +4,7 @@ import Button from "./Button"
 import './Topbar.css'
 
 export default function Topbar() {
-  const { user, isAuthenticated, logout } = useAuth()
-
+  const { user, isAuthenticated, logout, unreadCount } = useAuth()
   return (
     <nav className="topbar">
       <div className="topbar-logo">MATCHA</div>
@@ -14,6 +13,14 @@ export default function Topbar() {
           <>
             <span>Welcome, {user?.username}</span>
             <Link to="/profile/edit" className="nav-item">Profil</Link>
+            <Link to="/notification" className={`notif-btn ${unreadCount > 0 ? "notif-btn--active" : ""}`}>
+                Notifs
+                {unreadCount > 0 && (
+                    <span className="notif-badge">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                )}
+            </Link>
             <Button onClick={logout} className="btn-logout">Logout</Button>
           </>
         ) : (

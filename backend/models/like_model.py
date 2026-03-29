@@ -23,7 +23,7 @@ def remove_like(liker_id, liked_id):
 
     cur.execute("""
         DELETE FROM likes where liker_id = %s AND liked_id = %s
-    """, (liker_id, liker_id))
+    """, (liker_id, liked_id))
 
     conn.commit()
     cur.close()
@@ -40,7 +40,7 @@ def is_match(user1_id, user2_id):
             SELECT 1 FROM likes WHERE liker_id = %s AND liked_id = %s
         )
     """, (user1_id, user2_id, user2_id, user1_id))
-    result = cur.fetchone()
+    result = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()

@@ -8,6 +8,10 @@ import Home from './pages/Home'
 import VerifyEmail from './pages/VerifyEmail'
 import ResetPassword from './pages/ResetPassword'
 import VerifyResetPassword from './pages/VerifyResetPassword'
+import Notifications from './pages/Notifications'
+
+
+import DevTools from './pages/DevTools'
 
 
 export default function App() {
@@ -23,7 +27,12 @@ export default function App() {
             <Route path="/reset-password" element={<ResetPassword/>}></Route>
             <Route path="/home" element={<Home/>}></Route>
             <Route path="/verify-reset-password" element={<VerifyResetPassword/>}></Route>
+            <Route path="/notification" element={<Notifications/>}></Route>
             <Route path="/" element={<Login />} />
+
+
+
+            <Route path="/dev" element={<DevTools />} />
         </Routes>
         </Router>
     </AuthProvider>

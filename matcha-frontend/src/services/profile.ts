@@ -1,10 +1,6 @@
 import type { Profile, Tag, Photo } from "../types/profile"
 import { API_URL } from "../constants/profile"
-
-function authHeaders(): HeadersInit {
-  const token = localStorage.getItem("matcha_token")
-  return { Authorization: `Bearer ${token}` }
-}
+import { fetchWithCredentials } from "../config/api"
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -19,16 +15,13 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 
 export async function fetchProfile(): Promise<Profile> {
-  const res = await fetch(`${API_URL}/profile`, {
-    headers: { ...authHeaders(), "Content-Type": "application/json" }
-  })
+  const res = await fetchWithCredentials(`${API_URL}/profile`)
   return handleResponse<Profile>(res)
 }
 
 export async function updateProfile(data: Record<string, unknown>): Promise<Profile> {
-  const res = await fetch(`${API_URL}/profile`, {
+  const res = await fetchWithCredentials(`${API_URL}/profile`, {
     method: "PUT",
-    headers: { ...authHeaders(), "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
   return handleResponse<Profile>(res)
@@ -40,62 +33,58 @@ export async function updateLocation(data: {
   city: string
   gps_consent: boolean
 }): Promise<{ message: string }> {
-  const res = await fetch(`${API_URL}/profile/location`, {
+  const res = await fetchWithCredentials(`${API_URL}/profile/location`, {
     method: "PUT",
-    headers: { ...authHeaders(), "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
   return handleResponse<{ message: string }>(res)
 }
 
 export async function addTag(name: string): Promise<{ tags: Tag[] }> {
-  const res = await fetch(`${API_URL}/profile/tags`, {
+  const res = await fetchWithCredentials(`${API_URL}/profile/tags`, {
     method: "POST",
-    headers: { ...authHeaders(), "Content-Type": "application/json" },
     body: JSON.stringify({ name })
   })
   return handleResponse<{ tags: Tag[] }>(res)
 }
 
 export async function removeTag(name: string): Promise<{ tags: Tag[] }> {
-  const res = await fetch(`${API_URL}/profile/tags`, {
+  const res = await fetchWithCredentials(`${API_URL}/profile/tags`, {
     method: "DELETE",
-    headers: { ...authHeaders(), "Content-Type": "application/json" },
     body: JSON.stringify({ name })
   })
   return handleResponse<{ tags: Tag[] }>(res)
 }
 
 export async function searchTags(query: string): Promise<{ tags: Tag[] }> {
-  const res = await fetch(`${API_URL}/tags/search?q=${encodeURIComponent(query)}`, {
-    headers: authHeaders()
-  })
+  const res = await fetchWithCredentials(
+    `${API_URL}/tags/search?q=${encodeURIComponent(query)}`
+  )
   return handleResponse<{ tags: Tag[] }>(res)
 }
 
 export async function uploadPhoto(file: File): Promise<Photo> {
   const formData = new FormData()
   formData.append("photo", file)
-  const res = await fetch(`${API_URL}/profile/photos`, {
+  const res = await fetchWithCredentials(`${API_URL}/profile/photos`, {
     method: "POST",
-    headers: authHeaders(),
-    body: formData
+    headers: {},          // ← important : pas de Content-Type pour FormData
+    body: formData        // le navigateur le set automatiquement avec le boundary
   })
   return handleResponse<Photo>(res)
 }
 
 export async function deletePhoto(photoId: number): Promise<{ message: string }> {
-  const res = await fetch(`${API_URL}/profile/photos/${photoId}`, {
-    method: "DELETE",
-    headers: authHeaders()
+  const res = await fetchWithCredentials(`${API_URL}/profile/photos/${photoId}`, {
+    method: "DELETE"
   })
   return handleResponse<{ message: string }>(res)
 }
 
 export async function setProfilePhoto(photoId: number): Promise<{ message: string }> {
-  const res = await fetch(`${API_URL}/profile/photos/${photoId}/profile`, {
-    method: "PUT",
-    headers: authHeaders()
-  })
+  const res = await fetchWithCredentials(
+    `${API_URL}/profile/photos/${photoId}/profile`,
+    { method: "PUT" }
+  )
   return handleResponse<{ message: string }>(res)
 }

@@ -41,12 +41,12 @@ Sync : 1 appel / semaine — 2 semaines par sprint
   !! Sync debut de sprint : se mettre d'accord sur les API contracts !!
 
 [Pierre] LIKES + NOTIFICATIONS
-- [ ] Table likes : like / unlike
-- [ ] Detection match (like mutuel = "connectes")
-- [ ] Table profile_views : historique visites
-- [ ] Table blocks : bloquer un utilisateur
-- [ ] Table reports : signaler un faux compte
-- [ ] Table notifications : temps reel via WebSocket
+- [ok] Table likes : like / unlike
+- [ok] Detection match (like mutuel = "connectes")
+- [ok] Table profile_views : historique visites
+- [ok] Table blocks : bloquer un utilisateur
+- [ok] Table reports : signaler un faux compte
+- [ok] Table notifications : temps reel via WebSocket
       (like, visite, message, match, unlike)
 - [ ] Front : indicateur notifs non lues (toutes pages)
 - [ ] Front : page "qui m'a like" + "qui a vu mon profil"
