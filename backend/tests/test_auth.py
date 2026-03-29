@@ -11,7 +11,7 @@ def client():
         yield client
 
 @patch("services.auth_service.send_verification_email")
-def test_register_login(mock_mail, client):
+def test_register_login(client, mock_mail):
     unique = uuid.uuid4().hex[:8]
     email = f"test_{unique}@test.com"
     username = f"user_{unique}"
@@ -31,7 +31,7 @@ def test_register_login(mock_mail, client):
     assert response.status_code == 400 #email not verified
 
 @patch("services.auth_service.send_reset_password_email")
-def test_reset_password(mock_mail, client):
+def test_reset_password(client, mock_mail):
     response = client.post("/reset-password", json={
         "email": "test@test.com"
     })

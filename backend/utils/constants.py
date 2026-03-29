@@ -25,8 +25,10 @@ class AuthMessages:
     REGISTER_SUCCES       = "Enregistré avec succès. Tu dois maintenant valider ton email pour te connecter"
     LOGIN_SUCCESS         = "Connecté avec succès."
 
-
-
+class LikeMessage:
+    LIKE_YOURSELF         = "Impossible de se liker soit même !"
+    LIKE_IMPOSSIBLE       = "Action impossible"
+    LIKE_ALREADY          = "Déjà aimé"
 
 VALID_GENDERS = {"male", "female", "other"}
 VALID_PREFERENCES = {"male", "female", "bisexual"}
