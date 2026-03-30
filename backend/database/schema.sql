@@ -59,3 +59,44 @@ CREATE TABLE IF NOT EXISTS photos (
 );
 
 CREATE INDEX IF NOT EXISTS idx_photos_user_id ON photos(user_id);
+
+CREATE TABLE IF NOT EXISTS likes (
+    id          SERIAL PRIMARY KEY,
+    liker_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    liked_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (liker_id, liked_id)
+);
+
+CREATE TABLE IF NOT EXISTS profile_views (
+    id          SERIAL PRIMARY KEY,
+    viewer_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    viewed_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    viewed_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS blocks (
+    id          SERIAL PRIMARY KEY,
+    blocker_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    blocked_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (blocker_id, blocked_id)
+);
+
+CREATE TABLE IF NOT EXISTS reports (
+    id          SERIAL PRIMARY KEY,
+    reporter_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    reported_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    reason      TEXT,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (reporter_id, reported_id)
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    from_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    type        VARCHAR(20) NOT NULL,  -- 'like', 'visit', 'match', 'unlike', 'message'
+    is_read     BOOLEAN DEFAULT FALSE,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

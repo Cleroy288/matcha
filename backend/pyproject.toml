@@ -1,6 +1,6 @@
 [tool.pytest]
 testpaths = ["tests"]
-addopts = ["-ra", "-q", "--ruff", "--ruff-format"]
+addopts = ["-ra", "-q"]
 
 [tool.ruff]
 target-version = "py311"

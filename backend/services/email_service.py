@@ -3,6 +3,8 @@ import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+frontend_url = os.getenv("FRONTEND_URL")
+
 def get_email_template(title, body_text, button_text, link):
     return f"""
     <html>
@@ -33,8 +35,8 @@ def send_verification_email(user_email, token):
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_from = os.getenv("SMTP_FROM")
 
-    from services.constants import FRONTEND_URL
-    verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
+
+    verification_link = f"{frontend_url}/verify-email?token={token}"
 
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
@@ -51,7 +53,7 @@ def send_verification_email(user_email, token):
 
     try:
         with smtplib.SMTP(smtp_host, int(smtp_port)) as server:
-            server.starttls() # Sécurise la connexion
+            server.starttls()
             server.login(smtp_user, smtp_pass)
             server.send_message(message)
         return True
@@ -66,8 +68,7 @@ def send_reset_password_email(user_email, token):
     smtp_pass = os.getenv("SMTP_PASS")
     smtp_from = os.getenv("SMTP_FROM")
 
-    from services.constants import FRONTEND_URL
-    verification_link = f"{FRONTEND_URL}/verify-reset-password?token={token}"
+    verification_link = f"{frontend_url}/verify-reset-password?token={token}"
 
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
@@ -84,7 +85,7 @@ def send_reset_password_email(user_email, token):
 
     try:
         with smtplib.SMTP(smtp_host, int(smtp_port)) as server:
-            server.starttls() # Sécurise la connexion
+            server.starttls()
             server.login(smtp_user, smtp_pass)
             server.send_message(message)
         return True

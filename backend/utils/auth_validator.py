@@ -1,43 +1,32 @@
 import re
-from utils.constants import (
-    COMMON_PASSWORDS, EMAIL_REGEX,
-    EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH, PASSWORD_MIN_LENGTH
-)
-from utils.errors import (
-    ERR_PASSWORD_TOO_SHORT, ERR_PASSWORD_NO_UPPERCASE,
-    ERR_PASSWORD_NO_NUMBER, ERR_PASSWORD_NO_SPECIAL,
-    ERR_PASSWORD_TOO_COMMON, ERR_INVALID_EMAIL, ERR_USERNAME_TOO_LONG
-)
+from utils.constants import AuthMessages 
 
+EMAIL_REGEX = re.compile(
+    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+)
 
 def validate_email(email):
-    if len(email) > EMAIL_MAX_LENGTH:
-        return False, ERR_INVALID_EMAIL
-    if not EMAIL_REGEX.fullmatch(email):
-        return False, ERR_INVALID_EMAIL
-    return True, None
-
+    if len(email) > 254:
+        return False
+    return bool(EMAIL_REGEX.fullmatch(email))
 
 def validate_username(username):
-    if len(username) > USERNAME_MAX_LENGTH:
-        return False, ERR_USERNAME_TOO_LONG
-    return True, None
-
+    if len(username) > 32:
+        return False
+    return True
 
 def validate_password(password):
-    if len(password) < PASSWORD_MIN_LENGTH:
-        return False, ERR_PASSWORD_TOO_SHORT
+
+    if len(password) < 8:
+        return False, AuthMessages.PASSWORD_INVALID_LEN
 
     if not re.search(r"[A-Z]", password):
-        return False, ERR_PASSWORD_NO_UPPERCASE
+        return False, AuthMessages.PASSWORD_INVALID_UP
 
     if not re.search(r"[0-9]", password):
-        return False, ERR_PASSWORD_NO_NUMBER
+        return False, AuthMessages.PASSWORD_INVALID_NUMBER
 
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        return False, ERR_PASSWORD_NO_SPECIAL
-
-    if password.lower() in COMMON_PASSWORDS:
-        return False, ERR_PASSWORD_TOO_COMMON
+        return False, AuthMessages.PASSWORD_INVALID_SPECIAL
 
     return True, None

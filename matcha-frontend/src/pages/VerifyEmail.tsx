@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import { useSearchParams, useNavigate, Link } from "react-router-dom"
 import Topbar from "../components/Topbar.tsx"
+import { API_ROUTES } from "../config/api.ts"
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams()
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
   const [message, setMessage] = useState("Vérification en cours...")
   const navigate = useNavigate()
+  
 
   useEffect(() => {
     const verify = async () => {
@@ -18,7 +20,7 @@ export default function VerifyEmail() {
       return
     }
 
-    fetch(`http://localhost:5000/verify-email?token=${token}`)
+    fetch(`${API_ROUTES.verifyEmail}?token=${token}`)
       .then(async (res) => {
         const data = await res.json()
         if (res.ok) {
@@ -28,7 +30,7 @@ export default function VerifyEmail() {
           setTimeout(() => navigate("/login"), 3000)
         } else {
           setStatus("error")
-          setMessage(data.error || "Une erreur est survenue.")
+          setMessage(data.error)
         }
       })
       .catch(() => {

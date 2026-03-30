@@ -31,3 +31,4 @@ dist-ssr
 
 # Uploads
 backend/uploads/
+.env

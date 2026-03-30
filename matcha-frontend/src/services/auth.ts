@@ -1,3 +1,5 @@
+import { API_ROUTES } from "../config/api"
+
 interface User {
   id: number
   username: string
@@ -12,7 +14,7 @@ interface LoginResponse {
 }
 
 export async function login(username: string, password: string): Promise<LoginResponse> {
-  const res = await fetch("http://localhost:5000/login", {
+  const res = await fetch(`${API_ROUTES.login}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
