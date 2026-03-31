@@ -2,12 +2,14 @@ import { Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import Button from "./Button"
 import './Topbar.css'
+import ThemeSelector from "./ThemeSelector"
 
 export default function Topbar() {
   const { user, isAuthenticated, logout, unreadCount } = useAuth()
   return (
     <nav className="topbar">
       <div className="topbar-logo">MATCHA</div>
+      <ThemeSelector></ThemeSelector>
       <div className="topbar-links">
         {isAuthenticated ? (
           <>

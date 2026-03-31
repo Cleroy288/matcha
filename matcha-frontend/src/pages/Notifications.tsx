@@ -17,7 +17,7 @@ const TYPE_COLORS: Record<string, string> = {
   match:   "var(--accent)",     // vert fluo
   visit:   "var(--matcha-light)",
   unlike:  "#e0e0e0",
-  message: "var(--matcha)",
+  message: "var(--primary)",
 }
 
 function formatDate(dateStr: string): string {

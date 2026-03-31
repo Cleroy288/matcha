@@ -38,7 +38,7 @@ export default function Login() {
   return (
     <div className="app-container">
         <Topbar></Topbar>
-      <h1>Connexion</h1>
+      <h1>Se connecter</h1>
       {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
       {success && <StatusMessage type="success" message={success} onClose={() => setSucces(null)}/>} 
       <form onSubmit={handleSubmit} className="brutal-card">

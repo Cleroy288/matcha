@@ -1,6 +1,6 @@
 button {
   padding: 15px 25px;
-  background-color: var(--accent);
+  background-color: var(--h1-color);
   border-radius: 8px;
   border: var(--border-width) solid var(--black);
   font-weight: 800;
@@ -15,7 +15,7 @@ button {
 button:hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--brutal-shadow-hover);
-  border-color: var(--purple);
+  /* border-color: var(--purple); */
 }
 
 button:active {
