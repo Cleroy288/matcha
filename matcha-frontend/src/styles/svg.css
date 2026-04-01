@@ -1,0 +1,226 @@
+/* Permet de gérer l'affichage des svg en fonction de la taille de l'écran */
+@media (max-width: 900px) {
+  .sil { display: none; }
+}
+
+@media (max-height: 500px) {
+  .sil { display: none; }
+}
+
+/* Réduit entre 900px et 1200px */
+@media (max-width: 1200px) {
+  .sil { max-width: 18vw; }
+}
+
+/* ── Animations flottantes ── */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-25px); }
+}
+
+@keyframes sway-slow {
+  0%, 100% { transform: rotate(-2deg); }
+  50%       { transform: rotate(2deg); }
+}
+
+@keyframes sway-medium {
+  0%, 100% { transform: rotate(-4deg); }
+  50%       { transform: rotate(4deg); }
+}
+
+@keyframes sway-hight {
+  0%, 100% { transform: rotate(-6deg); }
+  50%       { transform: rotate(6deg); }
+}
+
+@keyframes float-flip {
+  0%, 100% { transform: scaleX(-1) translateY(0px); }
+  50%       { transform: scaleX(-1) translateY(-10px); }
+}
+
+/* ── Classes d'animation ── */
+.sil-float {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+.sil-float-alt {
+  animation: float-medium 4s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.sil-sway-sl {
+  animation: sway-slow 5s ease-in-out infinite;
+}
+.sil-sway-slow-md {
+  animation: sway-medium  5s ease-in-out infinite;
+}
+.sil-sway-hg {
+  animation: sway-hight 20s ease-in-out infinite;
+}
+
+.sil-sway-alt {
+  animation: sway 4s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+.sil-float-sway {
+  animation: 
+    float-slow  6s ease-in-out infinite,
+    sway-slow   8s ease-in-out infinite;
+}
+
+/* ── Shadow animations ── */
+@keyframes shadow-pulse {
+  0%, 100% { filter: drop-shadow(4px 4px 0px var(--black)); }
+  50%       { filter: drop-shadow(8px 8px 0px var(--black)); }
+}
+
+@keyframes shadow-color-shift {
+  0%   { filter: drop-shadow(5px 5px 0px var(--primary)); }
+  50%  { filter: drop-shadow(5px 5px 0px var(--accent)); }
+  100% { filter: drop-shadow(5px 5px 0px var(--primary)); }
+}
+
+@keyframes shadow-move {
+  0%, 100% { filter: drop-shadow(4px 4px 0px var(--primary)); }
+  50%       { filter: drop-shadow(-4px 4px 0px var(--accent)); }
+  /* 50%       { filter: drop-shadow(-4px -4px 0px var(--primary)); } */
+  /* 75%       { filter: drop-shadow(4px -4px 0px var(--primary)); } */
+}
+
+/* ── Classes ── */
+.sil-shadow-pulse {
+  animation: shadow-pulse 3s ease-in-out infinite;
+}
+
+.sil-shadow-shift {
+  animation: shadow-color-shift 4s ease-in-out infinite;
+}
+
+.sil-shadow-move {
+  animation: shadow-move 6s ease-in-out infinite;
+}
+
+/* .sil-float-sway {
+  animation: 
+    float-medium  8s ease-in-out infinite,
+    sway-medium   12s ease-in-out infinite;
+} */
+
+.sil-sway-shadow {
+  animation:
+    sway-slow    7s ease-in-out infinite,
+    shadow-move  7s ease-in-out infinite;
+    /* shadow-color-shift  5s ease-in-out infinite; */
+}
+
+/* Effet "lumière qui tourne" — ombre suit le mouvement */
+.sil-float-shadow-sync {
+  animation:
+    float-slow   5s ease-in-out infinite,
+    shadow-move  5s ease-in-out infinite;
+}
+
+
+.sil-flip-x.sil-float {
+  animation: float-flip 5s ease-in-out infinite;
+}
+
+/* ── Base ── */
+.sil {
+  position: absolute;
+  width: auto;
+  max-width: 25vw;
+  /* pointer-events: none; */
+  will-change: transform, filter;
+  transform: translateZ(0);
+}
+
+.sil:hover {
+    animation-play-state: paused;
+}
+
+.sil-xxs  { height: clamp(80px,  15vh, 180px); }
+.sil-xs   { height: clamp(80px,  25vh, 180px); }
+.sil-sm   { height: clamp(120px, 40vh, 280px); }
+.sil-md   { height: clamp(180px, 60vh, 450px); }
+.sil-lg   { height: clamp(250px, 80vh, 650px); }
+.sil-xl   { height: clamp(300px, 95vh, 850px); }
+.sil-full { height: clamp(400px, 100vh, 100vh); }
+
+/* ── Position horizontale ── */
+.sil-left         { left: 0; }
+.sil-left-in      { left: 5%; }
+.sil-left-in-up    { left: 8%; }
+.sil-left-cup4      { left: 5%; }
+.sil-left-mid     { left: 15%; }
+.sil-left-mid-center     { left: 25%; }
+.sil-center       { left: 50%; transform: translateX(-50%); }
+.sil-right        { right: 0; }
+.sil-right-in     { right: 5%; }
+.sil-right-mid    { right: 15%; }
+
+/* ── Position verticale ── */
+.sil-bottom       { bottom: 0; }
+.sil-bottom-up    { bottom: 5%; }
+.sil-bottom-big-up    { bottom: 23%; }
+.sil-middle-down    { bottom: 50%; }
+.sil-middle       { top: 50%; transform: translateY(-50%); }
+.sil-middle-cup4      { bottom: 50%; }
+.sil-middle-cupi      { bottom: 60%; }
+.sil-middle-up       { bottom: 70%; }
+.sil-top          { top: 0; }
+
+/* ── Combos position (bottom + horizontal) ── */
+.sil-bl  { bottom: 0; left: 0; }
+.sil-br  { bottom: 0; right: 0; }
+.sil-tl  { top: 0; left: 0; }
+.sil-tr  { top: 0; right: 0; }
+
+/* ── Flip ── */
+.sil-flip-x { transform: scaleX(-1); }
+.sil-flip-y { transform: scaleY(-1); }
+.sil-flip-xy { transform: scale(-1, -1); }
+
+/* ── Opacité ── */
+.sil-opacity-20  { opacity: 0.20; }
+.sil-opacity-40  { opacity: 0.40; }
+.sil-opacity-60  { opacity: 0.60; }
+.sil-opacity-80  { opacity: 0.80; }
+.sil-opacity-100 { opacity: 1; }
+
+/* ── Couleurs (suit le thème) ── */
+.sil-primary  { color: var(--primary); }
+.sil-accent   { color: var(--accent); }
+.sil-black    { color: var(--black); }
+.sil-surface  { color: var(--surface-alt); }
+.sil-muted    { color: var(--text-muted); }
+.sil-color-topbar-border { color: var(--topbar-border); }
+
+/* ── Rotation ── */
+.sil-rotate-5  { transform: rotate(5deg); }
+.sil-rotate-10 { transform: rotate(10deg); }
+.sil-rotate-15 { transform: rotate(15deg); }
+.sil-rotate-n5 { transform: rotate(-5deg); }
+.sil-rotate-n10{ transform: rotate(-10deg); }
+
+/* ── Z-index ── */
+.sil-behind  { z-index: 0; }
+.sil-front   { z-index: 5; }
+.sil-overlay { z-index: 20; }
+
+/* ── Effets brutaux ── */
+.sil-shadow {
+  filter: drop-shadow(5px 5px 0px var(--black));
+}
+.sil-shadow-primary {
+  filter: drop-shadow(5px 5px 0px var(--primary));
+}
+.sil-shadow-accent {
+  filter: drop-shadow(5px 5px 0px var(--accent));
+}
