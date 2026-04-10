@@ -139,6 +139,7 @@
   /* pointer-events: none; */
   will-change: transform, filter;
   transform: translateZ(0);
+  border: 3px solid(var(--black));
 }
 
 .sil:hover {

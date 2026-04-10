@@ -112,17 +112,3 @@ form {
 form.brutal-card button {
   margin-top: auto;
 }
-/*
-.silhouette {
-  position: absolute;
-  /* bottom: 0; */
-  /* height: 85vh; */
-  /*width: auto;
-  opacity: 0.85;
-} */
-
-/* .sil-left  {
-    left: 2%;
-    color: var(--primary);
-} */
-/* .sil-right { right: -3%; color: var(--accent); transform: scaleX(-1); } */

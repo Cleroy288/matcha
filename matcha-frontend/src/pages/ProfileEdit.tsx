@@ -63,6 +63,9 @@ export default function ProfileEdit() {
       <Topbar />
       <div className="ProfileEdit">
         <h1>Mon Profil</h1>
+        <div className="fame-rating">
+        ⭐ Popularité : <strong>{profile.fame_rating ?? 0} / 10</strong>
+        </div>
 
         <div className="ProfileEdit-sections">
           <ProfileInfoForm

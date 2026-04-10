@@ -1,5 +1,9 @@
 
 .theme-sunset {
+  --color1: #BEF264;
+  --color2: #FF5C8A;
+  --color3: #1a1a1a;
+  --color4: ;
   --bg-color: #FDF6E3;
   --primary: #BEF264;
   --accent: #BEF264;
@@ -22,6 +26,10 @@
 }
 
 .theme-ocean {
+  --color1: #00C9FF;
+  --color2:#00F5D4 ;
+  --color3: #1e3a5f;
+  --color4: ;
   --bg-color: #0A0F1E;
   --primary: #00C9FF;
   --accent: #00F5D4;
@@ -44,6 +52,10 @@
 }
 
 .theme-emerald {
+  --color1: #C84B2F;
+  --color2: #E8A87C;
+  --color3: #2C1A0E;
+  --color4: ;
   --bg-color: #FAF4EC;
   --primary: #C84B2F;
   --accent: #E8A87C;
@@ -66,6 +78,10 @@
 }
 
 .theme-night {
+  --color1: #9717FF;
+  --color2: #00F5D4;
+  --color3: #3d2a6e;
+  --color4: #BEF264;
   --bg-color: #0E0A1A;
   --primary: #9717FF;
   --accent: #00F5D4;
