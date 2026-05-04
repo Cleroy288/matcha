@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     biography TEXT,
     birth_date DATE,
 
-    fame_rating INTEGER DEFAULT 0,
+    fame_rating NUMERIC(4,1) DEFAULT 0,
 
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
@@ -100,3 +100,46 @@ CREATE TABLE IF NOT EXISTS notifications (
     is_read     BOOLEAN DEFAULT FALSE,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE OR REPLACE FUNCTION recalculate_fame_ratings()
+RETURNS VOID AS $$
+DECLARE
+    max_score NUMERIC;
+BEGIN
+    WITH scored AS (
+        SELECT
+            u.id AS user_id,
+            GREATEST(
+                (COUNT(DISTINCT l.id) * 3) +
+                (COUNT(DISTINCT pv.id) * 1) -
+                (COUNT(DISTINCT r.id) * 5),
+            0) AS total
+        FROM users u
+        LEFT JOIN likes l         ON l.liked_id    = u.id
+        LEFT JOIN profile_views pv ON pv.viewed_id  = u.id
+        LEFT JOIN reports r        ON r.reported_id = u.id
+        GROUP BY u.id
+    )
+    SELECT COALESCE(MAX(total), 1) INTO max_score FROM scored;
+
+    UPDATE profiles p
+    SET fame_rating = ROUND(
+        (s.total::NUMERIC / max_score) * 10, 1
+    )
+    FROM (
+        SELECT
+            u.id AS user_id,
+            GREATEST(
+                (COUNT(DISTINCT l.id) * 3) +
+                (COUNT(DISTINCT pv.id) * 1) -
+                (COUNT(DISTINCT r.id) * 5),
+            0) AS total
+        FROM users u
+        LEFT JOIN likes l          ON l.liked_id    = u.id
+        LEFT JOIN profile_views pv ON pv.viewed_id  = u.id
+        LEFT JOIN reports r        ON r.reported_id = u.id
+        GROUP BY u.id
+    ) s
+    WHERE p.user_id = s.user_id;
+END;
+$$ LANGUAGE plpgsql;

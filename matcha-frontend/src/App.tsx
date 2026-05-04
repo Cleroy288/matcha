@@ -12,10 +12,13 @@ import Notifications from './pages/Notifications'
 
 
 import DevTools from './pages/DevTools'
+import { ThemeProvider } from './context/ThemeContext'
 
 
 export default function App() {
   return (
+    <ThemeProvider>
+
     <AuthProvider>
         <Router>
         <Routes>
@@ -36,5 +39,6 @@ export default function App() {
         </Routes>
         </Router>
     </AuthProvider>
+    </ThemeProvider>
   )
 }

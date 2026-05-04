@@ -1,46 +1,9 @@
-import { useEffect, useState } from "react"
-import { useSearchParams, useNavigate, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Topbar from "../components/Topbar.tsx"
-import { API_ROUTES } from "../config/api.ts"
+import { useVerifyEmail } from "../hooks/useVerifyEmail.ts"
 
 export default function VerifyEmail() {
-  const [searchParams] = useSearchParams()
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
-  const [message, setMessage] = useState("Vérification en cours...")
-  const navigate = useNavigate()
-  
-
-  useEffect(() => {
-    const verify = async () => {
-    const token = searchParams.get("token")
-
-    if (!token) {
-      setStatus("error")
-      setMessage("Token de vérification manquant.")
-      return
-    }
-
-    fetch(`${API_ROUTES.verifyEmail}?token=${token}`)
-      .then(async (res) => {
-        const data = await res.json()
-        if (res.ok) {
-          setStatus("success")
-          setMessage(data.message)
-          // On redirige vers le login après 3 secondes pour qu'il ait le temps de lire
-          setTimeout(() => navigate("/login"), 3000)
-        } else {
-          setStatus("error")
-          setMessage(data.error)
-        }
-      })
-      .catch(() => {
-        setStatus("error")
-        setMessage("Impossible de contacter le serveur.")
-      })
-      }
-
-    verify()
-  }, [searchParams, navigate])
+    const {status, message} = useVerifyEmail()
 
   return (
     <div className="app-container">

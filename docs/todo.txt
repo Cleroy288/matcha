@@ -48,8 +48,8 @@ Sync : 1 appel / semaine — 2 semaines par sprint
 - [ok] Table reports : signaler un faux compte
 - [ok] Table notifications : temps reel via WebSocket
       (like, visite, message, match, unlike)
-- [ ] Front : indicateur notifs non lues (toutes pages)
-- [ ] Front : page "qui m'a like" + "qui a vu mon profil"
+- [ok] Front : indicateur notifs non lues (toutes pages)
+- [ok] Front : page "qui m'a like" + "qui a vu mon profil"
 
 [Charles] NAVIGATION + RECHERCHE
 - [ ] Algo suggestions (preferences sexuelles, geo, tags, popularite)
@@ -66,8 +66,10 @@ Sync : 1 appel / semaine — 2 semaines par sprint
 ══════════════════════════════════════════════════════════════
 
 [Pierre] SCORE + SEED + SECURITE
-- [ ] Systeme fame_rating (calcul auto sur evenements)
-- [ ] Script seed : 500 profils realistes
+- [commencé] Systeme fame_rating (calcul auto sur evenements) :
+    score_brut = (likes × 3) + (premiers_messages × 2) + (vues × 1) - (reports × 5)
+    fame_rating = ROUND((score_brut / max_score_brut) × 10, 1)
+- [commencé] Script seed : 500 profils realistes
 - [ ] Audit securite (XSS, SQL injection, CSRF, uploads)
 - [ ] Tests back
 

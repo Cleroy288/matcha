@@ -1,5 +1,5 @@
 input {
-  background-color: var(--matcha-light);
+  background-color: var(--bg-color);
   padding: 15px;
   border: var(--border-width) solid var(--black);
   font-family: var(--font-body);
@@ -8,15 +8,15 @@ input {
   outline: none;
   box-shadow: 2px 2px 0px var(--black);
   transition: all 0.2s ease;
-  box-sizing: border-box
+  box-sizing: border-box;
+  color: var(--input-color);
 }
 
 input:focus {
   background-color: var(--bg-color);
-  transform: translate(-2px, -2px);
+  /* transform: translate(-2px, -2px); */
   box-shadow: 4px 4px 0px var(--black);
-  color: var(--purple);
   outline: none;
-  padding: 10px;
-  border-color: var(--purple);
+  /* padding: 10px; */
+  border-color: var(--h1-color);
 }

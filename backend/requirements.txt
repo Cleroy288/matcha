@@ -7,3 +7,5 @@ python-dotenv==1.0.1
 eventlet==0.36.1
 Pillow==10.4.0
 PyJWT
+Faker
+psycopg2-binary

@@ -42,7 +42,7 @@ class TestLikeRoutes:
     def test_like_success(self, auth_client, mocker):
         mocker.patch("controllers.like_controller.like_user",
                      return_value={"liked": True, "match": False})
-
+        mocker.patch("controllers.like_controller.recalculate_fame")
         res = auth_client.post("/like/2")
         data = json.loads(res.data)
 
@@ -53,7 +53,7 @@ class TestLikeRoutes:
     def test_like_match(self, auth_client, mocker):
         mocker.patch("controllers.like_controller.like_user",
                      return_value={"liked": True, "match": True})
-
+        mocker.patch("controllers.like_controller.recalculate_fame")
         res = auth_client.post("/like/2")
         data = json.loads(res.data)
 
@@ -63,7 +63,7 @@ class TestLikeRoutes:
     def test_like_yourself(self, auth_client, mocker):
         mocker.patch("controllers.like_controller.like_user",
                      side_effect=Exception("You cannot like yourself"))
-
+        mocker.patch("controllers.like_controller.recalculate_fame")
         res = auth_client.post("/like/1")  # user_id = 1 = soi-même
         data = json.loads(res.data)
 
@@ -73,7 +73,7 @@ class TestLikeRoutes:
     def test_like_already(self, auth_client, mocker):
         mocker.patch("controllers.like_controller.like_user",
                      side_effect=Exception("Already liked"))
-
+        mocker.patch("controllers.like_controller.recalculate_fame")
         res = auth_client.post("/like/2")
 
         assert res.status_code == 400
@@ -81,7 +81,7 @@ class TestLikeRoutes:
     def test_unlike_success(self, auth_client, mocker):
         mocker.patch("controllers.like_controller.unlike_user",
                      return_value={"unliked": True})
-
+        mocker.patch("controllers.like_controller.recalculate_fame")
         res = auth_client.delete("/like/2")
         data = json.loads(res.data)
 
@@ -92,7 +92,6 @@ class TestLikeRoutes:
         mocker.patch("controllers.like_controller.get_received_likes", return_value=[
             {"id": 2, "username": "userB", "first_name": "B", "last_name": "B", "liked_at": "2026-01-01"}
         ])
-
         res = auth_client.get("/likes/received")
         data = json.loads(res.data)
 
@@ -113,7 +112,7 @@ class TestLikeRoutes:
 class TestProfileViewRoutes:
     def test_visit_success(self, auth_client, mocker):
         mocker.patch("controllers.profile_view_controller.view_profile")
-
+        mocker.patch("controllers.profile_view_controller.recalculate_fame")
         res = auth_client.post("/visit/2")
         data = json.loads(res.data)
 
@@ -171,6 +170,7 @@ class TestBlockRoutes:
 class TestReportRoutes:
     def test_report_success(self, auth_client, mocker):
         mocker.patch("controllers.report_controller.report_user")
+        mocker.patch("controllers.report_controller.recalculate_fame")
 
         res = auth_client.post("/report/2", json={"reason": "fake account"})
         data = json.loads(res.data)
@@ -181,7 +181,7 @@ class TestReportRoutes:
     def test_report_yourself(self, auth_client, mocker):
         mocker.patch("controllers.report_controller.report_user",
                      side_effect=Exception("You cannot report yourself"))
-
+        mocker.patch("controllers.report_controller.recalculate_fame")
         res = auth_client.post(
             "/report/1",
             json={}  # ← force le cookie
@@ -192,7 +192,7 @@ class TestReportRoutes:
     def test_report_no_reason(self, auth_client, mocker):
         """La raison est optionnelle — doit quand même fonctionner."""
         mocker.patch("controllers.report_controller.report_user")
-
+        mocker.patch("controllers.report_controller.recalculate_fame")
         res = auth_client.post("/report/2", json={})
 
         assert res.status_code == 200
