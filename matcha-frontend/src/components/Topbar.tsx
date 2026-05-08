@@ -14,6 +14,7 @@ export default function Topbar() {
         {isAuthenticated ? (
           <>
             <span>Welcome, {user?.username}</span>
+            <Link to="/home" className="nav-item">Home</Link>
             <Link to="/profile/edit" className="nav-item">Profil</Link>
             <Link to="/notification" className={`notif-btn ${unreadCount > 0 ? "notif-btn--active" : ""}`}>
                 Notifs
