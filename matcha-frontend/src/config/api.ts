@@ -15,6 +15,7 @@ export const API_ROUTES = {
     visit:   `${API_BASE_URL}/visit`,
     block:   `${API_BASE_URL}/block`,
     me:                  `${API_BASE_URL}/me`,
+    profile:              `${API_BASE_URL}/profile`,
 }
 
 export const fetchWithCredentials = (url: string, options: RequestInit = {}) => {

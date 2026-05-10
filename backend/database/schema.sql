@@ -120,7 +120,7 @@ BEGIN
         LEFT JOIN reports r        ON r.reported_id = u.id
         GROUP BY u.id
     )
-    SELECT COALESCE(MAX(total), 1) INTO max_score FROM scored;
+    SELECT COALESCE(NULLIF(MAX(total), 0), 1) INTO max_score FROM scored;
 
     UPDATE profiles p
     SET fame_rating = ROUND(

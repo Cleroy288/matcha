@@ -16,6 +16,13 @@ def get_profile(payload):
     except Exception as e:
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 
+@jwt_required
+def get_public_profile(payload, user_id):
+    from services.profile_service import get_public_profile_data
+    data = get_public_profile_data(user_id)
+    if not data:
+        return jsonify({"error": "Not found"}), HTTP_BAD_REQUEST
+    return jsonify(data), HTTP_OK
 
 @jwt_required
 def update_profile(payload):

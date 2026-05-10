@@ -112,3 +112,11 @@ form {
 form.brutal-card button {
   margin-top: auto;
 }
+
+.feed-content {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}

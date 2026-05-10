@@ -13,6 +13,29 @@ from utils.profile_validator import (
 from services.constants import MIN_TAGS_FOR_COMPLETE, MIN_PHOTOS_FOR_COMPLETE
 from services.errors import ERR_NO_FIELDS_TO_UPDATE
 
+def get_public_profile_data(user_id):
+    """Retourne les données publiques d'un profil pour la card Feed."""
+    user = get_user_by_id(user_id)
+    profile = get_profile_by_user_id(user_id)
+    if not user or not profile:
+        return None
+
+    photos = get_photos_by_user(user_id)
+    profile_photo = next((p["file_path"] for p in photos if p["is_profile"]), None)
+
+    birth_date = profile.get("birth_date")
+
+    return {
+        "user_id": user_id,
+        "first_name": user["first_name"],
+        "birth_date": str(birth_date) if birth_date else None,
+        "city": profile.get("city"),
+        "profile_photo_url": (
+            f"http://localhost:5000/uploads/{profile_photo}"
+            if profile_photo else None
+        ),
+    }
+
 
 def get_or_create_profile(user_id):
     profile = get_profile_by_user_id(user_id)

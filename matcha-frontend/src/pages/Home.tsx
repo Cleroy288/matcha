@@ -1,58 +1,93 @@
-import Topbar from "../components/Topbar.tsx"
-import { useAuth } from "../context/AuthContext.tsx"
+import { useState, useEffect } from "react";
+import { ProfileStack } from "../components/ProfileCard";
+import type { ProfileCardData } from "../components/ProfileCard";
+import { API_ROUTES } from "../config/api";
+import  { likeUser } from "../services/social"
+import Topbar from "../components/Topbar"
+import { useAuth } from "../context/AuthContext"
+import StatusMessage from "../components/StatusMessage"
 
-export default function Home() {
-  const { user } = useAuth()
+export default function Feed() {
+    const [profiles, setProfiles] = useState<ProfileCardData[]>([]);
+    const [error, setError] = useState<string | null>(null)
+    // const [success, setSuccess] = useState<string | null>(null)
+    
+    // exemple: à modifer avec l'algo de suggestion
+    useEffect(() => {
+        const fetchProfiles = async () => {
+            const results: ProfileCardData[] = [];
 
-  // Mock de données pour visualiser la grille
-  const tempProfiles = [
-    { id: 1, name: "Alice", age: 24, location: "Paris", tags: ["#art", "#vegan"] },
-    { id: 2, name: "Bob", age: 28, location: "Lyon", tags: ["#geek", "#coffee"] },
-    { id: 3, name: "Charlie", age: 22, location: "Marseille", tags: ["#sport"] },
-  ]
+            const ids = Array.from({ length: 10 }, (_, i) => i + 1);
 
-  return (
-    <div className="app-container">
-      <Topbar />
-      <div style={{ paddingTop: "80px" }}>
-        <header style={{ marginBottom: "30px" }}>
-          <h1>Bienvenue, {user?.username} ! ✨</h1>
-          <p>Voici des profils qui pourraient vous plaire :</p>
-        </header>
+            await Promise.allSettled(
+                ids.map(async (id) => {
+          try {
+            const res = await fetch(`${API_ROUTES.profile}/${id}`, {
+                method: "GET",
+              credentials: "include",
+            });
+            if (!res.ok) return;
+            console.log("ok")
+            const u = await res.json();
 
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", 
-          gap: "20px" 
-        }}>
-          {tempProfiles.map(profile => (
-            <div key={profile.id} className="brutal-card" style={{ background: "white" }}>
-              <div style={{ 
-                width: "100%", 
-                height: "200px", 
-                background: "#ddd", 
-                borderBottom: "3px solid black",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-                [Photo de {profile.name}]
-              </div>
-              <div style={{ padding: "15px" }}>
-                <h3>{profile.name}, {profile.age}</h3>
-                <p style={{ fontSize: "0.9rem" }}>📍 {profile.location}</p>
-                <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", marginTop: "10px" }}>
-                  {profile.tags.map(tag => (
-                    <span key={tag} style={{ background: "var(--accent)", padding: "2px 5px", border: "1px solid black", fontSize: "0.8rem" }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+            const age = u.birth_date
+              ? Math.floor(
+                  (Date.now() - new Date(u.birth_date).getTime()) /
+                    (1000 * 60 * 60 * 24 * 365.25)
+                )
+              : null;
+
+            if (!age) return; // profil incomplet, on skip
+
+            results.push({
+              userId: id,
+              name: u.first_name ?? `User ${id}`,
+              age,
+              distance: u.distance_km ? Math.round(u.distance_km) : 0,
+              photoUrl: u.profile_photo_url ?? undefined,
+            });
+          } catch {
+            // skip
+          }
+        })
+      );
+
+      results.sort((a, b) => a.userId - b.userId);
+      setProfiles(results);
+    };
+    
+    fetchProfiles();
+}, []);
+
+    const { isAuthenticated } = useAuth()
+
+    if (!isAuthenticated) {
+        return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
+    }
+
+    const handleLike = async (userId: number) => {
+        setError(null);
+        try { 
+            await likeUser(userId); 
+        } catch {
+                setError("Personne déjà like")
+        }
+    };
+
+    const handleDislike = () => {setError(null);};
+
+
+    return (
+        <div className="app-container">
+        <Topbar></Topbar>
+        <div className="feed-content">
+            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
+            <ProfileStack
+                profiles={profiles}
+                onLike={handleLike}
+                onDislike={handleDislike}
+            />
         </div>
-      </div>
-    </div>
-  )
+        </div>
+    );
 }
