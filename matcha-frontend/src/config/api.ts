@@ -1,5 +1,5 @@
 // frontend/src/config/api.ts  ← fichier dédié
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000"
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost"
 
 export const API_ROUTES = {
     login:               `${API_BASE_URL}/login`,
@@ -19,12 +19,15 @@ export const API_ROUTES = {
 }
 
 export const fetchWithCredentials = (url: string, options: RequestInit = {}) => {
+    const headers = new Headers(options.headers)
+
+    if (!(options.body instanceof FormData) && !headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/json")
+    }
+
     return fetch(url, {
         ...options,
         credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            ...options.headers,
-        }
+        headers
     })
 }

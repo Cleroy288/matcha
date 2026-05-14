@@ -1,18 +1,18 @@
 import psycopg2.extras
 from database.db import get_connection
 
-def create_user(email, username, password_hash, first_name, last_name, token):
+def create_user(email, username, password_hash, first_name, last_name, token, email_verified=False):
 
     conn = get_connection()
     cur = conn.cursor()
 
     query = """
-    INSERT INTO users (email, username, password_hash, first_name, last_name, verification_token)
-    VALUES (%s, %s, %s, %s, %s, %s)
+    INSERT INTO users (email, username, password_hash, first_name, last_name, verification_token, email_verified)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
     RETURNING id
     """
 
-    cur.execute(query, (email, username, password_hash, first_name, last_name, token))
+    cur.execute(query, (email, username, password_hash, first_name, last_name, token, email_verified))
 
     user_id = cur.fetchone()[0]
 

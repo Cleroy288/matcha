@@ -1,5 +1,7 @@
-export const API_URL = "http://localhost:5000"
-export const UPLOAD_BASE = "http://localhost:80/uploads/"
+import { API_BASE_URL } from "../config/api"
+
+export const API_URL = API_BASE_URL
+export const UPLOAD_BASE = `${API_BASE_URL}/uploads/`
 
 export const MAX_PHOTOS = 5
 export const MAX_TAGS = 10

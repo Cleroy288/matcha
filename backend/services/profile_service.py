@@ -1,3 +1,4 @@
+import os
 from models.profile_model import (
     create_profile, get_profile_by_user_id, update_profile,
     update_location, set_profile_complete
@@ -12,6 +13,8 @@ from utils.profile_validator import (
 )
 from services.constants import MIN_TAGS_FOR_COMPLETE, MIN_PHOTOS_FOR_COMPLETE
 from services.errors import ERR_NO_FIELDS_TO_UPDATE
+
+UPLOAD_BASE_URL = os.getenv("UPLOAD_BASE_URL", "http://localhost/uploads")
 
 def get_public_profile_data(user_id):
     """Retourne les données publiques d'un profil pour la card Feed."""
@@ -31,7 +34,7 @@ def get_public_profile_data(user_id):
         "birth_date": str(birth_date) if birth_date else None,
         "city": profile.get("city"),
         "profile_photo_url": (
-            f"http://localhost:5000/uploads/{profile_photo}"
+            f"{UPLOAD_BASE_URL.rstrip('/')}/{profile_photo}"
             if profile_photo else None
         ),
     }

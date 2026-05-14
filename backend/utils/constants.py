@@ -23,6 +23,7 @@ class AuthMessages:
     USERNAME_NOT_VALID    = "Nom d'utilisateur limité à 32 caractères"
 
     REGISTER_SUCCES       = "Enregistré avec succès. Tu dois maintenant valider ton email pour te connecter"
+    REGISTER_SUCCESS_NO_EMAIL = "Enregistré avec succès. Tu peux maintenant te connecter."
     LOGIN_SUCCESS         = "Connecté avec succès."
 
 class LikeMessage:

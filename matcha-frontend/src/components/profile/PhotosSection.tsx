@@ -1,6 +1,6 @@
 import { useRef, type ChangeEvent } from "react"
 import PhotoSlot from "../PhotoSlot"
-import { uploadPhoto, deletePhoto, setProfilePhoto } from "../../services/profile"
+import { uploadPhoto, deletePhoto } from "../../services/profile"
 import type { Photo } from "../../types/profile"
 import { MAX_PHOTOS, UPLOAD_BASE, ACCEPTED_IMAGE_TYPES } from "../../constants/profile"
 import "./PhotosSection.css"
@@ -28,15 +28,6 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
       onUpdate(photos.filter((p) => p.id !== photoId))
     } catch (e) {
       alert(e instanceof Error ? e.message : "Delete error")
-    }
-  }
-
-  async function handleSetProfile(photoId: number) {
-    try {
-      await setProfilePhoto(photoId)
-      onUpdate(photos.map((p) => ({ ...p, is_profile: p.id === photoId })))
-    } catch (e) {
-      alert(e instanceof Error ? e.message : "Error setting profile photo")
     }
   }
 
@@ -69,10 +60,8 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
           <PhotoSlot
             key={photo ? photo.id : `empty-${index}`}
             imageUrl={photo ? `${UPLOAD_BASE}${photo.file_path}` : undefined}
-            isProfile={photo?.is_profile}
             onUpload={!photo && photos.length < MAX_PHOTOS ? triggerUpload : undefined}
             onDelete={photo ? () => handleDelete(photo.id) : undefined}
-            onSetProfile={photo ? () => handleSetProfile(photo.id) : undefined}
           />
         ))}
       </div>

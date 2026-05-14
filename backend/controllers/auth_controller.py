@@ -1,5 +1,5 @@
 from flask import request, jsonify, make_response
-from services.auth_service import register_user, login_user, reset_password_user, verify_reset_password_user, verify_email_user
+from services.auth_service import register_user, login_user, reset_password_user, verify_reset_password_user, verify_email_user, email_verification_disabled
 from utils.jwt_required import jwt_required
 from models.user_model import get_user_by_id
 from utils.constants import AuthMessages
@@ -18,7 +18,8 @@ def register():
 			data["last_name"]
 		)
 
-		return jsonify({"message": AuthMessages.REGISTER_SUCCES}), HTTP_CREATED
+		message = AuthMessages.REGISTER_SUCCESS_NO_EMAIL if email_verification_disabled() else AuthMessages.REGISTER_SUCCES
+		return jsonify({"message": message}), HTTP_CREATED
 
 	except Exception as e:
 		return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
