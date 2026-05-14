@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useCallback, useContext, useState, useEffect, type ReactNode } from "react"
 import { API_ROUTES, fetchWithCredentials } from "../config/api"
 import { useSocket } from "../hooks/useSocket"
 /* eslint-disable react-refresh/only-export-components */
@@ -26,11 +26,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [unreadCount, setUnreadCount] = useState(0)
 
-  useSocket((notif) => {
+  const handleNotification = useCallback((notif: { type: string; data: unknown }) => {
     if (notif.type === "like" || notif.type === "match" || notif.type === "visit") {
         setUnreadCount(prev => prev + 1)  // ← incrémente le badge
     }
-  })
+  }, [])
+
+  useSocket(handleNotification, user !== null)
   const logout = async () => {
     await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
     setUser(null)

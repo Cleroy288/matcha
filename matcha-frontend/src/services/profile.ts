@@ -19,6 +19,11 @@ export async function fetchProfile(): Promise<Profile> {
   return handleResponse<Profile>(res)
 }
 
+export async function fetchUserPhotos(): Promise<Photo[]> {
+  const profile = await fetchProfile()
+  return profile.photos
+}
+
 export async function updateProfile(data: Record<string, unknown>): Promise<Profile> {
   const res = await fetchWithCredentials(`${API_URL}/profile`, {
     method: "PUT",
@@ -68,8 +73,7 @@ export async function uploadPhoto(file: File): Promise<Photo> {
   formData.append("photo", file)
   const res = await fetchWithCredentials(`${API_URL}/profile/photos`, {
     method: "POST",
-    headers: {},          // ← important : pas de Content-Type pour FormData
-    body: formData        // le navigateur le set automatiquement avec le boundary
+    body: formData
   })
   return handleResponse<Photo>(res)
 }

@@ -1,10 +1,15 @@
 import bcrypt
+import os
 import secrets
 from models.user_model import create_user, get_user_by_email, get_user_by_username, set_token_reset_password_user_email, get_user_by_verification_token, set_new_password, confirm_user_email
 from utils.auth_validator import validate_password, validate_email, validate_username
 from utils.constants import AuthMessages
 from services.jwt_service import generate_token
 from services.email_service import send_verification_email, send_reset_password_email
+
+
+def email_verification_disabled():
+    return os.getenv("DISABLE_EMAIL_VERIFICATION", "FALSE").upper() == "TRUE"
 
 def register_user(email, username, password, first_name, last_name):
 
@@ -26,7 +31,8 @@ def register_user(email, username, password, first_name, last_name):
     if not valid:
         raise Exception(error)
     
-    verification_token = secrets.token_urlsafe(32)
+    skip_email_verification = email_verification_disabled()
+    verification_token = None if skip_email_verification else secrets.token_urlsafe(32)
 
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
@@ -36,10 +42,12 @@ def register_user(email, username, password, first_name, last_name):
         hashed.decode(),
         first_name,
         last_name,
-        verification_token
+        verification_token,
+        email_verified=skip_email_verification
     )
 
-    send_verification_email(email, verification_token)
+    if not skip_email_verification:
+        send_verification_email(email, verification_token)
 
     return user_id
 

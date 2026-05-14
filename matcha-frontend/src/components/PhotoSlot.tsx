@@ -2,13 +2,11 @@ import "./PhotoSlot.css"
 
 interface PhotoSlotProps {
   imageUrl?: string
-  isProfile?: boolean
   onUpload?: () => void
   onDelete?: () => void
-  onSetProfile?: () => void
 }
 
-export default function PhotoSlot({ imageUrl, isProfile, onUpload, onDelete, onSetProfile }: PhotoSlotProps) {
+export default function PhotoSlot({ imageUrl, onUpload, onDelete }: PhotoSlotProps) {
   if (!imageUrl) {
     return (
       <div className="PhotoSlot PhotoSlot--empty" onClick={onUpload}>
@@ -18,14 +16,9 @@ export default function PhotoSlot({ imageUrl, isProfile, onUpload, onDelete, onS
   }
 
   return (
-    <div className={`PhotoSlot ${isProfile ? "PhotoSlot--profile" : ""}`}>
+    <div className="PhotoSlot">
       <img src={imageUrl} alt="Photo" className="PhotoSlot-img" />
       <div className="PhotoSlot-actions">
-        {onSetProfile && !isProfile && (
-          <button className="PhotoSlot-btn" onClick={onSetProfile} type="button">
-            ★
-          </button>
-        )}
         {onDelete && (
           <button className="PhotoSlot-btn PhotoSlot-btn--delete" onClick={onDelete} type="button">
             X
