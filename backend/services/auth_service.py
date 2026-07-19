@@ -1,17 +1,30 @@
-import bcrypt
 import os
 import secrets
-from models.user_model import create_user, get_user_by_email, get_user_by_username, set_token_reset_password_user_email, get_user_by_verification_token, set_new_password, confirm_user_email
-from utils.auth_validator import validate_password, validate_email, validate_username
-from utils.constants import AuthMessages
+
+import bcrypt
+
+from models.user_model import (
+    confirm_user_email,
+    create_user,
+    get_user_by_email,
+    get_user_by_username,
+    get_user_by_verification_token,
+    set_new_password,
+    set_token_reset_password_user_email,
+)
+from services.email_service import send_reset_password_email, send_verification_email
 from services.jwt_service import generate_token
-from services.email_service import send_verification_email, send_reset_password_email
+from utils.auth_validator import validate_email, validate_password, validate_username
+from utils.constants import AuthMessages
 
 
 def email_verification_disabled():
     return os.getenv("DISABLE_EMAIL_VERIFICATION", "FALSE").upper() == "TRUE"
 
-def register_user(email, username, password, first_name, last_name):
+def register_user(email, username, password, confirm_password, first_name, last_name):
+
+    if password != confirm_password:
+        raise Exception(AuthMessages.PASSWORDS_DO_NOT_MATCH)
 
     if validate_email(email) is False:
         raise Exception(AuthMessages.INVALID_EMAIL_FORMAT)

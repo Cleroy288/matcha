@@ -1,14 +1,26 @@
-from models.like_model import add_like, remove_like, is_match, get_likes_received
-from models.block_model import is_blocked
-from models.notification_model import create_notification
-from utils.constants import LikeMessage
-from services.socket_service import notify_user
 from extensions import socketio
+from models.block_model import is_blocked
+from models.like_model import add_like, get_likes_received, is_match, remove_like
+from models.notification_model import create_notification
+from models.photo_model import get_profile_photo
+from models.profile_model import get_profile_by_user_id
+from services.errors import ERR_PROFILE_INCOMPLETE, ERR_PROFILE_PHOTO_REQUIRED
+from services.socket_service import notify_user
+from utils.constants import LikeMessage
+
 
 def like_user(liker_id, liked_id):
     if liker_id == liked_id:
         raise Exception(LikeMessage.LIKE_YOURSELF)
-    
+
+    profile = get_profile_by_user_id(liker_id)
+    if not profile or not profile.get("profile_complete"):
+        raise Exception(ERR_PROFILE_INCOMPLETE)
+
+    # sujet IV.5 : sans photo de profil, impossible de liker
+    if not get_profile_photo(liker_id):
+        raise Exception(ERR_PROFILE_PHOTO_REQUIRED)
+
     if is_blocked(liker_id, liked_id):
         raise Exception(LikeMessage.LIKE_IMPOSSIBLE)
     liked = add_like(liker_id, liked_id)

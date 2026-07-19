@@ -1,4 +1,7 @@
+import psycopg2.extras
+
 from database.db import get_connection
+
 
 def add_like(liker_id, liked_id):
     conn = get_connection()
@@ -29,6 +32,21 @@ def remove_like(liker_id, liked_id):
     cur.close()
     conn.close()
 
+def has_liked(liker_id, liked_id):
+    """Vrai si liker_id a déjà liké liked_id."""
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT EXISTS (SELECT 1 FROM likes WHERE liker_id = %s AND liked_id = %s)",
+        (liker_id, liked_id)
+    )
+    result = cur.fetchone()[0]
+
+    cur.close()
+    conn.close()
+    return result
+
 def is_match(user1_id, user2_id):
     conn = get_connection()
     cur  = conn.cursor()
@@ -48,17 +66,18 @@ def is_match(user1_id, user2_id):
 
 def get_likes_received(user_id):
     conn = get_connection()
-    cur = conn.cursor()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cur.execute("""
-        SELECT u.id u.username, u.first_name, u.last_name, l.created_at
+        SELECT u.id, u.username, u.first_name, u.last_name,
+               l.created_at AS liked_at
         FROM likes l
-        JOIN users u ON u.id= l.liker_id
+        JOIN users u ON u.id = l.liker_id
         WHERE l.liked_id = %s
         ORDER BY l.created_at DESC
-    """, (user_id))
+    """, (user_id,))
 
     rows = cur.fetchall()
     cur.close()
     conn.close()
-    return [dict(zip(["id", "username", "first_name", "last_name", "liked_at"], r)) for r in rows]
+    return [dict(row) for row in rows]

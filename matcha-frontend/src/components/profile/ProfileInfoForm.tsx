@@ -14,6 +14,9 @@ interface ProfileInfoFormProps {
 }
 
 export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormProps) {
+  const [firstName, setFirstName] = useState(profile.first_name)
+  const [lastName, setLastName] = useState(profile.last_name)
+  const [email, setEmail] = useState(profile.email)
   const [gender, setGender] = useState<Gender | "">(profile.gender || "")
   const [preference, setPreference] = useState<SexualPreference | "">(profile.sexual_preference || "")
   const [biography, setBiography] = useState(profile.biography || "")
@@ -23,13 +26,22 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
 
   async function handleSave() {
     setError("")
+    if (!gender || !preference || !biography.trim() || !birthDate) {
+      setError("Gender, preference, biography, and birth date are required")
+      return
+    }
+
     setSaving(true)
     try {
-      const data: Record<string, unknown> = {}
-      if (gender) data.gender = gender
-      if (preference) data.sexual_preference = preference
-      if (biography.trim()) data.biography = biography.trim()
-      if (birthDate) data.birth_date = birthDate
+      const data: Record<string, unknown> = {
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim(),
+        gender,
+        sexual_preference: preference,
+        biography: biography.trim(),
+        birth_date: birthDate,
+      }
       const updated = await updateProfile(data)
       onUpdate(updated)
     } catch (e) {
@@ -42,6 +54,34 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
   return (
     <div className="ProfileInfoForm">
       <h3>Informations</h3>
+
+      <label>Prénom</label>
+      <Input
+        value={firstName}
+        maxLength={100}
+        required
+        autoComplete="given-name"
+        onChange={(e) => setFirstName(e.target.value)}
+      />
+
+      <label>Nom</label>
+      <Input
+        value={lastName}
+        maxLength={100}
+        required
+        autoComplete="family-name"
+        onChange={(e) => setLastName(e.target.value)}
+      />
+
+      <label>Email</label>
+      <Input
+        type="email"
+        value={email}
+        maxLength={254}
+        required
+        autoComplete="email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
 
       <label>Genre</label>
       <Select value={gender} onChange={(e) => setGender(e.target.value as Gender)}>

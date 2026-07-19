@@ -1,8 +1,10 @@
 from flask import jsonify, request
-from utils.jwt_required import jwt_required
-from utils.fame import recalculate_fame
+
+from controllers.constants import HTTP_BAD_REQUEST, HTTP_OK
 from services.report_service import report_user
-from controllers.constants import HTTP_OK, HTTP_BAD_REQUEST
+from utils.fame import recalculate_fame
+from utils.jwt_required import jwt_required
+
 
 @jwt_required
 def report(payload, user_id):

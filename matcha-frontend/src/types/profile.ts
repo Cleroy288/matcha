@@ -13,6 +13,33 @@ export interface Photo {
   sort_order: number
 }
 
+export interface PublicPhoto extends Photo {
+  url: string
+}
+
+export interface PublicProfile {
+  user_id: number
+  username: string
+  first_name: string | null
+  last_name: string | null
+  gender: string | null
+  sexual_preference: string | null
+  biography: string | null
+  birth_date: string | null
+  age: number | null
+  city: string | null
+  fame_rating: number
+  is_online: boolean
+  last_online: string | null
+  distance_km: number | null
+  tags: Tag[]
+  photos: PublicPhoto[]
+  profile_photo_url: string | null
+  liked_by_me: boolean
+  likes_me: boolean
+  connected: boolean
+}
+
 export interface Profile {
   id: number
   user_id: number

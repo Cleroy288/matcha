@@ -1,5 +1,6 @@
 from database.db import get_connection
 
+
 def add_block(blocker_id, blocked_id):
     conn = get_connection()
     cur = conn.cursor()

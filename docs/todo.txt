@@ -52,14 +52,14 @@ Sync : 1 appel / semaine — 2 semaines par sprint
 - [ok] Front : page "qui m'a like" + "qui a vu mon profil"
 
 [Charles] NAVIGATION + RECHERCHE
-- [ ] Algo suggestions (preferences sexuelles, geo, tags, popularite)
-- [ ] Page navigation : liste profils suggeres
-- [ ] Tri (age, localisation, popularite, tags communs)
-- [ ] Filtres (memes criteres)
-- [ ] Recherche avancee (tranche age, popularite, localisation, tags)
-- [ ] Consultation de profil (toutes infos sauf email/mdp)
-- [ ] Boutons like / unlike / block / report sur profil
-- [ ] Statut en ligne / derniere connexion
+- [ok] Algo suggestions (preferences sexuelles, geo, tags, popularite)
+- [ok] Page navigation : liste profils suggeres
+- [ok] Tri (age, localisation, popularite, tags communs)
+- [ok] Filtres (memes criteres)
+- [ok] Recherche avancee (tranche age, popularite, localisation, tags)
+- [ok] Consultation de profil (toutes infos sauf email/mdp)
+- [ok] Boutons like / unlike / block / report sur profil
+- [ok] Statut en ligne / derniere connexion
 
 ══════════════════════════════════════════════════════════════
   SPRINT 3 — Communication + Polish
@@ -74,13 +74,13 @@ Sync : 1 appel / semaine — 2 semaines par sprint
 - [ ] Tests back
 
 [Charles] CHAT + RESPONSIVE
-- [ ] Table messages
-- [ ] Chat temps reel (WebSocket, delai < 10s)
-- [ ] Condition : uniquement entre users "connectes" (match)
-- [ ] Notification nouveau message (toutes pages)
-- [ ] Front : interface chat
-- [ ] Responsive final (mobile)
-- [ ] Tests front
+- [ok] Table messages
+- [ok] Chat temps reel (WebSocket, delai < 10s)
+- [ok] Condition : uniquement entre users "connectes" (match)
+- [ok] Notification nouveau message (toutes pages)
+- [ok] Front : interface chat
+- [ok] Responsive final (mobile)
+- [ok] Tests front
 
 
 

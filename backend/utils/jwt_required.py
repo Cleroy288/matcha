@@ -1,5 +1,7 @@
 from functools import wraps
-from flask import request, jsonify
+
+from flask import jsonify, request
+
 from services.jwt_service import decode_token
 from utils.errors import ERR_TOKEN_MISSING
 

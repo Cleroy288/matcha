@@ -1,4 +1,5 @@
 import psycopg2.extras
+
 from database.db import get_connection
 from models.constants import PROFILE_ALLOWED_FIELDS
 
@@ -72,6 +73,27 @@ def update_location(user_id, lat, lng, city, gps_consent):
     conn.close()
 
     return dict(profile) if profile else None
+
+
+def set_online_status(user_id, is_online):
+    """Met à jour le statut en ligne ; horodate last_online au passage hors ligne."""
+    conn = get_connection()
+    cur = conn.cursor()
+
+    if is_online:
+        cur.execute(
+            "UPDATE profiles SET is_online = TRUE WHERE user_id = %s",
+            (user_id,)
+        )
+    else:
+        cur.execute(
+            "UPDATE profiles SET is_online = FALSE, last_online = CURRENT_TIMESTAMP WHERE user_id = %s",
+            (user_id,)
+        )
+
+    conn.commit()
+    cur.close()
+    conn.close()
 
 
 def set_profile_complete(user_id, is_complete):

@@ -1,8 +1,9 @@
 import { useRef, type ChangeEvent } from "react"
 import PhotoSlot from "../PhotoSlot"
-import { uploadPhoto, deletePhoto } from "../../services/profile"
+import { deletePhoto, fetchUserPhotos, setProfilePhoto, uploadPhoto } from "../../services/profile"
 import type { Photo } from "../../types/profile"
 import { MAX_PHOTOS, UPLOAD_BASE, ACCEPTED_IMAGE_TYPES } from "../../constants/profile"
+import { splitPhotos } from "../../utils/photos"
 import "./PhotosSection.css"
 
 interface PhotosSectionProps {
@@ -25,9 +26,18 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
   async function handleDelete(photoId: number) {
     try {
       await deletePhoto(photoId)
-      onUpdate(photos.filter((p) => p.id !== photoId))
+      onUpdate(await fetchUserPhotos())
     } catch (e) {
       alert(e instanceof Error ? e.message : "Delete error")
+    }
+  }
+
+  async function handleSetPrimary(photoId: number) {
+    try {
+      await setProfilePhoto(photoId)
+      onUpdate(photos.map((photo) => ({ ...photo, is_profile: photo.id === photoId })))
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Update error")
     }
   }
 
@@ -41,7 +51,9 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
     e.target.value = ""
   }
 
-  const slots = Array.from({ length: MAX_PHOTOS }, (_, i) => photos[i] || null)
+  const { primary, standard } = splitPhotos(photos)
+  const standardSlots = Array.from({ length: MAX_PHOTOS - 1 }, (_, i) => standard[i] || null)
+  const canUpload = photos.length < MAX_PHOTOS
 
   return (
     <div className="PhotosSection">
@@ -55,16 +67,38 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
         style={{ display: "none" }}
       />
 
-      <div className="PhotosSection-grid">
-        {slots.map((photo, index) => (
-          <PhotoSlot
-            key={photo ? photo.id : `empty-${index}`}
-            imageUrl={photo ? `${UPLOAD_BASE}${photo.file_path}` : undefined}
-            onUpload={!photo && photos.length < MAX_PHOTOS ? triggerUpload : undefined}
-            onDelete={photo ? () => handleDelete(photo.id) : undefined}
-          />
-        ))}
-      </div>
+      <section className="PhotosSection-group PhotosSection-main">
+        <h4>Photo principale</h4>
+        <PhotoSlot
+          imageUrl={primary ? `${UPLOAD_BASE}${primary.file_path}` : undefined}
+          onUpload={!primary && canUpload ? triggerUpload : undefined}
+          onDelete={primary ? () => handleDelete(primary.id) : undefined}
+        />
+      </section>
+
+      <section className="PhotosSection-group PhotosSection-standard">
+        <h4>Photos supplémentaires ({standard.length}/{MAX_PHOTOS - 1})</h4>
+        <div className="PhotosSection-grid">
+          {standardSlots.map((photo, index) => (
+            <div className="PhotosSection-item" key={photo ? photo.id : `empty-${index}`}>
+              <PhotoSlot
+                imageUrl={photo ? `${UPLOAD_BASE}${photo.file_path}` : undefined}
+                onUpload={!photo && canUpload ? triggerUpload : undefined}
+                onDelete={photo ? () => handleDelete(photo.id) : undefined}
+              />
+              {photo && (
+                <button
+                  className="PhotosSection-primaryButton"
+                  type="button"
+                  onClick={() => handleSetPrimary(photo.id)}
+                >
+                  Rendre principale
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }

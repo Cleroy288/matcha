@@ -33,8 +33,8 @@ export async function updateProfile(data: Record<string, unknown>): Promise<Prof
 }
 
 export async function updateLocation(data: {
-  latitude: number
-  longitude: number
+  latitude: number | null
+  longitude: number | null
   city: string
   gps_consent: boolean
 }): Promise<{ message: string }> {

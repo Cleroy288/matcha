@@ -1,9 +1,16 @@
 from utils.constants import (
-    BIO_MIN_LENGTH, BIO_MAX_LENGTH,
-    MIN_AGE, TAG_NAME_MAX_LENGTH,
-    LATITUDE_MIN, LATITUDE_MAX, LONGITUDE_MIN, LONGITUDE_MAX,
-    CITY_MIN_LENGTH, CITY_MAX_LENGTH,
-    PASSWORD_MIN_LENGTH, MAX_FILE_SIZE
+    BIO_MAX_LENGTH,
+    BIO_MIN_LENGTH,
+    CITY_MAX_LENGTH,
+    CITY_MIN_LENGTH,
+    LATITUDE_MAX,
+    LATITUDE_MIN,
+    LONGITUDE_MAX,
+    LONGITUDE_MIN,
+    MAX_FILE_SIZE,
+    MIN_AGE,
+    PASSWORD_MIN_LENGTH,
+    TAG_NAME_MAX_LENGTH,
 )
 
 ERR_INVALID_GENDER = "Gender must be male, female, or other"
@@ -22,6 +29,7 @@ ERR_INVALID_CITY = f"City must be between {CITY_MIN_LENGTH} and {CITY_MAX_LENGTH
 ERR_NO_FILE = "No file provided"
 ERR_INVALID_IMAGE = "File is not a valid image"
 ERR_INVALID_IMAGE_FORMAT = "Image format must be JPEG, PNG, or WEBP"
+ERR_INVALID_IMAGE_EXTENSION = "Image extension must match its JPEG, PNG, or WEBP content"
 ERR_IMAGE_TOO_LARGE = f"Image must be under {MAX_FILE_SIZE // (1024 * 1024)}MB"
 
 ERR_PASSWORD_TOO_SHORT = f"Password must be at least {PASSWORD_MIN_LENGTH} characters"

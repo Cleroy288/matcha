@@ -5,7 +5,7 @@ import './Topbar.css'
 import ThemeSelector from "./ThemeSelector"
 
 export default function Topbar() {
-  const { user, isAuthenticated, logout, unreadCount } = useAuth()
+  const { user, isAuthenticated, logout, unreadCount, unreadMessages } = useAuth()
   return (
     <nav className="topbar">
       <div className="topbar-logo">MATCHA</div>
@@ -13,8 +13,17 @@ export default function Topbar() {
       <div className="topbar-links">
         {isAuthenticated ? (
           <>
-            <span>Welcome, {user?.username}</span>
+            <span className="topbar-welcome">Welcome, {user?.username}</span>
             <Link to="/home" className="nav-item">Home</Link>
+            <Link to="/search" className="nav-item">Recherche</Link>
+            <Link to="/chat" className={`notif-btn ${unreadMessages > 0 ? "notif-btn--active" : ""}`}>
+                Chat
+                {unreadMessages > 0 && (
+                    <span className="notif-badge">
+                    {unreadMessages > 99 ? "99+" : unreadMessages}
+                    </span>
+                )}
+            </Link>
             <Link to="/profile/edit" className="nav-item">Profil</Link>
             <Link to="/notification" className={`notif-btn ${unreadCount > 0 ? "notif-btn--active" : ""}`}>
                 Notifs

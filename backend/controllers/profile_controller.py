@@ -1,9 +1,10 @@
-from flask import request, jsonify
-from services.profile_service import get_full_profile, update_user_profile, update_user_location
-from services.tag_service import add_tag_to_profile, remove_tag_from_profile, search_available_tags
-from services.photo_service import upload_photo, delete_user_photo, set_user_profile_photo
-from controllers.constants import HTTP_OK, HTTP_CREATED, HTTP_BAD_REQUEST
+from flask import jsonify, request
+
+from controllers.constants import HTTP_BAD_REQUEST, HTTP_CREATED, HTTP_NOT_FOUND, HTTP_OK
 from controllers.errors import MSG_LOCATION_UPDATED, MSG_PHOTO_DELETED, MSG_PROFILE_PHOTO_UPDATED
+from services.photo_service import delete_user_photo, set_user_profile_photo, upload_photo
+from services.profile_service import get_full_profile, update_user_location, update_user_profile
+from services.tag_service import add_tag_to_profile, remove_tag_from_profile, search_available_tags
 from utils.jwt_required import jwt_required
 
 
@@ -19,9 +20,9 @@ def get_profile(payload):
 @jwt_required
 def get_public_profile(payload, user_id):
     from services.profile_service import get_public_profile_data
-    data = get_public_profile_data(user_id)
+    data = get_public_profile_data(payload["user_id"], user_id)
     if not data:
-        return jsonify({"error": "Not found"}), HTTP_BAD_REQUEST
+        return jsonify({"error": "Not found"}), HTTP_NOT_FOUND
     return jsonify(data), HTTP_OK
 
 @jwt_required

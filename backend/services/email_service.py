@@ -1,7 +1,7 @@
-import smtplib
 import os
-from email.mime.text import MIMEText
+import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 frontend_url = os.getenv("FRONTEND_URL")
 

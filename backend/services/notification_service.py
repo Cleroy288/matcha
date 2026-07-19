@@ -1,4 +1,5 @@
-from models.notification_model import get_notifications, mark_all_read, count_unread
+from models.notification_model import count_unread, get_notifications, mark_all_read
+
 
 def get_user_notifications(user_id):
     return get_notifications(user_id)

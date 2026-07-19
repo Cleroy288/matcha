@@ -5,22 +5,31 @@ export interface ProfileCardData {
   userId: number;
   name: string;
   age: number;
-  distance: number;
-  photoUrl?: string;
+  distance: number | null;
+  photoUrls: string[];
+  city?: string | null;
+  fame?: number;
+  commonTags?: number;
+  isOnline?: boolean;
 }
 
 interface ProfileCardProps {
   profile: ProfileCardData;
   onLike: (userId: number) => void;
   onDislike: (userId: number) => void;
+  onOpenProfile?: (userId: number) => void;
   /** Stack index: 0 = front, 1 = mid, 2 = back */
   stackIndex?: 0 | 1 | 2;
 }
 
-export function ProfileCard({profile, onLike, onDislike, stackIndex = 0,}: ProfileCardProps) {
+export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackIndex = 0,}: ProfileCardProps) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [hint, setHint] = useState<"like" | "nope" | null>(null);
+    const [photoIndex, setPhotoIndex] = useState(0);
     const dragState = useRef({ active: false, startX: 0, currentX: 0 });
+    const activePhoto = profile.photoUrls.length
+        ? profile.photoUrls[photoIndex % profile.photoUrls.length]
+        : undefined;
 
     const applyDrag = (dx: number) => {
         const card = cardRef.current;
@@ -122,17 +131,61 @@ export function ProfileCard({profile, onLike, onDislike, stackIndex = 0,}: Profi
         onTouchEnd={onTouchEnd}
         >
         {/* Photo */}
-        {profile.photoUrl ? (
+        {activePhoto ? (
             <img
             className="pc-photo"
-            src={profile.photoUrl}
-            alt={profile.name}
+            src={activePhoto}
+            alt={`${profile.name}, photo ${photoIndex + 1}`}
             draggable={false}
             />
         ) : (
             <div className="pc-photo-placeholder" aria-hidden="true">
             <span>👤</span>
             </div>
+        )}
+
+        {profile.photoUrls.length > 1 && (
+            <>
+            <button
+                type="button"
+                className="pc-photo-nav pc-photo-nav-left"
+                aria-label="Photo précédente"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setPhotoIndex((index) => (index - 1 + profile.photoUrls.length) % profile.photoUrls.length);
+                }}
+            >
+                ←
+            </button>
+            <button
+                type="button"
+                className="pc-photo-nav pc-photo-nav-right"
+                aria-label="Photo suivante"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setPhotoIndex((index) => (index + 1) % profile.photoUrls.length);
+                }}
+            >
+                →
+            </button>
+            </>
+        )}
+
+        {/* Ouvre la consultation du profil sans déclencher le drag */}
+        {onOpenProfile && (
+            <button
+            className="pc-open-btn"
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onClick={() => onOpenProfile(profile.userId)}
+            aria-label="Voir le profil"
+            >
+            Voir profil
+            </button>
         )}
 
         {/* Swipe hints */}
@@ -153,10 +206,24 @@ export function ProfileCard({profile, onLike, onDislike, stackIndex = 0,}: Profi
 
         {/* Info overlay */}
         <div className="pc-overlay">
-            <p className="pc-name">{profile.name}</p>
+            <p className="pc-name">
+                {profile.name}
+                {profile.isOnline && <span className="pc-online-dot" title="En ligne" />}
+            </p>
             <div className="pc-meta">
             <span className="pc-age">{profile.age} ans</span>
-            <span className="pc-dist">{profile.distance} km</span>
+            {profile.distance !== null && profile.distance !== undefined && (
+                <span className="pc-dist">{Math.round(profile.distance)} km</span>
+            )}
+            {profile.city && <span className="pc-dist">{profile.city}</span>}
+            </div>
+            <div className="pc-meta pc-meta-secondary">
+            {profile.fame !== undefined && (
+                <span className="pc-badge">★ {profile.fame}</span>
+            )}
+            {profile.commonTags !== undefined && (
+                <span className="pc-badge">{profile.commonTags} tags communs</span>
+            )}
             </div>
         </div>
         </div>
@@ -208,12 +275,14 @@ interface ProfileStackProps {
   profiles: ProfileCardData[];
   onLike: (userId: number) => void;
   onDislike: (userId: number) => void;
+  onOpenProfile?: (userId: number) => void;
 }
 
 export function ProfileStack({
   profiles,
   onLike,
   onDislike,
+  onOpenProfile,
 }: ProfileStackProps) {
   const [index, setIndex] = useState(0);
 
@@ -250,6 +319,7 @@ export function ProfileStack({
         stackIndex={0}
         onLike={handleLike}
         onDislike={handleDislike}
+        onOpenProfile={onOpenProfile}
       />
     </div>
     <ProfileCardActions

@@ -1,24 +1,38 @@
 import { useEffect, useRef } from "react"
 import { io, Socket } from "socket.io-client"
 import { API_BASE_URL } from "../config/api"
+import type { Message } from "../types/chat"
 
-export function useSocket(onNotification: (notif: { type: string; data: unknown }) => void, enabled = true) {
-    const socketRef = useRef<Socket | null>(null)
+export interface SocketNotification {
+  type: string
+  data: unknown
+}
 
-    useEffect(() => {
-        if (!enabled) return
+/* Connexion WebSocket authentifiée (cookie) : notifications + messages temps réel */
+export function useSocket(
+  onNotification: (notif: SocketNotification) => void,
+  enabled = true,
+  onMessage?: (message: Message) => void
+) {
+  const socketRef = useRef<Socket | null>(null)
 
-        socketRef.current = io(API_BASE_URL, {
-            withCredentials: true,
-        })
+  useEffect(() => {
+    if (!enabled) return
 
-        socketRef.current.on("new_notification", (notif) => {
-            console.log("Notif reçue :", notif)
-            onNotification(notif)
-        })
+    socketRef.current = io(API_BASE_URL, {
+      withCredentials: true,
+    })
 
-        return () => {
-            socketRef.current?.disconnect()
-        }
-    }, [enabled, onNotification])
+    socketRef.current.on("new_notification", (notif) => {
+      onNotification(notif)
+    })
+
+    socketRef.current.on("new_message", (message: Message) => {
+      onMessage?.(message)
+    })
+
+    return () => {
+      socketRef.current?.disconnect()
+    }
+  }, [enabled, onNotification, onMessage])
 }

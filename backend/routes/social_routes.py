@@ -1,9 +1,10 @@
 from flask import Blueprint
-from controllers.like_controller import like, unlike, likes_received
-from controllers.profile_view_controller import visit, views_received
+
 from controllers.block_controller import block, unblock
-from controllers.report_controller import report
+from controllers.like_controller import like, likes_received, unlike
 from controllers.notification_controller import get_notifications, read_notifications, unread_count
+from controllers.profile_view_controller import views_received, visit
+from controllers.report_controller import report
 
 social_routes = Blueprint("social", __name__)
 

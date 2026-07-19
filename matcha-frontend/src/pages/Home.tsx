@@ -1,92 +1,85 @@
-import { useState, useEffect } from "react";
-import { ProfileStack } from "../components/ProfileCard";
-import type { ProfileCardData } from "../components/ProfileCard";
-import { API_ROUTES } from "../config/api";
-import  { likeUser } from "../services/social"
+import { useCallback, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { ProfileStack } from "../components/ProfileCard"
+import type { ProfileCardData } from "../components/ProfileCard"
+import ProfileFilters from "../components/ProfileFilters"
 import Topbar from "../components/Topbar"
-import { useAuth } from "../context/AuthContext"
 import StatusMessage from "../components/StatusMessage"
+import { useAuth } from "../context/AuthContext"
+import { browseProfiles } from "../services/browse"
+import { likeUser } from "../services/social"
+import { toCardData } from "../utils/profileCard"
+import type { BrowseFilters } from "../types/browse"
 
-export default function Feed() {
-    const [profiles, setProfiles] = useState<ProfileCardData[]>([]);
-    const [error, setError] = useState<string | null>(null)
-    // const [success, setSuccess] = useState<string | null>(null)
-    
-    // exemple: à modifer avec l'algo de suggestion
-    useEffect(() => {
-        const fetchProfiles = async () => {
-            const results: ProfileCardData[] = [];
-
-            const ids = Array.from({ length: 10 }, (_, i) => i + 1);
-
-            await Promise.allSettled(
-                ids.map(async (id) => {
-          try {
-            const res = await fetch(`${API_ROUTES.profile}/${id}`, {
-                method: "GET",
-              credentials: "include",
-            });
-            if (!res.ok) return;
-            console.log("ok")
-            const u = await res.json();
-
-            const age = u.birth_date
-              ? Math.floor(
-                  (Date.now() - new Date(u.birth_date).getTime()) /
-                    (1000 * 60 * 60 * 24 * 365.25)
-                )
-              : null;
-
-            if (!age) return; // profil incomplet, on skip
-
-            results.push({
-              userId: id,
-              name: u.first_name ?? `User ${id}`,
-              age,
-              distance: u.distance_km ? Math.round(u.distance_km) : 0,
-              photoUrl: u.profile_photo_url ?? undefined,
-            });
-          } catch {
-            // skip
-          }
-        })
-      );
-
-      results.sort((a, b) => a.userId - b.userId);
-      setProfiles(results);
-    };
-    
-    fetchProfiles();
-}, []);
-
+/* Feed : profils suggérés par l'algo (tags communs + proximité + fame), swipe like/pass */
+export default function Home() {
     const { isAuthenticated } = useAuth()
+    const navigate = useNavigate()
+    const [filters, setFilters] = useState<BrowseFilters>({ sort_by: "score" })
+    const [profiles, setProfiles] = useState<ProfileCardData[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<string | null>(null)
+
+    const loadSuggestions = useCallback(async (activeFilters: BrowseFilters) => {
+        setLoading(true)
+        setError(null)
+        try {
+            const suggestions = await browseProfiles(activeFilters)
+            setProfiles(suggestions.map(toCardData))
+        } catch (e) {
+            setError(e instanceof Error ? e.message : "Erreur serveur")
+        } finally {
+            setLoading(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!isAuthenticated) return
+        loadSuggestions(filters)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAuthenticated, loadSuggestions])
 
     if (!isAuthenticated) {
         return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
     }
 
     const handleLike = async (userId: number) => {
-        setError(null);
-        try { 
-            await likeUser(userId); 
-        } catch {
-                setError("Personne déjà like")
+        setError(null)
+        try {
+            const result = await likeUser(userId)
+            if (result.match) {
+                setSuccess("C'est un match !")
+            }
+        } catch (e) {
+            setError(e instanceof Error ? e.message : "Erreur serveur")
         }
-    };
+    }
 
-    const handleDislike = () => {setError(null);};
-
+    const handleDislike = () => { setError(null) }
 
     return (
-        <div className="app-container">
+        <div className="app-container page-scroll">
         <Topbar></Topbar>
         <div className="feed-content">
-            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
-            <ProfileStack
-                profiles={profiles}
-                onLike={handleLike}
-                onDislike={handleDislike}
+            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
+            {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>}
+            <ProfileFilters
+                variant="browse"
+                filters={filters}
+                onChange={setFilters}
+                onApply={() => loadSuggestions(filters)}
             />
+            {loading ? (
+                <p>Chargement...</p>
+            ) : (
+                <ProfileStack
+                    profiles={profiles}
+                    onLike={handleLike}
+                    onDislike={handleDislike}
+                    onOpenProfile={(userId) => navigate(`/user/${userId}`)}
+                />
+            )}
         </div>
         </div>
     );

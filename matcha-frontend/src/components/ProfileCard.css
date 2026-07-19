@@ -1,5 +1,6 @@
 /* ── Stack wrapper ── */
 .pc-stack-wrapper {
+  --pc-card-width: clamp(360px, min(40vw, 60vh), 760px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,15 +9,15 @@
 
 .pc-stack {
   position: relative;
-  width: 320px;
-  height: 480px;
+  width: var(--pc-card-width);
+  aspect-ratio: 2 / 3;
 }
 
 /* ── Card base ── */
 .pc-card {
   position: absolute;
-  width: 320px;
-  height: 480px;
+  width: 100%;
+  height: 100%;
   border: 3px solid var(--border-color);
   box-shadow: var(--brutal-shadow);
   overflow: hidden;
@@ -73,6 +74,84 @@
   align-items: center;
   justify-content: center;
   font-size: 80px;
+}
+
+.pc-photo-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  width: 48px;
+  height: 64px;
+  transform: translateY(-50%);
+  border: 2px solid var(--border-color);
+  background: var(--surface-alt, var(--bg-color));
+  box-shadow: var(--brutal-shadow);
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pc-photo-nav:hover {
+  background: var(--primary);
+}
+
+.pc-photo-nav-left {
+  left: 12px;
+}
+
+.pc-photo-nav-right {
+  right: 12px;
+}
+
+/* ── Bouton consultation profil ── */
+.pc-open-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  background: var(--surface-alt, var(--bg-color));
+  border: 2px solid var(--border-color);
+  box-shadow: var(--brutal-shadow);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.pc-open-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--brutal-shadow-hover);
+}
+
+/* ── Statut en ligne + badges secondaires ── */
+.pc-online-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+  border-radius: 50%;
+  background: #3ddc84;
+  border: 2px solid var(--border-color);
+}
+
+.pc-meta-secondary {
+  margin-top: 6px;
+}
+
+.pc-badge {
+  background: var(--accent);
+  border: 2px solid var(--border-color);
+  color: var(--border-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-body);
 }
 
 /* ── Swipe hints ── */
@@ -212,8 +291,8 @@
 
 /* ── Empty state ── */
 .pc-empty {
-  width: 320px;
-  height: 480px;
+  width: clamp(360px, min(40vw, 60vh), 760px);
+  aspect-ratio: 2 / 3;
   border: 3px solid var(--border-color);
   box-shadow: var(--brutal-shadow);
   background: var(--surface);
@@ -228,4 +307,14 @@
   text-transform: uppercase;
   color: var(--text-muted);
   letter-spacing: -0.5px;
+}
+
+@media (max-width: 768px) {
+  .pc-stack-wrapper {
+    --pc-card-width: min(320px, 86vw);
+  }
+
+  .pc-empty {
+    width: min(320px, 86vw);
+  }
 }

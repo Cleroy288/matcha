@@ -1,5 +1,6 @@
 from database.db import get_connection
 
+
 def create_notification(user_id, from_user_id, notif_type):
     conn = get_connection()
     cur = conn.cursor()
@@ -30,7 +31,7 @@ def get_notifications(user_id):
     cur.close()
     conn.close()
     return [dict(zip(
-        ["id", "type", "is_read", "created_at", "username", "first_name", "last_name"], r
+        ["id", "type", "is_read", "created_at", "username", "first_name", "last_name"], r, strict=True
     )) for r in rows]
 
 def mark_all_read(user_id):

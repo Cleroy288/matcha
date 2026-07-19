@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+/* eslint-disable react-refresh/only-export-components */
 
 export const themes = {
   sunset: { name: "🍵", class: "theme-sunset", color: "#2d1b4e" },
