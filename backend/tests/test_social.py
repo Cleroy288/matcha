@@ -13,6 +13,7 @@ os.environ.setdefault("FRONTEND_URL", "http://localhost:5173")
 @pytest.fixture()
 def app():
     from flask import Flask
+
     from routes.social_routes import social_routes
 
     test_app = Flask(__name__)

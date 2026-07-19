@@ -1,5 +1,14 @@
 from flask import Blueprint
-from controllers.auth_controller import register, login, logout, verify_email, testmiddleware, reset_password, verify_reset_password
+
+from controllers.auth_controller import (
+    login,
+    logout,
+    register,
+    reset_password,
+    testmiddleware,
+    verify_email,
+    verify_reset_password,
+)
 
 auth_routes = Blueprint("auth", __name__)
 

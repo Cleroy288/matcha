@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useState, useEffect, type ReactNode } from "react"
 import { API_ROUTES, fetchWithCredentials } from "../config/api"
 import { useSocket } from "../hooks/useSocket"
+import { fetchUnreadMessages } from "../services/chat"
+import type { Message } from "../types/chat"
 /* eslint-disable react-refresh/only-export-components */
 
 interface User {
@@ -18,6 +20,9 @@ interface AuthContextType {
   isAuthenticated: boolean
   unreadCount: number
   setUnreadCount: (count: number) => void
+  unreadMessages: number
+  refreshUnreadMessages: () => void
+  incomingMessage: Message | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -25,14 +30,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [unreadMessages, setUnreadMessages] = useState(0)
+  const [incomingMessage, setIncomingMessage] = useState<Message | null>(null)
 
-  const handleNotification = useCallback((notif: { type: string; data: unknown }) => {
-    if (notif.type === "like" || notif.type === "match" || notif.type === "visit") {
-        setUnreadCount(prev => prev + 1)  // ← incrémente le badge
-    }
+  // toute notification (like, visit, match, unlike, message) alimente le badge notifs
+  const handleNotification = useCallback(() => {
+    setUnreadCount(prev => prev + 1)
   }, [])
 
-  useSocket(handleNotification, user !== null)
+  // message temps réel : badge messages + relai vers la page chat si ouverte
+  const handleMessage = useCallback((message: Message) => {
+    setIncomingMessage(message)
+    setUnreadMessages(prev => prev + 1)
+  }, [])
+
+  useSocket(handleNotification, user !== null, handleMessage)
+
+  const refreshUnreadMessages = useCallback(() => {
+    fetchUnreadMessages()
+      .then(setUnreadMessages)
+      .catch(() => {})
+  }, [])
+
   const logout = async () => {
     await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
     setUser(null)
@@ -47,14 +66,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .catch(() => {})
   }, [])
 
+  // compteurs initiaux au login (notifs + messages non lus)
+  useEffect(() => {
+    if (!user) return
+
+    fetchWithCredentials(API_ROUTES.notificationsUnread)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+            if (data) setUnreadCount(data.count)
+        })
+        .catch(() => {})
+
+    refreshUnreadMessages()
+  }, [user, refreshUnreadMessages])
+
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      setUser, 
+    <AuthContext.Provider value={{
+      user,
+      setUser,
       logout,
       isAuthenticated: user !== null,
       unreadCount,
-      setUnreadCount
+      setUnreadCount,
+      unreadMessages,
+      refreshUnreadMessages,
+      incomingMessage
     }}>
       {children}
     </AuthContext.Provider>

@@ -10,14 +10,16 @@ interface LocationSectionProps {
   longitude: number | null
   city: string | null
   gpsConsent: boolean
-  onUpdate: (lat: number, lng: number, city: string, consent: boolean) => void
+  onUpdate: (lat: number | null, lng: number | null, city: string, consent: boolean) => void
 }
+
+type LocationMode = "gps" | "manual"
 
 export default function LocationSection({ latitude, longitude, city, gpsConsent, onUpdate }: LocationSectionProps) {
   const [lat, setLat] = useState(latitude)
   const [lng, setLng] = useState(longitude)
   const [cityValue, setCityValue] = useState(city || "")
-  const [consent, setConsent] = useState(gpsConsent)
+  const [mode, setMode] = useState<LocationMode>(gpsConsent ? "gps" : "manual")
   const [error, setError] = useState("")
   const [saving, setSaving] = useState(false)
   const [locating, setLocating] = useState(false)
@@ -34,7 +36,7 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
       (position) => {
         setLat(position.coords.latitude)
         setLng(position.coords.longitude)
-        setConsent(true)
+        setMode("gps")
         setLocating(false)
       },
       () => {
@@ -45,21 +47,30 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
   }
 
   async function handleSave() {
-    if (lat === null || lng === null) {
+    const city = cityValue.trim()
+    if (mode === "manual" && !city) {
+      setError("Ville ou quartier requis")
+      return
+    }
+    if (mode === "gps" && (lat === null || lng === null)) {
       setError("Position requise")
       return
     }
+
+    const nextLat = mode === "manual" ? null : lat
+    const nextLng = mode === "manual" ? null : lng
+    const consent = mode === "gps"
 
     setError("")
     setSaving(true)
     try {
       await updateLocation({
-        latitude: lat,
-        longitude: lng,
-        city: cityValue.trim(),
+        latitude: nextLat,
+        longitude: nextLng,
+        city,
         gps_consent: consent
       })
-      onUpdate(lat, lng, cityValue.trim(), consent)
+      onUpdate(nextLat, nextLng, city, consent)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error saving location")
     } finally {
@@ -71,17 +82,43 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
     <div className="LocationSection">
       <h3>Localisation</h3>
 
-      <Button onClick={handleGPS} disabled={locating}>
-        {locating ? "Localisation..." : "Utiliser le GPS"}
-      </Button>
+      <div className="LocationSection-modes" role="group" aria-label="Mode de localisation">
+        <button
+          type="button"
+          className={mode === "gps" ? "is-active" : ""}
+          onClick={() => setMode("gps")}
+        >
+          GPS
+        </button>
+        <button
+          type="button"
+          className={mode === "manual" ? "is-active" : ""}
+          onClick={() => {
+            setMode("manual")
+            setLat(null)
+            setLng(null)
+            setError("")
+          }}
+        >
+          Ville manuelle
+        </button>
+      </div>
 
-      {lat !== null && lng !== null && (
-        <p className="LocationSection-coords">
-          {lat.toFixed(COORDINATE_DECIMALS)}, {lng.toFixed(COORDINATE_DECIMALS)}
-        </p>
+      {mode === "gps" && (
+        <>
+          <Button onClick={handleGPS} disabled={locating}>
+            {locating ? "Localisation..." : "Utiliser le GPS"}
+          </Button>
+
+          {lat !== null && lng !== null && (
+            <p className="LocationSection-coords">
+              {lat.toFixed(COORDINATE_DECIMALS)}, {lng.toFixed(COORDINATE_DECIMALS)}
+            </p>
+          )}
+        </>
       )}
 
-      <label>Ville</label>
+      <label>{mode === "manual" ? "Ville ou quartier" : "Ville (optionnelle)"}</label>
       <Input
         value={cityValue}
         onChange={(e) => setCityValue(e.target.value)}

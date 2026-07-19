@@ -1,5 +1,5 @@
 import { API_ROUTES, fetchWithCredentials } from "../config/api"
-import type { LoginPayload, LoginResponse, RegisterPayload } from "../types/auth"
+import type { LoginPayload, LoginResponse, RegisterPayload, RegisterResponse } from "../types/auth"
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   const res = await fetchWithCredentials(API_ROUTES.login, {
@@ -12,7 +12,7 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
   return data
 }
 
-export async function register(payload: RegisterPayload): Promise<LoginResponse> {
+export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
   const res = await fetch(API_ROUTES.register, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

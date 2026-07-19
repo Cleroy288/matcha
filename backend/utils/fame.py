@@ -1,5 +1,6 @@
 from database.db import get_connection
 
+
 def recalculate_fame():
     conn = get_connection()
     try:

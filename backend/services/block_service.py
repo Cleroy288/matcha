@@ -1,5 +1,6 @@
-from models.block_model import add_block, remove_block, is_blocked
+from models.block_model import add_block, is_blocked, remove_block
 from models.like_model import remove_like
+
 
 def block_user(blocker_id, blocked_id):
     if blocker_id == blocked_id:

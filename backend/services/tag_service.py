@@ -1,14 +1,15 @@
 from models.tag_model import (
-    create_tag, search_tags, get_user_tags,
-    add_tag_to_user, remove_tag_from_user, count_user_tags
+    add_tag_to_user,
+    count_user_tags,
+    create_tag,
+    get_user_tags,
+    remove_tag_from_user,
+    search_tags,
 )
-from utils.profile_validator import validate_tag_name
-from services.profile_service import check_profile_completeness
 from services.constants import MAX_TAGS_PER_USER
-from services.errors import (
-    ERR_MAX_TAGS, ERR_TAG_CREATION_FAILED,
-    ERR_TAG_NOT_FOUND, ERR_SEARCH_QUERY_REQUIRED
-)
+from services.errors import ERR_MAX_TAGS, ERR_SEARCH_QUERY_REQUIRED, ERR_TAG_CREATION_FAILED, ERR_TAG_NOT_FOUND
+from services.profile_service import check_profile_completeness
+from utils.profile_validator import validate_tag_name
 
 
 def add_tag_to_profile(user_id, tag_name):

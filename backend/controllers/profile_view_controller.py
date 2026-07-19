@@ -1,8 +1,10 @@
 from flask import jsonify
-from utils.jwt_required import jwt_required
+
+from controllers.constants import HTTP_BAD_REQUEST, HTTP_OK
+from services.profile_view_service import get_profile_views, view_profile
 from utils.fame import recalculate_fame
-from services.profile_view_service import view_profile, get_profile_views
-from controllers.constants import HTTP_OK, HTTP_BAD_REQUEST
+from utils.jwt_required import jwt_required
+
 
 @jwt_required
 def visit(payload, user_id):

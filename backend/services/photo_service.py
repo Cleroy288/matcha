@@ -1,15 +1,17 @@
 import os
+
 from models.photo_model import (
-    create_photo, get_photos_by_user, get_photo_by_id,
-    count_user_photos, delete_photo, set_profile_photo
+    count_user_photos,
+    create_photo,
+    delete_photo,
+    get_photo_by_id,
+    get_photos_by_user,
+    set_profile_photo,
 )
-from utils.upload_validator import (
-    validate_image_file, validate_image_mime,
-    validate_image_size, generate_safe_filename
-)
-from services.profile_service import check_profile_completeness
 from services.constants import MAX_PHOTOS, UPLOAD_DIR
-from services.errors import ERR_MAX_PHOTOS, ERR_PHOTO_NOT_FOUND, ERR_NOT_AUTHORIZED
+from services.errors import ERR_MAX_PHOTOS, ERR_NOT_AUTHORIZED, ERR_PHOTO_NOT_FOUND
+from services.profile_service import check_profile_completeness
+from utils.upload_validator import generate_safe_filename, validate_image_file, validate_image_mime, validate_image_size
 
 
 def upload_photo(user_id, file_storage):
@@ -77,6 +79,7 @@ def set_user_profile_photo(user_id, photo_id):
         raise Exception(ERR_NOT_AUTHORIZED)
 
     set_profile_photo(user_id, photo_id)
+    check_profile_completeness(user_id)
 
 
 def get_user_photos(user_id):

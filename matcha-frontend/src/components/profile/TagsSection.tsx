@@ -3,7 +3,7 @@ import TagChip from "../TagChip"
 import Input from "../Input"
 import { addTag, removeTag, searchTags } from "../../services/profile"
 import type { Tag } from "../../types/profile"
-import { MAX_TAGS, SEARCH_DEBOUNCE_MS, MIN_SEARCH_LENGTH } from "../../constants/profile"
+import { MAX_TAGS, MIN_TAGS_FOR_COMPLETE, SEARCH_DEBOUNCE_MS, MIN_SEARCH_LENGTH } from "../../constants/profile"
 import "./TagsSection.css"
 
 interface TagsSectionProps {
@@ -20,8 +20,8 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
+    // en dessous du seuil, pas de recherche (la liste est vidée dans handleQueryChange)
     if (query.length < MIN_SEARCH_LENGTH) {
-      setSuggestions([])
       return
     }
 
@@ -38,6 +38,14 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
       if (debounceRef.current) clearTimeout(debounceRef.current)
     }
   }, [query])
+
+  /* Saisie : met à jour la query et vide les suggestions dès qu'elle est trop courte */
+  function handleQueryChange(value: string) {
+    setQuery(value)
+    if (value.length < MIN_SEARCH_LENGTH) {
+      setSuggestions([])
+    }
+  }
 
   async function handleAdd(tagName: string) {
     setError("")
@@ -75,7 +83,7 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
 
   return (
     <div className="TagsSection">
-      <h3>Tags ({tags.length}/{MAX_TAGS})</h3>
+      <h3>Tags ({tags.length}/{MAX_TAGS}, minimum {MIN_TAGS_FOR_COMPLETE})</h3>
 
       <div className="TagsSection-chips">
         {tags.map((tag) => (
@@ -86,7 +94,7 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
       <div className="TagsSection-search">
         <Input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => handleQueryChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="#tag (Enter pour ajouter)"
         />

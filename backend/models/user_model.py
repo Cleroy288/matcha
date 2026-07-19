@@ -1,5 +1,7 @@
 import psycopg2.extras
+
 from database.db import get_connection
+
 
 def create_user(email, username, password_hash, first_name, last_name, token, email_verified=False):
 
@@ -29,7 +31,7 @@ def get_user_by_email(email):
 
     query = """
     SELECT id, email, username, first_name, last_name, email_verified FROM users
-    WHERE email = %s
+    WHERE LOWER(email) = LOWER(%s)
     """
     cur.execute(query, (email,))
 
@@ -85,6 +87,24 @@ def get_user_by_id(id):
     cur.execute("SELECT id, email, username, first_name, last_name FROM users WHERE id = %s", (id,))
     user = cur.fetchone()
 
+    cur.close()
+    conn.close()
+
+    return dict(user) if user else None
+
+def update_user(user_id, fields):
+    safe_fields = {key: value for key, value in fields.items() if key in {"email", "first_name", "last_name"}}
+    if not safe_fields:
+        return None
+
+    set_clause = ", ".join(f"{key} = %s" for key in safe_fields)
+    values = [*safe_fields.values(), user_id]
+
+    conn = get_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(f"UPDATE users SET {set_clause} WHERE id = %s RETURNING *", values)
+    user = cur.fetchone()
+    conn.commit()
     cur.close()
     conn.close()
 

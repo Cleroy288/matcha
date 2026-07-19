@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import Topbar from "../components/Topbar"
+import Button from "../components/Button"
 import ProfileInfoForm from "../components/profile/ProfileInfoForm"
 import TagsSection from "../components/profile/TagsSection"
 import PhotosSection from "../components/profile/PhotosSection"
 import LocationSection from "../components/profile/LocationSection"
+import AccountActivity from "../components/profile/AccountActivity"
 import { fetchProfile } from "../services/profile"
 import type { Profile } from "../types/profile"
 import "./ProfileEdit.css"
 
 export default function ProfileEdit() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, setUser, user } = useAuth()
+  const navigate = useNavigate()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [onboarding, setOnboarding] = useState(false)
+  const [finishing, setFinishing] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -24,10 +30,42 @@ export default function ProfileEdit() {
     try {
       const data = await fetchProfile()
       setProfile(data)
+      setOnboarding(!data.profile_complete)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error loading profile")
     } finally {
       setLoading(false)
+    }
+  }
+
+  function handleProfileUpdate(updated: Profile) {
+    setProfile(updated)
+    if (user) {
+      setUser({
+        ...user,
+        first_name: updated.first_name,
+        last_name: updated.last_name,
+        email: updated.email,
+      })
+    }
+  }
+
+  async function handleFinish() {
+    setError("")
+    setFinishing(true)
+    try {
+      const latest = await fetchProfile()
+      setProfile(latest)
+      if (!latest.profile_complete) {
+        setError("Complete all required fields, add at least 5 tags, a profile photo, and a location")
+        return
+      }
+      setOnboarding(false)
+      navigate("/home", { replace: true })
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error checking profile")
+    } finally {
+      setFinishing(false)
     }
   }
 
@@ -49,7 +87,7 @@ export default function ProfileEdit() {
     )
   }
 
-  if (error || !profile) {
+  if (!profile) {
     return (
       <div className="app-container">
         <Topbar />
@@ -59,10 +97,11 @@ export default function ProfileEdit() {
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container page-scroll">
       <Topbar />
       <div className="ProfileEdit">
-        <h1>Mon Profil</h1>
+        <h1>{onboarding ? "Complete your profile" : "Mon Profil"}</h1>
+        {error && <p>{error}</p>}
         <div className="fame-rating">
         ⭐ Popularité : <strong>{profile.fame_rating ?? 0} / 10</strong>
         </div>
@@ -70,7 +109,7 @@ export default function ProfileEdit() {
         <div className="ProfileEdit-sections">
           <ProfileInfoForm
             profile={profile}
-            onUpdate={(updated) => setProfile(updated)}
+            onUpdate={handleProfileUpdate}
           />
 
           <TagsSection
@@ -92,6 +131,14 @@ export default function ProfileEdit() {
               setProfile({ ...profile, latitude: lat, longitude: lng, city, gps_consent: consent })
             }
           />
+
+          {!onboarding && <AccountActivity />}
+
+          {onboarding && (
+            <Button onClick={handleFinish} disabled={finishing}>
+              {finishing ? "Checking..." : "Finish registration"}
+            </Button>
+          )}
         </div>
       </div>
     </div>

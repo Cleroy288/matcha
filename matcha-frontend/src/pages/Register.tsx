@@ -7,7 +7,7 @@ import { useRegister } from "../hooks/useRegister"
 export default function Register(){
 
     const { first_name, setFirstName, last_name, setLastName, email, setEmail,
-              username, setUsername, password, setPassword,
+              username, setUsername, password, setPassword, confirmPassword, setConfirmPassword,
               error, setError, success, setSuccess, handleSubmit } = useRegister()
     return (
         <div className="app-container">
@@ -46,6 +46,13 @@ export default function Register(){
                     value={password}
                     autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
+                />
+                <Input
+                    type="password"
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    autoComplete="new-password"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                 />
                 <Button type="submit"> Register </Button>
                 </form>

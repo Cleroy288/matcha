@@ -1,7 +1,9 @@
 from flask import jsonify
-from utils.jwt_required import jwt_required
+
+from controllers.constants import HTTP_BAD_REQUEST, HTTP_OK
 from services.block_service import block_user, unblock_user
-from controllers.constants import HTTP_OK, HTTP_BAD_REQUEST
+from utils.jwt_required import jwt_required
+
 
 @jwt_required
 def block(payload, user_id):

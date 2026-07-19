@@ -1,4 +1,5 @@
 import psycopg2.extras
+
 from database.db import get_connection
 
 

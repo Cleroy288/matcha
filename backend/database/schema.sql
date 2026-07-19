@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
     gender VARCHAR(10),
-    sexual_preference VARCHAR(10) DEFAULT 'bisexual',
+    sexual_preference VARCHAR(10),
     biography TEXT,
     birth_date DATE,
 
@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS profiles (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE profiles ALTER COLUMN sexual_preference DROP DEFAULT;
 
 CREATE TABLE IF NOT EXISTS tags (
     id SERIAL PRIMARY KEY,
@@ -91,6 +93,18 @@ CREATE TABLE IF NOT EXISTS reports (
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (reporter_id, reported_id)
 );
+
+CREATE TABLE IF NOT EXISTS messages (
+    id          SERIAL PRIMARY KEY,
+    sender_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    receiver_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    content     TEXT NOT NULL,
+    is_read     BOOLEAN DEFAULT FALSE,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages(receiver_id, is_read);
+CREATE INDEX IF NOT EXISTS idx_messages_pair ON messages(sender_id, receiver_id, created_at);
 
 CREATE TABLE IF NOT EXISTS notifications (
     id          SERIAL PRIMARY KEY,

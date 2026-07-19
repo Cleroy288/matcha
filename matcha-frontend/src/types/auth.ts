@@ -8,12 +8,18 @@ export interface LoginResponse {
     message: string
 }
 
+export interface RegisterResponse {
+    message: string
+    email_verification_required: boolean
+}
+
 export interface RegisterPayload {
     first_name: string
     last_name: string
     email: string
     username: string
     password: string
+    confirm_password: string
 }
 
 export interface User {

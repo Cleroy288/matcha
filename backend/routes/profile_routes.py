@@ -1,8 +1,16 @@
 from flask import Blueprint
+
 from controllers.profile_controller import (
-    get_profile, get_public_profile, update_profile, update_location,
-    add_tag, remove_tag, search_tags,
-    upload_photo_handler, delete_photo, set_profile_photo
+    add_tag,
+    delete_photo,
+    get_profile,
+    get_public_profile,
+    remove_tag,
+    search_tags,
+    set_profile_photo,
+    update_location,
+    update_profile,
+    upload_photo_handler,
 )
 
 profile_routes = Blueprint("profile", __name__)

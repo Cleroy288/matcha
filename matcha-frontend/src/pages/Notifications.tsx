@@ -45,7 +45,7 @@ export default function Notifications() {
       .then(() => setUnreadCount(0))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
-  }, [isAuthenticated])
+  }, [isAuthenticated, setUnreadCount])
 
   if (!isAuthenticated) {
     return (

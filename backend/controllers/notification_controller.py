@@ -1,7 +1,9 @@
 from flask import jsonify
+
+from controllers.constants import HTTP_BAD_REQUEST, HTTP_OK
+from services.notification_service import get_unread_count, get_user_notifications, mark_notifications_read
 from utils.jwt_required import jwt_required
-from services.notification_service import get_user_notifications, mark_notifications_read, get_unread_count
-from controllers.constants import HTTP_OK, HTTP_BAD_REQUEST
+
 
 @jwt_required
 def get_notifications(payload):

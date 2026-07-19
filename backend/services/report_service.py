@@ -1,6 +1,7 @@
-from models.report_model import add_report
 from models.block_model import add_block
 from models.like_model import remove_like
+from models.report_model import add_report
+
 
 def report_user(reporter_id, reported_id, reason=None):
     if reporter_id == reported_id:

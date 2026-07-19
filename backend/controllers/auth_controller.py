@@ -1,25 +1,39 @@
-from flask import request, jsonify, make_response
-from services.auth_service import register_user, login_user, reset_password_user, verify_reset_password_user, verify_email_user, email_verification_disabled
-from utils.jwt_required import jwt_required
+from flask import jsonify, make_response, request
+
+from controllers.constants import HTTP_BAD_REQUEST, HTTP_CREATED, HTTP_NOT_FOUND, HTTP_OK
 from models.user_model import get_user_by_id
+from services.auth_service import (
+	email_verification_disabled,
+	login_user,
+	register_user,
+	reset_password_user,
+	verify_email_user,
+	verify_reset_password_user,
+)
 from utils.constants import AuthMessages
-from controllers.constants import HTTP_OK, HTTP_CREATED, HTTP_BAD_REQUEST, HTTP_NOT_FOUND
+from utils.jwt_required import jwt_required
+
 
 def register():
 
 	data = request.json
 	
 	try:  
-		user_id = register_user(
+		register_user(
 			data["email"],
 			data["username"],
 			data["password"],
+			data.get("confirm_password"),
 			data["first_name"],
 			data["last_name"]
 		)
 
-		message = AuthMessages.REGISTER_SUCCESS_NO_EMAIL if email_verification_disabled() else AuthMessages.REGISTER_SUCCES
-		return jsonify({"message": message}), HTTP_CREATED
+		requires_email_verification = not email_verification_disabled()
+		message = AuthMessages.REGISTER_SUCCES if requires_email_verification else AuthMessages.REGISTER_SUCCESS_NO_EMAIL
+		return jsonify({
+			"message": message,
+			"email_verification_required": requires_email_verification,
+		}), HTTP_CREATED
 
 	except Exception as e:
 		return jsonify({"error": str(e)}), HTTP_BAD_REQUEST

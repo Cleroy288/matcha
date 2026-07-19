@@ -1,8 +1,10 @@
 import os
-import jwt
-from utils.constants import AuthMessages
 from datetime import datetime, timedelta
+
+import jwt
 from dotenv import load_dotenv
+
+from utils.constants import AuthMessages
 
 load_dotenv()
 
@@ -24,6 +26,6 @@ def decode_token(token):
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         return payload
     except jwt.ExpiredSignatureError:
-        raise Exception(AuthMessages.TOKEN_EXPIRED)
+        raise Exception(AuthMessages.TOKEN_EXPIRED) from None
     except jwt.InvalidTokenError:
-        raise Exception(AuthMessages.INVALID_TOKEN)
+        raise Exception(AuthMessages.INVALID_TOKEN) from None

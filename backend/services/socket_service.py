@@ -1,10 +1,12 @@
-from flask_socketio import emit, join_room, leave_room
+from flask_socketio import join_room, leave_room
+
+from models.profile_model import set_online_status
 from services.jwt_service import decode_token
 
 connected_users = {}  # { user_id: socket_id }
 
 def handle_connect(socketio, request):
-    """Appelé quand un user ouvre une connexion WebSocket."""
+    """Appelé quand un user ouvre une connexion WebSocket : room privée + statut en ligne."""
     try:
         # On récupère le token depuis les cookies de la connexion WS
         token = request.cookies.get("auth_token")
@@ -17,6 +19,7 @@ def handle_connect(socketio, request):
         # L'user rejoint sa room privée
         join_room(f"user_{user_id}")
         connected_users[user_id] = request.sid  # sid = socket id unique
+        set_online_status(user_id, True)
         print(f"User {user_id} connecté via WebSocket")
 
     except Exception:
@@ -24,13 +27,14 @@ def handle_connect(socketio, request):
 
 
 def handle_disconnect(request):
-    """Appelé quand un user ferme la connexion."""
+    """Appelé quand un user ferme la connexion : statut hors ligne + last_online."""
     sid = request.sid
     # Retrouve le user_id depuis le sid
     user_id = next((uid for uid, s in connected_users.items() if s == sid), None)
     if user_id:
         leave_room(f"user_{user_id}")
         del connected_users[user_id]
+        set_online_status(user_id, False)
         print(f"User {user_id} déconnecté")
 
 
