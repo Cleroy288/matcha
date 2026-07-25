@@ -13,7 +13,26 @@ from PIL import Image
 from database.db import get_connection
 from services.constants import MIN_TAGS_FOR_COMPLETE, UPLOAD_DIR
 
-fake = Faker()
+fake = Faker("fr_FR")
+fake_be = Faker("fr_BE")
+
+# (nom_ville, latitude, longitude) — centres réels
+FRANCE_CITIES = (
+    ("Paris", 48.8566, 2.3522), ("Marseille", 43.2965, 5.3698),
+    ("Lyon", 45.7640, 4.8357), ("Toulouse", 43.6047, 1.4442),
+    ("Nice", 43.7102, 7.2620), ("Nantes", 47.2184, -1.5536),
+    ("Montpellier", 43.6108, 3.8767), ("Strasbourg", 48.5734, 7.7521),
+    ("Bordeaux", 44.8378, -0.5792), ("Lille", 50.6292, 3.0573),
+    ("Rennes", 48.1173, -1.6778), ("Grenoble", 45.1885, 5.7245),
+    ("Dijon", 47.3220, 5.0415), ("Avignon", 43.9493, 4.8055),
+    ("Aix-en-Provence", 43.5297, 5.4474), ("Toulon", 43.1242, 5.9280),
+)
+BELGIUM_CITIES = (
+    ("Bruxelles", 50.8503, 4.3517), ("Anvers", 51.2194, 4.4025),
+    ("Gand", 51.0543, 3.7174), ("Liège", 50.6326, 5.5797),
+    ("Charleroi", 50.4108, 4.4446), ("Bruges", 51.2093, 3.2247),
+    ("Namur", 50.4674, 4.8720), ("Louvain", 50.8798, 4.7005),
+)
 
 # Shared intentionally: these accounts only exist as local evaluation data.
 SEED_PASSWORD = "Zxqv9!mN482"
@@ -81,8 +100,9 @@ def generate_users(target=500):
             password_hash = bcrypt.hashpw(SEED_PASSWORD.encode(), bcrypt.gensalt()).decode()
 
             for _ in range(missing):
-                user_id = create_seed_user(cur, password_hash)
-                create_seed_profile(cur, user_id)
+                location = pick_location()
+                user_id = create_seed_user(cur, password_hash, location)
+                create_seed_profile(cur, user_id, location)
                 for tag_id in random.sample(tag_ids, random.randint(MIN_TAGS_FOR_COMPLETE, 8)):
                     cur.execute(
                         "INSERT INTO user_tags (user_id, tag_id) VALUES (%s, %s)",
@@ -122,8 +142,25 @@ def ensure_tags(cur):
         tag_ids.append(cur.fetchone()[0])
     return tag_ids
 
+def pick_location():
+    if random.random() < 0.8:
+        city, lat, lng = random.choice(FRANCE_CITIES)
+        faker = fake
+    else:
+        city, lat, lng = random.choice(BELGIUM_CITIES)
+        faker = fake_be
+    lat += random.uniform(-0.08, 0.08)
+    lng += random.uniform(-0.08, 0.08)
+    return {
+        "city": city,
+        "latitude": round(lat, 6),
+        "longitude": round(lng, 6),
+        "faker": faker,
+    }
 
-def create_seed_user(cur, password_hash):
+
+def create_seed_user(cur, password_hash, location):
+    faker = location["faker"]
     key = uuid.uuid4().hex
     cur.execute(
         """
@@ -138,14 +175,15 @@ def create_seed_user(cur, password_hash):
             f"seed_{key}@matcha.test",
             f"seed_{key[:16]}",
             password_hash,
-            fake.first_name(),
-            fake.last_name(),
+            faker.first_name(),
+            faker.last_name(),
         ),
     )
     return cur.fetchone()[0]
 
 
-def create_seed_profile(cur, user_id):
+def create_seed_profile(cur, user_id, location):
+    faker = location["faker"]
     cur.execute(
         """
         INSERT INTO profiles (
@@ -158,12 +196,12 @@ def create_seed_profile(cur, user_id):
             user_id,
             random.choice(("male", "female", "other")),
             random.choice(("male", "female", "bisexual")),
-            fake.text(max_nb_chars=240),
-            fake.date_of_birth(minimum_age=18, maximum_age=70),
+            faker.text(max_nb_chars=240),
+            faker.date_of_birth(minimum_age=18, maximum_age=70),
             random.randint(0, 10),
-            float(fake.latitude()),
-            float(fake.longitude()),
-            fake.city(),
+            location["latitude"],
+            location["longitude"],
+            location["city"],
         ),
     )
 

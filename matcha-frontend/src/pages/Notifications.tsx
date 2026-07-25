@@ -57,7 +57,7 @@ export default function Notifications() {
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container page-scroll">
       <Topbar />
       <h1>Notifications</h1>
 
