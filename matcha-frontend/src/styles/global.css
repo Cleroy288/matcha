@@ -21,7 +21,10 @@
   /* --brutal-shadow: 4px 4px 0px 0px var(--black);
   --brutal-shadow-hover: 8px 8px 0px 0px var(--black); */
   --font-title: 'Archivo Black', sans-serif;
-  --font-body: 'Space Grotesk', sans-serif
+  --font-body: 'Space Grotesk', sans-serif;
+
+  --topbar-height: 90px;
+  --footer-height: 52px;
 }
 
 
@@ -165,8 +168,9 @@ form.brutal-card button {
 /* Pages à contenu long : contenu sous la topbar fixe, scroll vertical autorisé */
 .page-scroll {
   justify-content: flex-start;
-  padding-top: 90px;
+  padding-top: var(--topbar-height);
   box-sizing: border-box;
+  padding-bottom: calc(var(--footer-height) + 2rem);
 }
 
 /* ── Responsive global (mobile) ── */

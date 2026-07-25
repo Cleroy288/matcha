@@ -10,11 +10,11 @@ export default function Register(){
               username, setUsername, password, setPassword, confirmPassword, setConfirmPassword,
               error, setError, success, setSuccess, handleSubmit } = useRegister()
     return (
-        <div className="app-container">
-            <h1>Register</h1>
+        <div className="app-container page-scroll">
             <Topbar></Topbar>
-            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
-            {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>} 
+            <h1>Register</h1>
+            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
+            {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>}
             <form onSubmit={handleSubmit} className="brutal-card">
                 <Input
                     type="text"
