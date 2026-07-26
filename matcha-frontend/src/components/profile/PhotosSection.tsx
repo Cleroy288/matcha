@@ -1,5 +1,6 @@
-import { useRef, type ChangeEvent } from "react"
+import { useRef, useState, type ChangeEvent } from "react"
 import PhotoSlot from "../PhotoSlot"
+import StatusMessage from "../StatusMessage"
 import { deletePhoto, fetchUserPhotos, setProfilePhoto, uploadPhoto } from "../../services/profile"
 import type { Photo } from "../../types/profile"
 import { MAX_PHOTOS, UPLOAD_BASE, ACCEPTED_IMAGE_TYPES } from "../../constants/profile"
@@ -13,31 +14,35 @@ interface PhotosSectionProps {
 
 export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleUpload(file: File) {
+    setError(null)
     try {
       const newPhoto = await uploadPhoto(file)
       onUpdate([...photos, newPhoto])
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Upload error")
+      setError(e instanceof Error ? e.message : "Upload error")
     }
   }
 
   async function handleDelete(photoId: number) {
+    setError(null)
     try {
       await deletePhoto(photoId)
       onUpdate(await fetchUserPhotos())
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Delete error")
+      setError(e instanceof Error ? e.message : "Delete error")
     }
   }
 
   async function handleSetPrimary(photoId: number) {
+    setError(null)
     try {
       await setProfilePhoto(photoId)
       onUpdate(photos.map((photo) => ({ ...photo, is_profile: photo.id === photoId })))
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Update error")
+      setError(e instanceof Error ? e.message : "Update error")
     }
   }
 
@@ -58,6 +63,8 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
   return (
     <div className="PhotosSection">
       <h3>Photos ({photos.length}/{MAX_PHOTOS})</h3>
+
+      {error && <StatusMessage type="error" message={error} onClose={() => setError(null)} />}
 
       <input
         ref={fileInputRef}

@@ -1,7 +1,10 @@
+import logging
 import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+logger = logging.getLogger(__name__)
 
 frontend_url = os.getenv("FRONTEND_URL")
 
@@ -57,10 +60,10 @@ def send_verification_email(user_email, token):
             server.login(smtp_user, smtp_pass)
             server.send_message(message)
         return True
-    except Exception as e:
-        print(f"Erreur envoi mail: {e}")
+    except Exception:
+        logger.exception("Failed to send verification email")
         return False
-    
+
 def send_reset_password_email(user_email, token):
     smtp_host = os.getenv("SMTP_HOST")
     smtp_port = os.getenv("SMTP_PORT")
@@ -89,6 +92,6 @@ def send_reset_password_email(user_email, token):
             server.login(smtp_user, smtp_pass)
             server.send_message(message)
         return True
-    except Exception as e:
-        print(f"Erreur envoi mail: {e}")
+    except Exception:
+        logger.exception("Failed to send reset password email")
         return False

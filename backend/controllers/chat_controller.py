@@ -1,8 +1,9 @@
-from flask import jsonify, request
+from flask import jsonify
 
 from controllers.constants import HTTP_BAD_REQUEST, HTTP_CREATED, HTTP_OK
 from services.chat_service import get_messages, get_unread_total, list_conversations, send_message
 from utils.jwt_required import jwt_required
+from utils.request_body import get_json_body
 
 
 @jwt_required
@@ -28,8 +29,8 @@ def conversation_messages(payload, user_id):
 @jwt_required
 def post_message(payload, user_id):
     """POST /chat/messages/<user_id> — envoie un message au match."""
-    data = request.json or {}
     try:
+        data = get_json_body()
         message = send_message(payload["user_id"], int(user_id), data.get("content"))
         return jsonify(message), HTTP_CREATED
     except Exception as e:

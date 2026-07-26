@@ -43,7 +43,7 @@ export default function Notifications() {
         return markNotificationsRead()
       })
       .then(() => setUnreadCount(0))
-      .catch(e => setError(e.message))
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Erreur serveur"))
       .finally(() => setLoading(false))
   }, [isAuthenticated, setUnreadCount])
 

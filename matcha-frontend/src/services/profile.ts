@@ -1,18 +1,7 @@
 import type { Profile, Tag, Photo } from "../types/profile"
 import { API_URL } from "../constants/profile"
 import { fetchWithCredentials } from "../config/api"
-
-async function handleResponse<T>(res: Response): Promise<T> {
-  if (!res.ok) {
-    let message = "An error occurred"
-    try {
-      const err = await res.json()
-      message = err.error || message
-    } catch { /* non-JSON body */ }
-    throw new Error(message)
-  }
-  return res.json()
-}
+import { handleResponse } from "./http"
 
 export async function fetchProfile(): Promise<Profile> {
   const res = await fetchWithCredentials(`${API_URL}/profile`)

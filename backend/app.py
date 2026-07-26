@@ -1,3 +1,4 @@
+import logging
 import os
 
 from dotenv import load_dotenv
@@ -13,18 +14,43 @@ from routes.chat_routes import chat_routes
 from routes.profile_routes import profile_routes
 from routes.social_routes import social_routes
 from services.socket_service import handle_connect, handle_disconnect
+from utils.http_errors import register_error_handlers
+from utils.logger import configure_logging
 
 load_dotenv()
 
+configure_logging()
+logger = logging.getLogger(__name__)
+
+MAX_CONTENT_LENGTH = 5 * 1024 * 1024
+DEFAULT_FRONTEND_URL = "http://localhost:5173"
+
+
+def get_secret_key():
+    """Échoue au démarrage plutôt qu'à la première signature de token."""
+    secret_key = os.getenv("SECRET_KEY")
+    if not secret_key:
+        raise RuntimeError("SECRET_KEY is not set: refusing to start")
+    return secret_key
+
+
+def is_debug_enabled():
+    return os.getenv("FLASK_DEBUG", "FALSE").upper() in ("1", "TRUE")
+
+
+frontend_url = os.getenv("FRONTEND_URL", DEFAULT_FRONTEND_URL)
+
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+CORS(app, supports_credentials=True, origins=[frontend_url])
+app.config['SECRET_KEY'] = get_secret_key()
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+
+register_error_handlers(app)
 
 socketio.init_app(
     app,
-    cors_allowed_origins="http://localhost:5173",
+    cors_allowed_origins=frontend_url,
     manage_session=False
 )
 
@@ -48,5 +74,6 @@ app.register_blueprint(chat_routes)
 
 if __name__ == "__main__":
     apply_schema()  # idempotent : crée les tables manquantes (dont messages)
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
-    # debug=True active le refresh automatique
+    debug = is_debug_enabled()
+    logger.info("Starting Matcha backend (debug=%s)", debug)
+    socketio.run(app, host="0.0.0.0", port=5000, debug=debug)

@@ -1,53 +1,40 @@
 import { API_ROUTES, fetchWithCredentials } from "../config/api"
+import { handleResponse } from "./http"
 import type { LoginPayload, LoginResponse, RegisterPayload, RegisterResponse } from "../types/auth"
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   const res = await fetchWithCredentials(API_ROUTES.login, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.error)
-  return data
+  return handleResponse<LoginResponse>(res)
 }
 
 export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
-  const res = await fetch(API_ROUTES.register, {
+  const res = await fetchWithCredentials(API_ROUTES.register, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.error)
-  return data
+  return handleResponse<RegisterResponse>(res)
 }
 
 export async function verifyEmail(token: string): Promise<{ message: string }> {
-  const res = await fetch(`${API_ROUTES.verifyEmail}?token=${token}`)
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.error)
-  return data
+  const res = await fetchWithCredentials(`${API_ROUTES.verifyEmail}?token=${token}`)
+  return handleResponse<{ message: string }>(res)
 }
 
 export async function resetPassword(email: string): Promise<{ message: string }> {
-  const res = await fetch(API_ROUTES.resetPassword, {
+  const res = await fetchWithCredentials(API_ROUTES.resetPassword, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
   })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.error)
-  return data
+  return handleResponse<{ message: string }>(res)
 }
 
 export async function verifyResetPassword(token: string, password: string): Promise<{ message: string }> {
-  const res = await fetch(`${API_ROUTES.verifyResetPassword}?token=${token}`, {
+  const res = await fetchWithCredentials(`${API_ROUTES.verifyResetPassword}?token=${token}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ password })
   })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.error)
-  return data
+  return handleResponse<{ message: string }>(res)
 }

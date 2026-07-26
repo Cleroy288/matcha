@@ -18,9 +18,11 @@ export function useVerifyEmail() {
         setMessage(data.message)
         setTimeout(() => navigate("/login"), 3000)
       })
-      .catch(() => {
-        setStatus("error");
-        setMessage("Impossible de contacter le serveur.")
+      .catch((err: unknown) => {
+        setStatus("error")
+        // le backend explique pourquoi (lien expiré, déjà utilisé…) : ne pas
+        // écraser son message par un diagnostic réseau faux
+        setMessage(err instanceof Error ? err.message : "Impossible de contacter le serveur.")
       })
   }, [token, navigate])
 

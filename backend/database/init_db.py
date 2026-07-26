@@ -1,7 +1,10 @@
+import logging
 import os
 import time
 
 from database.db import get_connection
+
+logger = logging.getLogger(__name__)
 
 SCHEMA_PATH = os.path.join(os.path.dirname(__file__), "schema.sql")
 SCHEMA_APPLY_RETRIES = 5
@@ -15,10 +18,11 @@ def apply_schema():
         try:
             run_schema_file()
             return
-        except Exception as error:
+        except Exception:
             if attempt == SCHEMA_APPLY_RETRIES - 1:
-                print(f"init_db: schema non appliqué ({error})")
+                logger.exception("Schema could not be applied after %s attempts", SCHEMA_APPLY_RETRIES)
                 return
+            logger.info("Database not ready, retrying schema apply (%s/%s)", attempt + 1, SCHEMA_APPLY_RETRIES)
             time.sleep(SCHEMA_APPLY_RETRY_DELAY_S)
 
 
