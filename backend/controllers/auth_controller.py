@@ -3,49 +3,53 @@ from flask import jsonify, make_response, request
 from controllers.constants import HTTP_BAD_REQUEST, HTTP_CREATED, HTTP_NOT_FOUND, HTTP_OK
 from models.user_model import get_user_by_id
 from services.auth_service import (
-	email_verification_disabled,
-	login_user,
-	register_user,
-	reset_password_user,
-	verify_email_user,
-	verify_reset_password_user,
+    email_verification_disabled,
+    login_user,
+    register_user,
+    reset_password_user,
+    verify_email_user,
+    verify_reset_password_user,
 )
 from utils.constants import AuthMessages
 from utils.jwt_required import jwt_required
+from utils.request_body import get_json_body, require_fields
+
+REGISTER_REQUIRED_FIELDS = ("email", "username", "password", "first_name", "last_name")
+COOKIE_MAX_AGE_S = 3600
 
 
 def register():
-
-	data = request.json
-	
-	try:  
-		register_user(
-			data["email"],
-			data["username"],
-			data["password"],
-			data.get("confirm_password"),
-			data["first_name"],
-			data["last_name"]
-		)
-
-		requires_email_verification = not email_verification_disabled()
-		message = AuthMessages.REGISTER_SUCCES if requires_email_verification else AuthMessages.REGISTER_SUCCESS_NO_EMAIL
-		return jsonify({
-			"message": message,
-			"email_verification_required": requires_email_verification,
-		}), HTTP_CREATED
-
-	except Exception as e:
-		return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
-	
-def login():
-    data = request.json
-    username = data["username"]
-    password = data["password"]
-
     try:
-        token, user_data = login_user(username, password)
-        
+        data = get_json_body()
+        require_fields(data, *REGISTER_REQUIRED_FIELDS)
+
+        register_user(
+            data["email"],
+            data["username"],
+            data["password"],
+            data.get("confirm_password"),
+            data["first_name"],
+            data["last_name"]
+        )
+
+        requires_email_verification = not email_verification_disabled()
+        message = AuthMessages.REGISTER_SUCCES if requires_email_verification else AuthMessages.REGISTER_SUCCESS_NO_EMAIL
+        return jsonify({
+            "message": message,
+            "email_verification_required": requires_email_verification,
+        }), HTTP_CREATED
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
+
+
+def login():
+    try:
+        data = get_json_body()
+        require_fields(data, "username", "password")
+
+        token, user_data = login_user(data["username"], data["password"])
+
         response = make_response(jsonify({
             "message": AuthMessages.LOGIN_SUCCESS,
             "user": user_data
@@ -57,19 +61,21 @@ def login():
             httponly=True,
             secure=False,
             samesite="Lax",
-            max_age=3600
+            max_age=COOKIE_MAX_AGE_S
         )
 
         return response
 
     except Exception as e:
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
-    
+
+
 def logout():
     response = make_response(jsonify({"message": "Logged out"}), HTTP_OK)
     response.delete_cookie("auth_token")
     return response
-    
+
+
 def verify_email():
     token = request.args.get('token')
     if not token:
@@ -80,41 +86,43 @@ def verify_email():
         return jsonify({"message": AuthMessages.EMAIL_VERIFIED}), HTTP_OK
     except Exception as e:
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
-    
+
+
 def verify_reset_password():
-    data = request.json
-    password = data["password"]
     token = request.args.get('token')
     if not token:
         return jsonify({"error": AuthMessages.NOT_TOKEN}), HTTP_BAD_REQUEST
 
     try:
-        verify_reset_password_user(token, password)
+        data = get_json_body()
+        require_fields(data, "password")
+
+        verify_reset_password_user(token, data["password"])
         return jsonify({"message": AuthMessages.PASSWORD_RESET_OK}), HTTP_OK
     except Exception as e:
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 
-def reset_password():
-    data = request.json
-    email = data["email"]
-    if not email:
-         return jsonify({"error": AuthMessages.NOT_EMAIL}), HTTP_BAD_REQUEST
 
+def reset_password():
     try:
-        reset_password_user(email)
+        data = get_json_body()
+        require_fields(data, "email")
+
+        reset_password_user(data["email"])
         return jsonify({"message": AuthMessages.EMAIL_SEND_SUCCESS}), HTTP_OK
     except Exception as e:
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 
+
 # TEST ca va disparaitre
 @jwt_required # A mettre au dessus d'un controller pour proteger sa route
-def testmiddleware(payload): 
+def testmiddleware(payload):
     user_id = payload["user_id"]
-    user = get_user_by_id(user_id) 
-    
+    user = get_user_by_id(user_id)
+
     if not user:
         return jsonify({"error": AuthMessages.USER_NOT_FOUND}), HTTP_NOT_FOUND
-        
+
     return jsonify({
         "user": {
             "id": user["id"],

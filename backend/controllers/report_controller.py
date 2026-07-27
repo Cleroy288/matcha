@@ -1,17 +1,17 @@
-from flask import jsonify, request
+from flask import jsonify
 
 from controllers.constants import HTTP_BAD_REQUEST, HTTP_OK
 from services.report_service import report_user
 from utils.fame import recalculate_fame
 from utils.jwt_required import jwt_required
+from utils.request_body import get_json_body
 
 
 @jwt_required
 def report(payload, user_id):
-    data = request.get_json(silent=True) or {}
-    reason = data.get("reason", None)
     try:
-        report_user(payload["user_id"], int(user_id), reason)
+        data = get_json_body()
+        report_user(payload["user_id"], int(user_id), data.get("reason"))
         recalculate_fame()
         return jsonify({"reported": True}), HTTP_OK
     except Exception as e:

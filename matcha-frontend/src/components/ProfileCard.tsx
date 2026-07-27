@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./ProfileCard.css";
 
 export interface ProfileCardData {
@@ -27,6 +27,14 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
     const [hint, setHint] = useState<"like" | "nope" | null>(null);
     const [photoIndex, setPhotoIndex] = useState(0);
     const dragState = useRef({ active: false, startX: 0, currentX: 0 });
+    const flyOutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // le like part 370 ms après le swipe : si la card disparaît entre-temps
+    // (navigation, rechargement du feed), le timer ne doit pas survivre
+    useEffect(() => () => {
+        if (flyOutTimer.current) clearTimeout(flyOutTimer.current);
+    }, []);
+
     const activePhoto = profile.photoUrls.length
         ? profile.photoUrls[photoIndex % profile.photoUrls.length]
         : undefined;
@@ -69,7 +77,7 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
         card.style.transform = `rotate(${rot}deg) translate(${tx}px, 80px)`;
         card.style.opacity = "0";
         setHint(null);
-        setTimeout(() => {
+        flyOutTimer.current = setTimeout(() => {
         if (dir === "right") onLike(profile.userId);
         else onDislike(profile.userId);
         }, 370);

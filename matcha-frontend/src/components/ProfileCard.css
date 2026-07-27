@@ -82,7 +82,7 @@
   z-index: 4;
   width: 48px;
   height: 64px;
-  transform: translateY(-50%);
+  /* transform: translateY(-50%); */
   border: 2px solid var(--border-color);
   background: var(--surface-alt, var(--bg-color));
   box-shadow: var(--brutal-shadow);

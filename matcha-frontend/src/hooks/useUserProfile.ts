@@ -24,6 +24,14 @@ export function useUserProfile(userId: number) {
 
   // consultation = enregistrée dans l'historique de visites (sujet IV.5)
   useEffect(() => {
+    // /user/abc → Number("abc") = NaN : la route backend <int:user_id> ne
+    // matche pas, on récupérait un 404 pour rien. La page affiche alors son
+    // « Profil introuvable » sans requête réseau.
+    if (!Number.isInteger(userId) || userId <= 0) {
+      setProfile(null)
+      setLoading(false)
+      return
+    }
     setLoading(true)
     load()
     visitUser(userId).catch(() => {})

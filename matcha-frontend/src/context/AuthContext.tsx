@@ -52,8 +52,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => {})
   }, [])
 
+  // passé directement à onClick dans la Topbar : ne doit jamais rejeter, sinon
+  // le navigateur logge un « Uncaught (in promise) » quand le backend est down
   const logout = async () => {
-    await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
+    try {
+      await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
+    } catch {
+      // backend injoignable : on déconnecte quand même côté client
+    }
     setUser(null)
   }
 

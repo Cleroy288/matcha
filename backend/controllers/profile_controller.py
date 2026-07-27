@@ -6,6 +6,7 @@ from services.photo_service import delete_user_photo, set_user_profile_photo, up
 from services.profile_service import get_full_profile, update_user_location, update_user_profile
 from services.tag_service import add_tag_to_profile, remove_tag_from_profile, search_available_tags
 from utils.jwt_required import jwt_required
+from utils.request_body import get_json_body
 
 
 @jwt_required
@@ -28,8 +29,8 @@ def get_public_profile(payload, user_id):
 @jwt_required
 def update_profile(payload):
     user_id = payload["user_id"]
-    data = request.json
     try:
+        data = get_json_body()
         profile = update_user_profile(user_id, data)
         return jsonify(profile), HTTP_OK
     except Exception as e:
@@ -39,8 +40,8 @@ def update_profile(payload):
 @jwt_required
 def update_location(payload):
     user_id = payload["user_id"]
-    data = request.json
     try:
+        data = get_json_body()
         update_user_location(
             user_id,
             data.get("latitude"),
@@ -56,8 +57,8 @@ def update_location(payload):
 @jwt_required
 def add_tag(payload):
     user_id = payload["user_id"]
-    data = request.json
     try:
+        data = get_json_body()
         tags = add_tag_to_profile(user_id, data.get("name", ""))
         return jsonify({"tags": tags}), HTTP_CREATED
     except Exception as e:
@@ -67,8 +68,8 @@ def add_tag(payload):
 @jwt_required
 def remove_tag(payload):
     user_id = payload["user_id"]
-    data = request.json
     try:
+        data = get_json_body()
         tags = remove_tag_from_profile(user_id, data.get("name", ""))
         return jsonify({"tags": tags}), HTTP_OK
     except Exception as e:
@@ -88,9 +89,8 @@ def search_tags(_payload):
 @jwt_required
 def upload_photo_handler(payload):
     user_id = payload["user_id"]
-    file = request.files.get("photo")
     try:
-        photo = upload_photo(user_id, file)
+        photo = upload_photo(user_id, request.files.get("photo"))
         return jsonify(photo), HTTP_CREATED
     except Exception as e:
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
