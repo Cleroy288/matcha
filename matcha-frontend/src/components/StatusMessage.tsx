@@ -13,8 +13,7 @@ type Props = {
 }
 
 export default function StatusMessage({ type, message, onClose, duration = 5000 }: Props) {
-  // les parents passent souvent un onClose inline : on garde la dernière version
-  // dans un ref pour ne pas réarmer le timer à chaque render
+
   const onCloseRef = useRef(onClose)
   useEffect(() => {
     onCloseRef.current = onClose
@@ -25,8 +24,8 @@ export default function StatusMessage({ type, message, onClose, duration = 5000 
       onCloseRef.current()
     }, duration)
 
-    return () => clearTimeout(timer)  // ← cleanup si le composant disparaît avant
-  }, [message, duration])             // ← se relance si un nouveau message arrive
+    return () => clearTimeout(timer)
+  }, [message, duration])
 
   return (
     <div className={`status-message status-${type}`}>

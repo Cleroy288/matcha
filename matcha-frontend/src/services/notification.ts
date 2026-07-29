@@ -9,7 +9,5 @@ export async function fetchNotifications(): Promise<{ notifications: Notificatio
 
 export async function markNotificationsRead(): Promise<void> {
   const res = await fetchWithCredentials(API_ROUTES.notificationsRead, { method: "PATCH" })
-  // sans ce contrôle, un 401 passait inaperçu et le badge était remis à zéro
-  // côté UI alors que rien n'avait été marqué lu en base
   await handleResponse<{ ok: boolean }>(res)
 }

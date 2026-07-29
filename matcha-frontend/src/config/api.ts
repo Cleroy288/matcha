@@ -1,4 +1,3 @@
-// frontend/src/config/api.ts  ← fichier dédié
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost"
 
 export const API_ROUTES = {

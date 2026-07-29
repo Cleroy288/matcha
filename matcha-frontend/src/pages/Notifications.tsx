@@ -13,8 +13,8 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  like:    "var(--primary)",    // rose
-  match:   "var(--accent)",     // vert fluo
+  like:    "var(--primary)",
+  match:   "var(--accent)",
   visit:   "var(--matcha-light)",
   unlike:  "#e0e0e0",
   message: "var(--primary)",
@@ -39,7 +39,6 @@ export default function Notifications() {
     fetchNotifications()
       .then(data => {
         setNotifications(data.notifications)
-        // marque tout comme lu + reset badge
         return markNotificationsRead()
       })
       .then(() => setUnreadCount(0))

@@ -30,8 +30,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.remove(t.class);
     }
     root.classList.add(current.class);
-    
-    // Fix pour la barre de statut iPhone
+
     const meta = document.querySelector("meta[name='theme-color']");
     if (meta) meta.setAttribute("content", current.color);
   }, [theme]);
@@ -45,7 +44,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Hook personnalisé pour utiliser le thème facilement
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) throw new Error("useTheme must be used within ThemeProvider");
