@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   fetchPublicProfile, visitUser, likeUser, unlikeUser, blockUser, reportUser
 } from "../services/social"
@@ -10,6 +10,7 @@ export function useUserProfile(userId: number) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<string | null>(null)
+  const visitedRef = useRef<number | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
@@ -34,7 +35,13 @@ export function useUserProfile(userId: number) {
     }
     setLoading(true)
     load()
-    visitUser(userId).catch(() => {})
+
+    // StrictMode (dev) démonte/remonte le composant et ré-exécute cet effect ;
+    // ce ref survit au remount et évite d'enregistrer 2 visites pour le même userId.
+    if (visitedRef.current !== userId) {
+      visitedRef.current = userId
+      visitUser(userId).catch(() => {})
+    }
   }, [userId, load])
 
   const toggleLike = async () => {

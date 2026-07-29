@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { likeUser, unlikeUser, visitUser } from "../services/social";
 
 interface UseProfileCardOptions {
@@ -16,8 +16,12 @@ export function useProfileCard({
   onDislikeSuccess,
   onError,
 }: UseProfileCardOptions) {
+  const visitedRef = useRef<number | null>(null);
+
   useEffect(() => {
     if (!isActive) return;
+    if (visitedRef.current === userId) return;
+    visitedRef.current = userId;
     visitUser(userId).catch(() => {
     });
   }, [isActive, userId]);

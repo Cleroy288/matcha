@@ -15,6 +15,7 @@ export default function Register(){
             <h1>Register</h1>
             {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
             {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>}
+            {(error || success) && <div style={{ height: "1rem" }} />}
             <form onSubmit={handleSubmit} className="brutal-card">
                 <Input
                     type="text"
