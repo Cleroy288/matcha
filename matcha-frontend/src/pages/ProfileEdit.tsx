@@ -11,6 +11,7 @@ import AccountActivity from "../components/profile/AccountActivity"
 import DeleteAccountSection from "../components/profile/DeleteAccountSection"
 import { fetchProfile } from "../services/profile"
 import type { Profile } from "../types/profile"
+import ThemeSelector from "../components/ThemeSelector"
 import "./ProfileEdit.css"
 
 export default function ProfileEdit() {
@@ -100,6 +101,7 @@ export default function ProfileEdit() {
   return (
     <div className="app-container page-scroll">
       <Topbar />
+      <ThemeSelector></ThemeSelector>
       <div className="ProfileEdit">
         <h1>{onboarding ? "Complete your profile" : "My profile"}</h1>
         {error && <p>{error}</p>}
