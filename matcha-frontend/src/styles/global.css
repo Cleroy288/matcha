@@ -85,9 +85,10 @@ h2, h3 {
 
 
 form {
-  background: white;
+  background: var(--card-bg);
+  color: var(--text-color);
   padding: 2rem;
-  border: var(--border-width) solid var(--black);
+  border: var(--border-width) solid var(--card-border);
   box-shadow: var(--brutal-shadow);
   display: flex;
   flex-direction: column;
@@ -134,7 +135,7 @@ form {
 }
 
 .link:hover {
-    color: var(--purple);
+    color: var(--link-hover);
     transform: translate(2px, 2px);
 }
 

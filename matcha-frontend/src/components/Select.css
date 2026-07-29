@@ -1,7 +1,8 @@
 select {
-  background-color: var(--matcha-light);
+  background-color: var(--input-bg);
+  color: var(--input-text);
   padding: 15px;
-  border: var(--border-width) solid var(--black);
+  border: var(--border-width) solid var(--input-border);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 1rem;
@@ -20,10 +21,10 @@ select {
 }
 
 select:focus {
-  background-color: var(--bg-color);
+  background-color: var(--input-bg);
+  color: var(--input-text);
   transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0px var(--black);
-  color: var(--purple);
   outline: none;
-  border-color: var(--purple);
+  border-color: var(--input-focus);
 }

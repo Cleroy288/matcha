@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  background: white;
+  background: var(--card-bg);
+  color: var(--text-color);
   padding: 1.5rem;
-  border: var(--border-width) solid var(--black);
+  border: var(--border-width) solid var(--card-border);
   box-shadow: var(--brutal-shadow);
 }
 
@@ -22,7 +23,7 @@
 
 .PhotosSection-standard {
   padding-top: 1.25rem;
-  border-top: 2px solid var(--black);
+  border-top: 2px solid var(--card-border);
 }
 
 .PhotosSection-main .PhotoSlot {
@@ -47,9 +48,9 @@
   width: 100%;
   min-height: 38px;
   padding: 0.4rem;
-  border: 2px solid var(--black);
-  background: white;
-  color: var(--black);
+  border: 2px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text-color);
   font: inherit;
   font-size: 0.78rem;
   font-weight: 700;
@@ -59,6 +60,7 @@
 
 .PhotosSection-primaryButton:hover {
   background: var(--accent);
+  color: var(--on-accent);
 }
 
 @media (max-width: 480px) {

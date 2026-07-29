@@ -3,7 +3,6 @@
   --color1: #BEF264;
   --color2: #FF5C8A;
   --color3: #1a1a1a;
-  --color4: ;
   --bg-color: #FDF6E3;
   --primary: #BEF264;
   --accent: #BEF264;
@@ -21,15 +20,25 @@
   --brutal-shadow: 4px 4px 0px 0px #1a1a1a;
   --brutal-shadow-hover: 8px 8px 0px 0px #1a1a1a;
   --h1-color: #FF5C8A;
-  --input-color: var(--black);
   --link-color: #fc9ab6;
+  --link-hover: #1a1a1a;
+  /* primary/accent/h1 sont tous clairs ici → texte foncé pour le contraste */
+  --on-primary: #1a1a1a;
+  --on-accent: #1a1a1a;
+  --on-h1: #1a1a1a;
+  --button-hover: #E05179;
+  --input-bg: #ffffff;
+  --input-border: #1a1a1a;
+  --input-text: #1a1a1a;
+  --input-focus: #FF5C8A;
+  --card-bg: var(--surface);
+  --card-border: var(--border-color);
 }
 
 .theme-ocean {
   --color1: #00C9FF;
   --color2:#00F5D4 ;
   --color3: #1e3a5f;
-  --color4: ;
   --bg-color: #0A0F1E;
   --primary: #00C9FF;
   --accent: #00F5D4;
@@ -46,16 +55,28 @@
   --tag-bg: #00F5D4;
   --brutal-shadow: 4px 4px 0px 0px var(--topbar-border);
   --brutal-shadow-hover: 8px 8px 0px 0px var(--topbar-border);
-   --h1-color: #00F5D4;
-   --input-color: var(--white);
-   --link-color: #97fcee;
+  --h1-color: #00F5D4;
+  --link-color: #97fcee;
+  --link-hover: #00C9FF;
+  /* primary/accent/h1 sont tous clairs en Ocean → texte foncé (réutilise topbar-bg, déjà dans la palette) */
+  --on-primary: #060C18;
+  --on-accent: #060C18;
+  --on-h1: #060C18;
+  --button-hover: #00D8BB;
+  /* fond distinct du bg-color pour que les champs se détachent, texte = text-color */
+  --input-bg: #111827;
+  --input-border: #1e3a5f;
+  --input-text: #E8F4FF;
+  --input-focus: #00C9FF;
+  /* remplace le "background: white" codé en dur des cartes profil */
+  --card-bg: var(--surface);
+  --card-border: var(--border-color);
 }
 
 .theme-emerald {
   --color1: #C84B2F;
   --color2: #E8A87C;
   --color3: #2C1A0E;
-  --color4: ;
   --bg-color: #FAF4EC;
   --primary: #C84B2F;
   --accent: #E8A87C;
@@ -72,16 +93,26 @@
   --tag-bg: #E8A87C;
   --brutal-shadow: 4px 4px 0px 0px #2C1A0E;
   --brutal-shadow-hover: 8px 8px 0px 0px #2C1A0E;
-   --h1-color: #E8A87C;
-   --input-color: var(--black);
-   --link-color: #fce2d2;
+  --h1-color: #E8A87C;
+  --link-color: #fce2d2;
+  --link-hover: #2C1A0E;
+  /* --primary (#C84B2F) est plus sombre/saturé que --accent/--h1 → texte clair requis ici, contrairement au reste de la palette */
+  --on-primary: #FFFFFF;
+  --on-accent: #2C1A0E;
+  --on-h1: #2C1A0E;
+  --button-hover: #CC946D;
+  --input-bg: #ffffff;
+  --input-border: #2C1A0E;
+  --input-text: #2C1A0E;
+  --input-focus: #C84B2F;
+  --card-bg: var(--surface);
+  --card-border: var(--border-color);
 }
 
 .theme-night {
   --color1: #9717FF;
   --color2: #00F5D4;
   --color3: #3d2a6e;
-  --color4: #BEF264;
   --bg-color: #0E0A1A;
   --primary: #9717FF;
   --accent: #00F5D4;
@@ -98,7 +129,19 @@
   --tag-bg: #BEF264;
   --brutal-shadow: 4px 4px 0px 0px var(--topbar-border);
   --brutal-shadow-hover: 8px 8px 0px 0px var(--topbar-border);
-   --h1-color: #00F5D4;
-   --input-color: var(--white);
-   --link-color: #7effee;
+  --h1-color: #00F5D4;
+  --link-color: #7effee;
+  --link-hover: #9717FF;
+  /* --primary (violet, plus sombre) et --accent/--h1 (turquoise, plus clair) ont des luminances opposées
+     → deux traitements différents de texte au sein du même thème */
+  --on-primary: #F0ECFF;
+  --on-accent: #080512;
+  --on-h1: #080512;
+  --button-hover: #00D8BB;
+  --input-bg: #150F28;
+  --input-border: #3d2a6e;
+  --input-text: #F0ECFF;
+  --input-focus: #9717FF;
+  --card-bg: var(--surface);
+  --card-border: var(--border-color);
 }
