@@ -27,7 +27,7 @@ export default function Search() {
             const results = await searchProfiles(activeFilters)
             setProfiles(results.map(toCardData))
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         } finally {
             setLoading(false)
         }
@@ -40,7 +40,7 @@ export default function Search() {
     }, [isAuthenticated, runSearch])
 
     if (!isAuthenticated) {
-        return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
+        return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
     }
 
     const handleLike = async (userId: number) => {
@@ -48,7 +48,7 @@ export default function Search() {
         try {
             await likeUser(userId)
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         }
     }
 
@@ -57,7 +57,7 @@ export default function Search() {
         <Topbar></Topbar>
         <div className="feed-content">
             {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
-            <h1>Recherche</h1>
+            <h1>Search</h1>
             <ProfileFilters
                 variant="search"
                 filters={filters}
@@ -65,10 +65,10 @@ export default function Search() {
                 onApply={() => runSearch(filters)}
             />
             {loading ? (
-                <p>Chargement...</p>
+                <p>Loading...</p>
             ) : (
                 <>
-                    <p className="search-count">{profiles.length} profil(s) trouvé(s)</p>
+                    <p className="search-count">{profiles.length} profile(s) found</p>
                     <ProfileStack
                         profiles={profiles}
                         onLike={handleLike}

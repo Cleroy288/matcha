@@ -1,10 +1,12 @@
-from flask import jsonify, request
+from flask import jsonify, make_response, request
 
 from controllers.constants import HTTP_BAD_REQUEST, HTTP_CREATED, HTTP_NOT_FOUND, HTTP_OK
 from controllers.errors import MSG_LOCATION_UPDATED, MSG_PHOTO_DELETED, MSG_PROFILE_PHOTO_UPDATED
+from services.account_service import delete_user_account
 from services.photo_service import delete_user_photo, set_user_profile_photo, upload_photo
 from services.profile_service import get_full_profile, update_user_location, update_user_profile
 from services.tag_service import add_tag_to_profile, remove_tag_from_profile, search_available_tags
+from utils.constants import AuthMessages
 from utils.jwt_required import jwt_required
 from utils.request_body import get_json_body
 
@@ -25,6 +27,20 @@ def get_public_profile(payload, user_id):
     if not data:
         return jsonify({"error": "Not found"}), HTTP_NOT_FOUND
     return jsonify(data), HTTP_OK
+
+@jwt_required
+def delete_account(payload):
+    """DELETE /profile — droit à l'effacement RGPD : purge le compte et déconnecte."""
+    user_id = payload["user_id"]
+    try:
+        delete_user_account(user_id)
+    except Exception as e:
+        return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
+
+    response = make_response(jsonify({"message": AuthMessages.ACCOUNT_DELETED}), HTTP_OK)
+    response.delete_cookie("auth_token")
+    return response
+
 
 @jwt_required
 def update_profile(payload):

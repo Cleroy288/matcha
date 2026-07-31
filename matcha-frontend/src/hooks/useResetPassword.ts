@@ -13,7 +13,7 @@ export function useResetPassword() {
             setSuccess(data.message)
         } catch (err: unknown) {
             if (err instanceof Error) setError(err.message)
-            else setError("Une erreur inattendue est survenue")
+            else setError("An unexpected error occurred")
         }
     }
 

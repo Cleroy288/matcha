@@ -13,11 +13,11 @@ interface ProfileFiltersProps {
 }
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
-  { key: "score", label: "Pertinence" },
-  { key: "age", label: "Âge" },
+  { key: "score", label: "Relevance" },
+  { key: "age", label: "Age" },
   { key: "distance", label: "Distance" },
-  { key: "fame", label: "Popularité" },
-  { key: "common_tags", label: "Tags communs" },
+  { key: "fame", label: "Fame rating" },
+  { key: "common_tags", label: "Common tags" },
 ]
 
 /* Panneau tri + filtres partagé entre le feed (browse) et la recherche avancée */
@@ -40,36 +40,36 @@ export default function ProfileFilters({ variant, filters, onChange, onApply }: 
   return (
     <div className="filters-panel">
       <button className="filters-toggle" onClick={() => setOpen(!open)} type="button">
-        {open ? "▲ Masquer les filtres" : "▼ Filtres & tri"}
+        {open ? "▲ Hide filters" : "▼ Filters & sorting"}
       </button>
 
       {open && (
         <form className="filters-form" onSubmit={submit}>
           <div className="filters-grid">
             <label className="filters-field">
-              Âge min
+              Min age
               <Input type="number" min={18} value={filters.age_min ?? ""} onChange={setNumber("age_min")} />
             </label>
             <label className="filters-field">
-              Âge max
+              Max age
               <Input type="number" min={18} value={filters.age_max ?? ""} onChange={setNumber("age_max")} />
             </label>
             <label className="filters-field">
-              Popularité min
+              Min fame rating
               <Input type="number" min={0} max={10} value={filters.fame_min ?? ""} onChange={setNumber("fame_min")} />
             </label>
             <label className="filters-field">
-              Popularité max
+              Max fame rating
               <Input type="number" min={0} max={10} value={filters.fame_max ?? ""} onChange={setNumber("fame_max")} />
             </label>
             <label className="filters-field">
-              Distance max (km)
+              Max distance (km)
               <Input type="number" min={0} value={filters.distance_max ?? ""} onChange={setNumber("distance_max")} />
             </label>
 
             {variant === "browse" && (
               <label className="filters-field">
-                Tags communs min
+                Min common tags
                 <Input type="number" min={0} value={filters.min_common_tags ?? ""} onChange={setNumber("min_common_tags")} />
               </label>
             )}
@@ -77,18 +77,18 @@ export default function ProfileFilters({ variant, filters, onChange, onApply }: 
             {variant === "search" && (
               <>
                 <label className="filters-field">
-                  Ville
+                  City
                   <Input type="text" placeholder="Paris" value={filters.city ?? ""} onChange={setText("city")} />
                 </label>
                 <label className="filters-field">
-                  Tags (séparés par des virgules)
+                  Tags (comma separated)
                   <Input type="text" placeholder="#geek,#vegan" value={filters.tags ?? ""} onChange={setText("tags")} />
                 </label>
               </>
             )}
 
             <label className="filters-field">
-              Trier par
+              Sort by
               <Select
                 value={filters.sort_by ?? "score"}
                 onChange={(e) => onChange({ ...filters, sort_by: e.target.value as SortKey })}
@@ -99,20 +99,20 @@ export default function ProfileFilters({ variant, filters, onChange, onApply }: 
               </Select>
             </label>
             <label className="filters-field">
-              Ordre
+              Order
               <Select
                 value={filters.order ?? ""}
                 onChange={(e) => onChange({ ...filters, order: (e.target.value || undefined) as SortOrder | undefined })}
               >
                 <option value="">Auto</option>
-                <option value="asc">Croissant</option>
-                <option value="desc">Décroissant</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
               </Select>
             </label>
           </div>
 
           <Button type="submit">
-            {variant === "search" ? "Rechercher" : "Appliquer"}
+            {variant === "search" ? "Search" : "Apply"}
           </Button>
         </form>
       )}

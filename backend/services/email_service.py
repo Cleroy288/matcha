@@ -23,7 +23,7 @@ def get_email_template(title, body_text, button_text, link):
             {button_text}
           </a>
           <p style="margin-top: 40px; font-size: 12px; color: #333;">
-            Si le bouton ne fonctionne pas, copie-colle ceci : <br>
+            If the button does not work, copy and paste this link: <br>
             <span style="word-break: break-all;">{link}</span>
           </p>
         </div>
@@ -44,12 +44,12 @@ def send_verification_email(user_email, token):
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
     message["To"] = user_email
-    message["Subject"] = "Matcha | Vérifie ton compte ! 🍵"
+    message["Subject"] = "Matcha | Verify your account 🍵"
 
     html_content = get_email_template(
-        "Bienvenue sur Matcha",
-        "Clique sur le bouton ci-dessous pour valider ton inscription et commencer à matcher !",
-        "Vérifier mon compte",
+        "Welcome to Matcha",
+        "Click the button below to confirm your registration and start matching.",
+        "Verify my account",
         verification_link
     )
     message.attach(MIMEText(html_content, "html"))
@@ -76,12 +76,12 @@ def send_reset_password_email(user_email, token):
     message = MIMEMultipart("alternative")
     message["From"] = smtp_from
     message["To"] = user_email
-    message["Subject"] = "Matcha | Nouveau mot de passe 🔑"
+    message["Subject"] = "Matcha | New password 🔑"
 
     html_content = get_email_template(
-        "Reset Password",
-        "Tu as demandé à changer ton mot de passe. Clique sur le bouton ci-dessous pour le modifier en toute sécurité.",
-        "Changer mon mot de passe",
+        "Reset your password",
+        "You asked to change your password. Click the button below to set a new one.",
+        "Change my password",
         verification_link
     )
     message.attach(MIMEText(html_content, "html"))

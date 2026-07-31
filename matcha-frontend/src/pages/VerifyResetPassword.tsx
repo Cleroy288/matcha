@@ -10,7 +10,7 @@ export default function VerifyResetPassword() {
   return (
     <div className="app-container">
       <Topbar />
-      <h1>Nouveau mot de passe</h1>
+      <h1>New password</h1>
       {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
       {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>} 
       <form onSubmit={handleSubmit} className="brutal-card">
@@ -20,7 +20,7 @@ export default function VerifyResetPassword() {
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
         />
-        <Button type="submit">Changer le mot de passe</Button>
+        <Button type="submit">Change password</Button>
       </form>
     </div>
   )

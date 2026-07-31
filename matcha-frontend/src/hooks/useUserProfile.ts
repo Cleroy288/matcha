@@ -16,7 +16,7 @@ export function useUserProfile(userId: number) {
     try {
       setProfile(await fetchPublicProfile(userId))
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur serveur")
+      setError(e instanceof Error ? e.message : "Server error")
     } finally {
       setLoading(false)
     }
@@ -42,14 +42,14 @@ export function useUserProfile(userId: number) {
     try {
       if (profile.liked_by_me) {
         await unlikeUser(userId)
-        setFeedback("Like retiré")
+        setFeedback("Like removed")
       } else {
         const result = await likeUser(userId)
-        setFeedback(result.match ? "C'est un match !" : "Profil liké")
+        setFeedback(result.match ? "It's a match!" : "Profile liked")
       }
       await load()
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur serveur")
+      setError(e instanceof Error ? e.message : "Server error")
     }
   }
 
@@ -58,7 +58,7 @@ export function useUserProfile(userId: number) {
       await blockUser(userId)
       return true
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur serveur")
+      setError(e instanceof Error ? e.message : "Server error")
       return false
     }
   }
@@ -66,9 +66,9 @@ export function useUserProfile(userId: number) {
   const report = async (reason: string) => {
     try {
       await reportUser(userId, reason)
-      setFeedback("Profil signalé comme faux compte")
+      setFeedback("Profile reported as a fake account")
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur serveur")
+      setError(e instanceof Error ? e.message : "Server error")
     }
   }
 

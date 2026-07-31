@@ -30,7 +30,7 @@ export default function Login() {
         <Cupi className="sil sil-color-topbar-border sil-right-mid sil-xxs sil-xs sil-middle-cupi sil-sway-shadow sil-shadow-accent" />
         <Couple className="sil sil-accent sil-right-in sil-md " />
         <Topbar></Topbar>
-      <h1>Se connecter</h1>
+      <h1>Log in</h1>
       {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
       {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>}
       <form onSubmit={handleSubmit} className="brutal-card">

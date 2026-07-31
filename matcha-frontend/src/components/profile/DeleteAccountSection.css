@@ -1,0 +1,19 @@
+.DeleteAccountSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: white;
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--primary);
+  box-shadow: var(--brutal-shadow);
+}
+
+.DeleteAccountSection h3 {
+  color: var(--primary);
+}
+
+.DeleteAccountSection-notice {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}

@@ -8,6 +8,7 @@ from flask_cors import CORS
 
 from database.init_db import apply_schema
 from extensions import socketio
+from models.profile_model import reset_all_online_status
 from routes.auth_routes import auth_routes
 from routes.browse_routes import browse_routes
 from routes.chat_routes import chat_routes
@@ -56,7 +57,7 @@ socketio.init_app(
 
 @app.route("/")
 def index():
-    return "Matcha Backend fonctionne !"
+    return "Matcha backend is running"
 
 @socketio.on("connect")
 def on_connect():
@@ -74,6 +75,7 @@ app.register_blueprint(chat_routes)
 
 if __name__ == "__main__":
     apply_schema()  # idempotent : crée les tables manquantes (dont messages)
+    reset_all_online_status()  # purge les statuts en ligne laissés par l'instance précédente
     debug = is_debug_enabled()
     logger.info("Starting Matcha backend (debug=%s)", debug)
     socketio.run(app, host="0.0.0.0", port=5000, debug=debug)

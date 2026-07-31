@@ -53,9 +53,9 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
 
   return (
     <div className="ProfileInfoForm">
-      <h3>Informations</h3>
+      <h3>Information</h3>
 
-      <label>Prénom</label>
+      <label>First name</label>
       <Input
         value={firstName}
         maxLength={100}
@@ -64,7 +64,7 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
         onChange={(e) => setFirstName(e.target.value)}
       />
 
-      <label>Nom</label>
+      <label>Last name</label>
       <Input
         value={lastName}
         maxLength={100}
@@ -83,20 +83,20 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <label>Genre</label>
+      <label>Gender</label>
       <Select value={gender} onChange={(e) => setGender(e.target.value as Gender)}>
-        <option value="">-- Choisir --</option>
-        <option value="male">Homme</option>
-        <option value="female">Femme</option>
-        <option value="other">Autre</option>
+        <option value="">-- Choose --</option>
+        <option value="male">Man</option>
+        <option value="female">Woman</option>
+        <option value="other">Other</option>
       </Select>
 
-      <label>Attirance</label>
+      <label>Interested in</label>
       <Select value={preference} onChange={(e) => setPreference(e.target.value as SexualPreference)}>
-        <option value="">-- Choisir --</option>
-        <option value="male">Hommes</option>
-        <option value="female">Femmes</option>
-        <option value="bisexual">Les deux</option>
+        <option value="">-- Choose --</option>
+        <option value="male">Men</option>
+        <option value="female">Women</option>
+        <option value="bisexual">Both</option>
       </Select>
 
       <label>Bio ({biography.length}/{BIO_MAX_LENGTH})</label>
@@ -104,10 +104,10 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
         value={biography}
         onChange={(e) => setBiography(e.target.value)}
         maxLength={BIO_MAX_LENGTH}
-        placeholder="Parle-nous de toi..."
+        placeholder="Tell us about yourself..."
       />
 
-      <label>Date de naissance</label>
+      <label>Date of birth</label>
       <Input
         type="date"
         value={birthDate}
@@ -117,7 +117,7 @@ export default function ProfileInfoForm({ profile, onUpdate }: ProfileInfoFormPr
       {error && <p className="ProfileInfoForm-error">{error}</p>}
 
       <Button onClick={handleSave} disabled={saving}>
-        {saving ? "Sauvegarde..." : "Sauvegarder"}
+        {saving ? "Saving..." : "Save"}
       </Button>
     </div>
   )

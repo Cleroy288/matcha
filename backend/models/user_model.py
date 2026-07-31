@@ -154,3 +154,18 @@ def set_token_reset_password_user_email(email, token):
     conn.commit()
     cur.close()
     conn.close()
+
+def delete_user(user_id):
+    """Supprime le compte ; toutes les tables liées cascadent (schema.sql).
+    Retourne False si l'user n'existe plus, pour ne pas confirmer une suppression fantôme."""
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM users WHERE id = %s RETURNING id", (user_id,))
+    deleted = cur.fetchone()
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return deleted is not None

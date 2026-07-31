@@ -8,11 +8,11 @@ import type { PublicProfile } from "../types/profile"
 import "./UserProfile.css"
 
 const GENDER_LABELS: Record<string, string> = {
-  male: "Homme", female: "Femme", other: "Autre",
+  male: "Man", female: "Woman", other: "Other",
 }
 
 const PREFERENCE_LABELS: Record<string, string> = {
-  male: "Hommes", female: "Femmes", bisexual: "Bisexuel(le)",
+  male: "Men", female: "Women", bisexual: "Both",
 }
 
 /* Consultation de profil : toutes les infos publiques + like/unlike/block/report */
@@ -24,17 +24,17 @@ export default function UserProfile() {
   const { profile, loading, error, feedback, setError, setFeedback, toggleLike, block, report } = useUserProfile(userId)
 
   if (!isAuthenticated) {
-    return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
+    return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
   }
 
   const handleBlock = async () => {
-    if (!window.confirm("Bloquer ce profil ? Il n'apparaîtra plus dans vos résultats.")) return
+    if (!window.confirm("Block this profile? It will no longer appear in your results.")) return
     const blocked = await block()
     if (blocked) navigate("/home")
   }
 
   const handleReport = async () => {
-    const reason = window.prompt("Pourquoi signaler ce compte comme faux ?")
+    const reason = window.prompt("Why are you reporting this account as fake?")
     if (reason === null) return
     await report(reason)
   }
@@ -46,8 +46,8 @@ export default function UserProfile() {
         {error && <StatusMessage type="error" message={error} onClose={() => setError(null)} />}
         {feedback && <StatusMessage type="success" message={feedback} onClose={() => setFeedback(null)} />}
 
-        {loading && <p>Chargement...</p>}
-        {!loading && !profile && <h1>Profil introuvable</h1>}
+        {loading && <p>Loading...</p>}
+        {!loading && !profile && <h1>Profile not found</h1>}
 
         {profile && (
           <>
@@ -82,24 +82,24 @@ function ProfileHeader({ profile }: { profile: PublicProfile }) {
       <div className="up-identity">
         <h1 className="up-name">
           {profile.first_name ?? profile.username}
-          {profile.age !== null && <span className="up-age">, {profile.age} ans</span>}
+          {profile.age !== null && <span className="up-age">, {profile.age} y/o</span>}
         </h1>
         <p className="up-username">@{profile.username} — {profile.first_name} {profile.last_name}</p>
         <OnlineStatus profile={profile} />
         <div className="up-badges">
-          <span className="up-badge">★ {profile.fame_rating} popularité</span>
+          <span className="up-badge">★ {profile.fame_rating} fame</span>
           {profile.city && <span className="up-badge">{profile.city}</span>}
           {profile.distance_km !== null && (
             <span className="up-badge">{Math.round(profile.distance_km)} km</span>
           )}
         </div>
         <div className="up-badges">
-          {profile.connected && <span className="up-badge up-badge-match">Connectés ✓</span>}
+          {profile.connected && <span className="up-badge up-badge-match">Matched ✓</span>}
           {!profile.connected && profile.likes_me && (
-            <span className="up-badge up-badge-like">Ce profil vous a liké</span>
+            <span className="up-badge up-badge-like">This profile liked you</span>
           )}
           {profile.liked_by_me && !profile.connected && (
-            <span className="up-badge up-badge-like">Vous avez liké ce profil</span>
+            <span className="up-badge up-badge-like">You liked this profile</span>
           )}
         </div>
       </div>
@@ -110,14 +110,14 @@ function ProfileHeader({ profile }: { profile: PublicProfile }) {
 /* Statut : en ligne, ou date/heure de dernière connexion (sujet IV.5) */
 function OnlineStatus({ profile }: { profile: PublicProfile }) {
   if (profile.is_online) {
-    return <p className="up-status up-status-online">● En ligne</p>
+    return <p className="up-status up-status-online">● Online</p>
   }
   const lastSeen = profile.last_online
-    ? new Date(profile.last_online).toLocaleString("fr-FR", {
+    ? new Date(profile.last_online).toLocaleString("en-GB", {
         day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
       })
-    : "inconnue"
-  return <p className="up-status">○ Hors ligne — dernière connexion : {lastSeen}</p>
+    : "unknown"
+  return <p className="up-status">○ Offline — last seen: {lastSeen}</p>
 }
 
 interface ProfileActionsProps {
@@ -138,8 +138,8 @@ function ProfileActions({ profile, onToggleLike, onChat, onBlock, onReport }: Pr
       {profile.connected && (
         <button className="up-btn up-btn-chat" onClick={onChat}>💬 Chat</button>
       )}
-      <button className="up-btn" onClick={onBlock}>🚫 Bloquer</button>
-      <button className="up-btn" onClick={onReport}>⚠ Signaler</button>
+      <button className="up-btn" onClick={onBlock}>🚫 Block</button>
+      <button className="up-btn" onClick={onReport}>⚠ Report</button>
     </div>
   )
 }
@@ -148,12 +148,12 @@ function ProfileActions({ profile, onToggleLike, onChat, onBlock, onReport }: Pr
 function ProfileDetails({ profile }: { profile: PublicProfile }) {
   return (
     <div className="up-details brutal-card">
-      <h2>À propos</h2>
-      <p className="up-bio">{profile.biography || "Pas encore de biographie."}</p>
+      <h2>About</h2>
+      <p className="up-bio">{profile.biography || "No biography yet."}</p>
       <div className="up-facts">
-        {profile.gender && <p><strong>Genre :</strong> {GENDER_LABELS[profile.gender] ?? profile.gender}</p>}
+        {profile.gender && <p><strong>Gender:</strong> {GENDER_LABELS[profile.gender] ?? profile.gender}</p>}
         {profile.sexual_preference && (
-          <p><strong>Recherche :</strong> {PREFERENCE_LABELS[profile.sexual_preference] ?? profile.sexual_preference}</p>
+          <p><strong>Looking for:</strong> {PREFERENCE_LABELS[profile.sexual_preference] ?? profile.sexual_preference}</p>
         )}
       </div>
       {profile.tags.length > 0 && (

@@ -1,3 +1,5 @@
+import logging
+
 from flask import jsonify, make_response, request
 
 from controllers.constants import HTTP_BAD_REQUEST, HTTP_CREATED, HTTP_NOT_FOUND, HTTP_OK
@@ -10,9 +12,13 @@ from services.auth_service import (
     verify_email_user,
     verify_reset_password_user,
 )
+from services.jwt_service import decode_token
+from services.socket_service import disconnect_user
 from utils.constants import AuthMessages
 from utils.jwt_required import jwt_required
 from utils.request_body import get_json_body, require_fields
+
+logger = logging.getLogger(__name__)
 
 REGISTER_REQUIRED_FIELDS = ("email", "username", "password", "first_name", "last_name")
 COOKIE_MAX_AGE_S = 3600
@@ -71,9 +77,25 @@ def login():
 
 
 def logout():
-    response = make_response(jsonify({"message": "Logged out"}), HTTP_OK)
+    force_offline_from_cookie()
+    response = make_response(jsonify({"message": AuthMessages.LOGOUT_SUCCESS}), HTTP_OK)
     response.delete_cookie("auth_token")
     return response
+
+
+def force_offline_from_cookie():
+    """Passe l'user hors ligne dès le logout : le socket peut mettre plusieurs
+    secondes à se fermer, voire rester ouvert si l'onglet n'est pas fermé."""
+    token = request.cookies.get("auth_token")
+    # 1 session déjà expirée côté client : il n'y a plus de statut à corriger
+    if not token:
+        return
+
+    try:
+        disconnect_user(decode_token(token)["user_id"])
+    except Exception:
+        # 2 token illisible : on supprime quand même le cookie, sans toucher au statut
+        logger.info("Logout with an unusable token, online status left untouched")
 
 
 def verify_email():

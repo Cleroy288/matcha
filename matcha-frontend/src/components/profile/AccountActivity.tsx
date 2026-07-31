@@ -21,7 +21,7 @@ export default function AccountActivity() {
         setViews(receivedViews)
       })
       .catch((reason: unknown) => {
-        setError(reason instanceof Error ? reason.message : "Impossible de charger l'activité")
+        setError(reason instanceof Error ? reason.message : "Could not load activity")
       })
       .finally(() => setLoading(false))
   }, [])
@@ -30,16 +30,16 @@ export default function AccountActivity() {
     <section className="AccountActivity">
       <h3>Account activity</h3>
 
-      {loading && <p>Chargement...</p>}
+      {loading && <p>Loading...</p>}
       {error && <p className="AccountActivity-error">{error}</p>}
 
       {!loading && !error && (
         <div className="AccountActivity-columns">
-          <ActivityList title="Likes reçus" entries={likes.map(like => ({
+          <ActivityList title="Likes received" entries={likes.map(like => ({
             ...like,
             date: like.liked_at,
           }))} />
-          <ActivityList title="Visites du profil" entries={views.map(view => ({
+          <ActivityList title="Profile views" entries={views.map(view => ({
             ...view,
             date: view.viewed_at,
           }))} />
@@ -62,7 +62,7 @@ function ActivityList({ title, entries }: { title: string; entries: ActivityEntr
     <div className="AccountActivity-column">
       <h4>{title} <span>{entries.length}</span></h4>
       {entries.length === 0 ? (
-        <p className="AccountActivity-empty">Aucune activité</p>
+        <p className="AccountActivity-empty">No activity yet</p>
       ) : (
         <ul className="AccountActivity-list">
           {entries.map((entry, index) => (
@@ -85,7 +85,7 @@ function displayName(entry: ActivityEntry): string {
 }
 
 function formatDate(value: string): string {
-  return new Date(value).toLocaleString("fr-FR", {
+  return new Date(value).toLocaleString("en-GB", {
     day: "numeric",
     month: "short",
     hour: "2-digit",

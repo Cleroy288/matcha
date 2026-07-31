@@ -157,7 +157,7 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
             <button
                 type="button"
                 className="pc-photo-nav pc-photo-nav-left"
-                aria-label="Photo précédente"
+                aria-label="Previous photo"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -170,7 +170,7 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
             <button
                 type="button"
                 className="pc-photo-nav pc-photo-nav-right"
-                aria-label="Photo suivante"
+                aria-label="Next photo"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -190,9 +190,9 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             onClick={() => onOpenProfile(profile.userId)}
-            aria-label="Voir le profil"
+            aria-label="Open profile"
             >
-            Voir profil
+            View profile
             </button>
         )}
 
@@ -216,10 +216,10 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
         <div className="pc-overlay">
             <p className="pc-name">
                 {profile.name}
-                {profile.isOnline && <span className="pc-online-dot" title="En ligne" />}
+                {profile.isOnline && <span className="pc-online-dot" title="Online" />}
             </p>
             <div className="pc-meta">
-            <span className="pc-age">{profile.age} ans</span>
+            <span className="pc-age">{profile.age} y/o</span>
             {profile.distance !== null && profile.distance !== undefined && (
                 <span className="pc-dist">{Math.round(profile.distance)} km</span>
             )}
@@ -230,7 +230,7 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
                 <span className="pc-badge">★ {profile.fame}</span>
             )}
             {profile.commonTags !== undefined && (
-                <span className="pc-badge">{profile.commonTags} tags communs</span>
+                <span className="pc-badge">{profile.commonTags} common tags</span>
             )}
             </div>
         </div>
@@ -308,7 +308,7 @@ export function ProfileStack({
   if (index >= profiles.length) {
     return (
       <div className="pc-empty">
-        <p className="pc-empty-text">Personne ...</p>
+        <p className="pc-empty-text">Nobody left...</p>
       </div>
     );
   }

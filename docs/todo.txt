@@ -1,3 +1,13 @@
+
+bug notif :
+- quand on vas sur notif de un user il recois 2 notifs
+- quand on register on confirme ladress mail, on est envoyee sur une page incoherente qui te donne un message derreur puis ca redirge vers login a fix
+-
+-- pour charles :
+- etat de connexion user, quand on vas sur profil de qql on voit la derniere connection ou si elle est connectee et nous on na pas ca. (actuelle on prend que le timestamp en login et on gere pas quand elle se deocnnecte et quand quelquun est coonectee on ne le montre pas non plus )
+- a fix messages en eng et fr ( on a par fois les 2 en meme temps)
+- norm RGPD pour le GPS a respecter pour le sujet
+
 Stack : Flask + PostgreSQL + React + Tailwind CSS
 Infra : Docker + .env
 Sync : 1 appel / semaine — 2 semaines par sprint
