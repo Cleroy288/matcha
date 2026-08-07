@@ -5,11 +5,11 @@ import { fetchNotifications, markNotificationsRead } from "../services/notificat
 import type { Notification } from "../types/notification"
 
 const TYPE_LABELS: Record<string, string> = {
-  like:    "a liké votre profil",
-  visit:   "a visité votre profil",
-  match:   "c'est un match !",
-  unlike:  "a retiré son like",
-  message: "vous a envoyé un message",
+  like:    "liked your profile",
+  visit:   "viewed your profile",
+  match:   "it's a match!",
+  unlike:  "removed their like",
+  message: "sent you a message",
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -22,7 +22,7 @@ const TYPE_COLORS: Record<string, string> = {
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
-  return date.toLocaleDateString("fr-FR", {
+  return date.toLocaleDateString("en-GB", {
     day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
   })
 }
@@ -43,7 +43,7 @@ export default function Notifications() {
         return markNotificationsRead()
       })
       .then(() => setUnreadCount(0))
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Erreur serveur"))
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Server error"))
       .finally(() => setLoading(false))
   }, [isAuthenticated, setUnreadCount])
 
@@ -51,7 +51,7 @@ export default function Notifications() {
     return (
       <div className="app-container">
         <Topbar />
-        <h1>Veuillez vous connecter</h1>
+        <h1>Please log in</h1>
       </div>
     )
   }
@@ -61,12 +61,12 @@ export default function Notifications() {
       <Topbar />
       <h1>Notifications</h1>
 
-      {loading && <p>Chargement...</p>}
+      {loading && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {!loading && notifications.length === 0 && (
         <div className="brutal-card" style={{ background: "var(--matcha-light)", textAlign: "center" }}>
-          <p>Aucune notification pour le moment.</p>
+          <p>No notifications yet.</p>
         </div>
       )}
 
@@ -86,7 +86,7 @@ export default function Notifications() {
             }}
           >
             <div>
-              <strong>{notif.username ?? "Quelqu'un"}</strong>
+              <strong>{notif.username ?? "Someone"}</strong>
               {" "}{TYPE_LABELS[notif.type] ?? notif.type}
             </div>
             <span style={{ fontSize: "0.8rem", fontWeight: 600, whiteSpace: "nowrap" }}>

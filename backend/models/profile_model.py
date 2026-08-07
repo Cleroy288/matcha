@@ -96,6 +96,20 @@ def set_online_status(user_id, is_online):
     conn.close()
 
 
+def reset_all_online_status():
+    """Repasse tout le monde hors ligne au démarrage : les sockets ouverts avant
+    un crash ou un redémarrage sont morts, leurs statuts en base sont des fantômes.
+    last_online n'est pas touché : on ne sait pas quand ces users sont vraiment partis."""
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("UPDATE profiles SET is_online = FALSE WHERE is_online = TRUE")
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 def set_profile_complete(user_id, is_complete):
     conn = get_connection()
     cur = conn.cursor()

@@ -42,7 +42,7 @@ export function useRegister() {
         if (err instanceof Error) {
             setError(err.message)
         } else {
-            setError("Une erreur inattendue est survenue")
+            setError("An unexpected error occurred")
         }
     }
   }

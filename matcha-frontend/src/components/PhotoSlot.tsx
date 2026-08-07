@@ -13,7 +13,7 @@ export default function PhotoSlot({ imageUrl, onUpload, onDelete }: PhotoSlotPro
         className="PhotoSlot PhotoSlot--empty"
         type="button"
         onClick={onUpload}
-        aria-label="Ajouter une photo"
+        aria-label="Add a photo"
       >
         <span className="PhotoSlot-plus">+</span>
       </button>
@@ -29,7 +29,7 @@ export default function PhotoSlot({ imageUrl, onUpload, onDelete }: PhotoSlotPro
             className="PhotoSlot-btn PhotoSlot-btn--delete"
             onClick={onDelete}
             type="button"
-            aria-label="Supprimer la photo"
+            aria-label="Delete photo"
           >
             X
           </button>

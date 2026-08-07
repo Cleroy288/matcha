@@ -13,20 +13,32 @@ interface LocationSectionProps {
   onUpdate: (lat: number | null, lng: number | null, city: string, consent: boolean) => void
 }
 
-type LocationMode = "gps" | "manual"
-
+/* Localisation (sujet IV.2) sous consentement explicite RGPD : le GPS n'est
+   jamais interrogé tant que la case n'est pas cochée, et le décocher efface les
+   coordonnées. Sans GPS, la ville saisie à la main sert de position approchée. */
 export default function LocationSection({ latitude, longitude, city, gpsConsent, onUpdate }: LocationSectionProps) {
   const [lat, setLat] = useState(latitude)
   const [lng, setLng] = useState(longitude)
   const [cityValue, setCityValue] = useState(city || "")
-  const [mode, setMode] = useState<LocationMode>(gpsConsent ? "gps" : "manual")
+  const [consent, setConsent] = useState(gpsConsent)
   const [error, setError] = useState("")
   const [saving, setSaving] = useState(false)
   const [locating, setLocating] = useState(false)
 
+  /* Retrait du consentement : les coordonnées sont effacées immédiatement côté
+     UI, et le save suivant les remet à NULL en base. */
+  function handleConsentChange(granted: boolean) {
+    setConsent(granted)
+    setError("")
+    if (!granted) {
+      setLat(null)
+      setLng(null)
+    }
+  }
+
   function handleGPS() {
     if (!navigator.geolocation) {
-      setError("Geolocation non supportee par ce navigateur")
+      setError("Geolocation is not supported by this browser")
       return
     }
 
@@ -36,30 +48,25 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
       (position) => {
         setLat(position.coords.latitude)
         setLng(position.coords.longitude)
-        setMode("gps")
         setLocating(false)
       },
       () => {
-        setError("Impossible d'obtenir la position")
+        setError("Could not get your position")
         setLocating(false)
       }
     )
   }
 
   async function handleSave() {
-    const city = cityValue.trim()
-    if (mode === "manual" && !city) {
-      setError("Ville ou quartier requis")
-      return
-    }
-    if (mode === "gps" && (lat === null || lng === null)) {
-      setError("Position requise")
+    const trimmedCity = cityValue.trim()
+    const validationError = validateLocation(consent, lat, lng, trimmedCity)
+    if (validationError) {
+      setError(validationError)
       return
     }
 
-    const nextLat = mode === "manual" ? null : lat
-    const nextLng = mode === "manual" ? null : lng
-    const consent = mode === "gps"
+    const nextLat = consent ? lat : null
+    const nextLng = consent ? lng : null
 
     setError("")
     setSaving(true)
@@ -67,10 +74,10 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
       await updateLocation({
         latitude: nextLat,
         longitude: nextLng,
-        city,
+        city: trimmedCity,
         gps_consent: consent
       })
-      onUpdate(nextLat, nextLng, city, consent)
+      onUpdate(nextLat, nextLng, trimmedCity, consent)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error saving location")
     } finally {
@@ -80,34 +87,28 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
 
   return (
     <div className="LocationSection">
-      <h3>Localisation</h3>
+      <h3>Location</h3>
 
-      <div className="LocationSection-modes" role="group" aria-label="Mode de localisation">
-        <button
-          type="button"
-          className={mode === "gps" ? "is-active" : ""}
-          onClick={() => setMode("gps")}
-        >
-          GPS
-        </button>
-        <button
-          type="button"
-          className={mode === "manual" ? "is-active" : ""}
-          onClick={() => {
-            setMode("manual")
-            setLat(null)
-            setLng(null)
-            setError("")
-          }}
-        >
-          Ville manuelle
-        </button>
-      </div>
+      <p className="LocationSection-notice">
+        Your location is used only to suggest and sort profiles near you, and to
+        show a distance on your profile. Your exact coordinates are never shown
+        to other users. Consent is optional and you can withdraw it at any time:
+        unchecking the box deletes the stored coordinates.
+      </p>
 
-      {mode === "gps" && (
+      <label className="LocationSection-consent">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => handleConsentChange(e.target.checked)}
+        />
+        I consent to sharing my GPS position
+      </label>
+
+      {consent && (
         <>
           <Button onClick={handleGPS} disabled={locating}>
-            {locating ? "Localisation..." : "Utiliser le GPS"}
+            {locating ? "Locating..." : "Use my GPS"}
           </Button>
 
           {lat !== null && lng !== null && (
@@ -118,7 +119,7 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
         </>
       )}
 
-      <label>{mode === "manual" ? "Ville ou quartier" : "Ville (optionnelle)"}</label>
+      <label>{consent ? "City (optional)" : "City or district"}</label>
       <Input
         value={cityValue}
         onChange={(e) => setCityValue(e.target.value)}
@@ -128,8 +129,25 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
       {error && <p className="LocationSection-error">{error}</p>}
 
       <Button onClick={handleSave} disabled={saving}>
-        {saving ? "Sauvegarde..." : "Sauvegarder"}
+        {saving ? "Saving..." : "Save"}
       </Button>
     </div>
   )
+}
+
+/* Sans consentement, la ville devient obligatoire : le sujet exige une position
+   approchée pour que le matching fonctionne. Message d'erreur, ou "" si valide. */
+function validateLocation(
+  consent: boolean,
+  lat: number | null,
+  lng: number | null,
+  city: string
+): string {
+  if (!consent && !city) {
+    return "City or district is required when GPS is not allowed"
+  }
+  if (consent && (lat === null || lng === null)) {
+    return "Position is required, or uncheck GPS consent and fill in your city"
+  }
+  return ""
 }

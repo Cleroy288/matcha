@@ -25,7 +25,7 @@ export default function Chat() {
         try {
             setConversations(await fetchConversations())
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         } finally {
             setLoading(false)
         }
@@ -40,7 +40,7 @@ export default function Chat() {
                 conv.user_id === userId ? { ...conv, unread_count: 0 } : conv
             ))
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         }
     }, [refreshUnreadMessages])
 
@@ -74,7 +74,7 @@ export default function Chat() {
     }, [messages])
 
     if (!isAuthenticated) {
-        return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
+        return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
     }
 
     const handleSend = async (e: React.FormEvent) => {
@@ -86,7 +86,7 @@ export default function Chat() {
             setDraft("")
             loadConversations()
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         }
     }
 
@@ -133,9 +133,9 @@ function ConversationList({ conversations, loading, activeId, onSelect }: Conver
     return (
         <aside className="chat-list">
             <h2 className="chat-list-title">Messages</h2>
-            {loading && <p className="chat-hint">Chargement...</p>}
+            {loading && <p className="chat-hint">Loading...</p>}
             {!loading && conversations.length === 0 && (
-                <p className="chat-hint">Pas encore de match. Va liker des profils !</p>
+                <p className="chat-hint">No match yet. Go like some profiles.</p>
             )}
             {conversations.map(conv => (
                 <button
@@ -151,10 +151,10 @@ function ConversationList({ conversations, loading, activeId, onSelect }: Conver
                     <div className="chat-item-body">
                         <span className="chat-item-name">
                             {conv.first_name ?? conv.username}
-                            {conv.is_online && <span className="chat-online-dot" title="En ligne" />}
+                            {conv.is_online && <span className="chat-online-dot" title="Online" />}
                         </span>
                         <span className="chat-item-preview">
-                            {conv.last_message ?? "Nouveau match — dites bonjour !"}
+                            {conv.last_message ?? "New match — say hi!"}
                         </span>
                     </div>
                     {conv.unread_count > 0 && (
@@ -184,7 +184,7 @@ function ConversationThread({
     if (!conversation) {
         return (
             <section className="chat-thread chat-thread--empty">
-                <p className="chat-hint">Sélectionne une conversation</p>
+                <p className="chat-hint">Select a conversation</p>
             </section>
         )
     }
@@ -192,7 +192,7 @@ function ConversationThread({
     return (
         <section className="chat-thread">
             <header className="chat-thread-header">
-                <button className="chat-back" onClick={onBack} aria-label="Retour">←</button>
+                <button className="chat-back" onClick={onBack} aria-label="Back">←</button>
                 {conversation.profile_photo_url ? (
                     <img className="chat-item-photo" src={conversation.profile_photo_url} alt="" />
                 ) : (
@@ -201,16 +201,16 @@ function ConversationThread({
                 <div className="chat-thread-title">
                     <span className="chat-item-name">
                         {conversation.first_name ?? conversation.username}
-                        {conversation.is_online && <span className="chat-online-dot" title="En ligne" />}
+                        {conversation.is_online && <span className="chat-online-dot" title="Online" />}
                     </span>
                     <ThreadStatus conversation={conversation} />
                 </div>
-                <Link className="chat-profile-link" to={`/user/${conversation.user_id}`}>Voir profil</Link>
+                <Link className="chat-profile-link" to={`/user/${conversation.user_id}`}>View profile</Link>
             </header>
 
             <div className="chat-messages">
                 {messages.length === 0 && (
-                    <p className="chat-hint">Aucun message. Lance la conversation !</p>
+                    <p className="chat-hint">No message yet. Start the conversation.</p>
                 )}
                 {messages.map(message => (
                     <MessageBubble key={message.id} message={message} mine={message.sender_id === myUserId} />
@@ -222,12 +222,12 @@ function ConversationThread({
                 <input
                     className="chat-input"
                     type="text"
-                    placeholder="Écris ton message..."
+                    placeholder="Write your message..."
                     value={draft}
                     maxLength={1000}
                     onChange={(e) => onDraftChange(e.target.value)}
                 />
-                <button className="chat-send" type="submit" disabled={!draft.trim()}>Envoyer</button>
+                <button className="chat-send" type="submit" disabled={!draft.trim()}>Send</button>
             </form>
         </section>
     )
@@ -236,20 +236,20 @@ function ConversationThread({
 /* En ligne, ou dernière connexion du match */
 function ThreadStatus({ conversation }: { conversation: Conversation }) {
     if (conversation.is_online) {
-        return <span className="chat-thread-status chat-thread-status--online">En ligne</span>
+        return <span className="chat-thread-status chat-thread-status--online">Online</span>
     }
     if (!conversation.last_online) {
         return null
     }
-    const lastSeen = new Date(conversation.last_online).toLocaleString("fr-FR", {
+    const lastSeen = new Date(conversation.last_online).toLocaleString("en-GB", {
         day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
     })
-    return <span className="chat-thread-status">Vu le {lastSeen}</span>
+    return <span className="chat-thread-status">Last seen {lastSeen}</span>
 }
 
 /* Bulle de message, alignée selon l'expéditeur */
 function MessageBubble({ message, mine }: { message: Message; mine: boolean }) {
-    const time = new Date(message.created_at).toLocaleTimeString("fr-FR", {
+    const time = new Date(message.created_at).toLocaleTimeString("en-GB", {
         hour: "2-digit", minute: "2-digit",
     })
     return (

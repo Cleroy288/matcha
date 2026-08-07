@@ -12,7 +12,7 @@ export default function DevTools() {
       const data = await res.json()
       setResult(`[${label}] ${JSON.stringify(data, null, 2)}`)
     } catch (e) {
-      setResult(`[${label}] ERREUR: ${e}`)
+      setResult(`[${label}] ERROR: ${e}`)
     }
   }
 
@@ -25,7 +25,7 @@ export default function DevTools() {
         <h2>Target user ID</h2>
         <input
           type="number"
-          placeholder="ID de l'user cible"
+          placeholder="Target user ID"
           value={targetId}
           onChange={e => setTargetId(e.target.value)}
           style={{ width: "100%", marginBottom: "1rem" }}
@@ -39,19 +39,19 @@ export default function DevTools() {
             Unlike user {targetId || "?"}
           </button>
           <button onClick={() => call("POST", `${API_ROUTES.visit}/${targetId}`, "VISIT")}>
-            Visiter profil {targetId || "?"}
+            Visit profile {targetId || "?"}
           </button>
           <button onClick={() => call("POST", `${API_ROUTES.block}/${targetId}`, "BLOCK")}>
-            Bloquer user {targetId || "?"}
+            Block user {targetId || "?"}
           </button>
           <button onClick={() => call("GET", API_ROUTES.notifications, "NOTIFS")}>
-            Voir mes notifs
+            View my notifications
           </button>
           <button onClick={() => call("GET", API_ROUTES.notificationsUnread, "UNREAD COUNT")}>
-            Compter notifs non lues
+            Count unread notifications
           </button>
           <button onClick={() => call("GET", `${API_ROUTES.me}`, "ME")}>
-            Qui suis-je ?
+            Who am I?
           </button>
         </div>
       </div>

@@ -96,7 +96,7 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="#tag (Enter pour ajouter)"
+          placeholder="#tag (press Enter to add)"
         />
         {suggestions.length > 0 && (
           <div className="TagsSection-dropdown">

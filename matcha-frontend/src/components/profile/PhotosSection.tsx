@@ -75,7 +75,7 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
       />
 
       <section className="PhotosSection-group PhotosSection-main">
-        <h4>Photo principale</h4>
+        <h4>Profile photo</h4>
         <PhotoSlot
           imageUrl={primary ? `${UPLOAD_BASE}${primary.file_path}` : undefined}
           onUpload={!primary && canUpload ? triggerUpload : undefined}
@@ -84,7 +84,7 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
       </section>
 
       <section className="PhotosSection-group PhotosSection-standard">
-        <h4>Photos supplémentaires ({standard.length}/{MAX_PHOTOS - 1})</h4>
+        <h4>Additional photos ({standard.length}/{MAX_PHOTOS - 1})</h4>
         <div className="PhotosSection-grid">
           {standardSlots.map((photo, index) => (
             <div className="PhotosSection-item" key={photo ? photo.id : `empty-${index}`}>
@@ -99,7 +99,7 @@ export default function PhotosSection({ photos, onUpdate }: PhotosSectionProps) 
                   type="button"
                   onClick={() => handleSetPrimary(photo.id)}
                 >
-                  Rendre principale
+                  Set as profile photo
                 </button>
               )}
             </div>

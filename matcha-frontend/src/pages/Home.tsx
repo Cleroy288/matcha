@@ -28,7 +28,7 @@ export default function Home() {
             const suggestions = await browseProfiles(activeFilters)
             setProfiles(suggestions.map(toCardData))
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         } finally {
             setLoading(false)
         }
@@ -41,7 +41,7 @@ export default function Home() {
     }, [isAuthenticated, loadSuggestions])
 
     if (!isAuthenticated) {
-        return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
+        return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
     }
 
     const handleLike = async (userId: number) => {
@@ -49,10 +49,10 @@ export default function Home() {
         try {
             const result = await likeUser(userId)
             if (result.match) {
-                setSuccess("C'est un match !")
+                setSuccess("It's a match!")
             }
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Erreur serveur")
+            setError(e instanceof Error ? e.message : "Server error")
         }
     }
 
@@ -71,7 +71,7 @@ export default function Home() {
                 onApply={() => loadSuggestions(filters)}
             />
             {loading ? (
-                <p>Chargement...</p>
+                <p>Loading...</p>
             ) : (
                 <ProfileStack
                     profiles={profiles}

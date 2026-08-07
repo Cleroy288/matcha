@@ -29,14 +29,14 @@ export default function Profile() {
   }
 
   if (!isAuthenticated) {
-    return <div className="app-container"> <Topbar></Topbar><h1>Veuillez vous connecter</h1></div>
+    return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
   }
 
   if (loading) {
     return (
       <div className="app-container">
         <Topbar />
-        <p>Chargement...</p>
+        <p>Loading...</p>
       </div>
     )
   }
@@ -45,15 +45,15 @@ export default function Profile() {
     <div className="app-container">
         <Topbar></Topbar>
       <div className="brutal-card" style={{ background: "var(--accent)" }}>
-        <h1>Mon Profil</h1>
+        <h1>My profile</h1>
         <hr style={{ borderWidth: "3px", borderColor: "black" }} />
         
         <div style={{ marginTop: "20px", textAlign: "left" }}>
-          <p><strong>ID :</strong> {user?.id}</p>
-          <p><strong>Username :</strong> {user?.username}</p>
-          <p><strong>Email :</strong> {user?.email}</p>
-          <p><strong>Prénom :</strong> {user?.first_name || "Non renseigné"}</p>
-          <p><strong>Nom :</strong> {user?.last_name || "Non renseigné"}</p>
+          <p><strong>ID:</strong> {user?.id}</p>
+          <p><strong>Username:</strong> {user?.username}</p>
+          <p><strong>Email:</strong> {user?.email}</p>
+          <p><strong>First name:</strong> {user?.first_name || "Not set"}</p>
+          <p><strong>Last name:</strong> {user?.last_name || "Not set"}</p>
         </div>
 
         {error && <p>{error}</p>}

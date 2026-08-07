@@ -15,7 +15,7 @@ export default function Topbar() {
           <>
             <span className="topbar-welcome">Welcome, {user?.username}</span>
             <Link to="/home" className="nav-item">Home</Link>
-            <Link to="/search" className="nav-item">Recherche</Link>
+            <Link to="/search" className="nav-item">Search</Link>
             <Link to="/chat" className={`notif-btn ${unreadMessages > 0 ? "notif-btn--active" : ""}`}>
                 Chat
                 {unreadMessages > 0 && (
@@ -24,7 +24,7 @@ export default function Topbar() {
                     </span>
                 )}
             </Link>
-            <Link to="/profile/edit" className="nav-item">Profil</Link>
+            <Link to="/profile/edit" className="nav-item">Profile</Link>
             <Link to="/notification" className={`notif-btn ${unreadCount > 0 ? "notif-btn--active" : ""}`}>
                 Notifs
                 {unreadCount > 0 && (

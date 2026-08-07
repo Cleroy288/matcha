@@ -14,7 +14,7 @@ export function useVerifyResetPassword() {
         e.preventDefault()
         try {
             if (!token) {
-                setError("Token manquant.");
+                setError("Token is missing.");
                 return
             }
 
@@ -24,7 +24,7 @@ export function useVerifyResetPassword() {
 
         } catch (err: unknown) {
             if (err instanceof Error) setError(err.message)
-            else setError("Une erreur inattendue est survenue")
+            else setError("An unexpected error occurred")
         }
     }
 

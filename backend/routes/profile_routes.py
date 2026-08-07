@@ -2,6 +2,7 @@ from flask import Blueprint
 
 from controllers.profile_controller import (
     add_tag,
+    delete_account,
     delete_photo,
     get_profile,
     get_public_profile,
@@ -18,6 +19,7 @@ profile_routes = Blueprint("profile", __name__)
 profile_routes.route("/profile", methods=["GET"])(get_profile)
 profile_routes.route("/profile/<int:user_id>", methods=["GET"])(get_public_profile)
 profile_routes.route("/profile", methods=["PUT"])(update_profile)
+profile_routes.route("/profile", methods=["DELETE"])(delete_account)
 profile_routes.route("/profile/location", methods=["PUT"])(update_location)
 profile_routes.route("/profile/tags", methods=["POST"])(add_tag)
 profile_routes.route("/profile/tags", methods=["DELETE"])(remove_tag)

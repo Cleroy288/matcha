@@ -1,4 +1,4 @@
-const DEFAULT_ERROR_MESSAGE = "Erreur serveur"
+const DEFAULT_ERROR_MESSAGE = "Server error"
 
 /* Erreur portée par une réponse HTTP non-2xx, avec son statut.
    Permet aux appelants de distinguer un 401 d'un 400 sans parser le message. */

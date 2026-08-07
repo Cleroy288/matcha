@@ -8,6 +8,7 @@ import TagsSection from "../components/profile/TagsSection"
 import PhotosSection from "../components/profile/PhotosSection"
 import LocationSection from "../components/profile/LocationSection"
 import AccountActivity from "../components/profile/AccountActivity"
+import DeleteAccountSection from "../components/profile/DeleteAccountSection"
 import { fetchProfile } from "../services/profile"
 import type { Profile } from "../types/profile"
 import "./ProfileEdit.css"
@@ -73,7 +74,7 @@ export default function ProfileEdit() {
     return (
       <div className="app-container">
         <Topbar />
-        <h1>Veuillez vous connecter</h1>
+        <h1>Please log in</h1>
       </div>
     )
   }
@@ -82,7 +83,7 @@ export default function ProfileEdit() {
     return (
       <div className="app-container">
         <Topbar />
-        <p>Chargement...</p>
+        <p>Loading...</p>
       </div>
     )
   }
@@ -91,7 +92,7 @@ export default function ProfileEdit() {
     return (
       <div className="app-container">
         <Topbar />
-        <p>{error || "Erreur de chargement"}</p>
+        <p>{error || "Loading error"}</p>
       </div>
     )
   }
@@ -100,10 +101,10 @@ export default function ProfileEdit() {
     <div className="app-container page-scroll">
       <Topbar />
       <div className="ProfileEdit">
-        <h1>{onboarding ? "Complete your profile" : "Mon Profil"}</h1>
+        <h1>{onboarding ? "Complete your profile" : "My profile"}</h1>
         {error && <p>{error}</p>}
         <div className="fame-rating">
-        ⭐ Popularité : <strong>{profile.fame_rating ?? 0} / 10</strong>
+        ⭐ Fame rating: <strong>{profile.fame_rating ?? 0} / 10</strong>
         </div>
 
         <div className="ProfileEdit-sections">
@@ -133,6 +134,7 @@ export default function ProfileEdit() {
           />
 
           {!onboarding && <AccountActivity />}
+          {!onboarding && <DeleteAccountSection />}
 
           {onboarding && (
             <Button onClick={handleFinish} disabled={finishing}>

@@ -20,6 +20,8 @@ ERR_MESSAGE_EMPTY = "Message cannot be empty"
 ERR_MESSAGE_TOO_LONG = "Message is too long"
 ERR_PROFILE_PHOTO_REQUIRED = "A profile photo is required to like someone"
 
+ERR_USER_NOT_FOUND = "User not found"
+
 ERR_EMAIL_ALREADY_REGISTERED = "Email already registered"
 ERR_USERNAME_ALREADY_TAKEN = "Username already taken"
 ERR_USERNAME_NOT_REGISTERED = "Username not registered"
