@@ -11,14 +11,15 @@ export default function VerifyResetPassword() {
     <div className="app-container">
       <Topbar />
       <h1>New password</h1>
-      {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
-      {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>} 
+      {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
+      {success && <StatusMessage type="success" message={success} onClose={() => setSuccess(null)}/>}
+      {(error || success) && <div style={{ height: "1rem" }} />}
       <form onSubmit={handleSubmit} className="brutal-card">
-        <Input 
-          type="password" 
-          placeholder="New Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
+        <Input
+          type="password"
+          placeholder="New Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <Button type="submit">Change password</Button>
       </form>

@@ -37,7 +37,6 @@ export default function Home() {
     useEffect(() => {
         if (!isAuthenticated) return
         loadSuggestions(filters)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated, loadSuggestions])
 
     if (!isAuthenticated) {

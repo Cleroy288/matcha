@@ -20,7 +20,6 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
-    // en dessous du seuil, pas de recherche (la liste est vidée dans handleQueryChange)
     if (query.length < MIN_SEARCH_LENGTH) {
       return
     }

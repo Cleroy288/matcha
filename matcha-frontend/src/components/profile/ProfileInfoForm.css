@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  background: white;
+  background: var(--card-bg);
   padding: 1.5rem;
-  border: var(--border-width) solid var(--black);
+  border: var(--border-width) solid var(--card-border);
   box-shadow: var(--brutal-shadow);
 }
 
@@ -12,6 +12,7 @@
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.85rem;
+  color: var(--text-color);
 }
 
 .ProfileInfoForm-error {

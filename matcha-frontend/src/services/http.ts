@@ -41,8 +41,6 @@ export async function handleResponse<T>(res: Response): Promise<T> {
   }
 
   if (body === null) {
-    // 2xx dont le corps n'est pas exploitable : erreur propre plutôt qu'un
-    // SyntaxError brut affiché à l'utilisateur
     throw new ApiError(DEFAULT_ERROR_MESSAGE, res.status)
   }
 

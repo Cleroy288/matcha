@@ -13,9 +13,9 @@
   min-width: 20rem;
 }
 
-.status-error   { background: var(--primary); }
-.status-success { background: var(--accent); }
-.status-info    { background: var(--matcha-light); }
+.status-error   { background: var(--primary); color: var(--on-primary); }
+.status-success { background: var(--accent); color: var(--on-accent); }
+.status-info    { background: var(--card-bg); color: var(--text-color); }
 
 .status-icon {
   width: 22px;

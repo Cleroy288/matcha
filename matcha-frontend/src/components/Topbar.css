@@ -54,7 +54,7 @@
     border: 2px solid var(--border-color);
     transform: translate(-2px, -2px);
     box-shadow: 2px 2px 0px var(--border-color);
-    color: var(--text-color);
+    color: var(--on-accent);
 }
 
 .notif-btn {
@@ -75,7 +75,7 @@
 
 .notif-btn--active {
     background: var(--accent);
-    color: var(--text-color);
+    color: var(--on-accent);
 }
 
 .notif-btn:hover {
@@ -87,9 +87,9 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    background: var(--primary); /*check la var*/
+    background: var(--primary);
     border: 2px solid var(--border-color);
-    color: var(--hero-fg);
+    color: var(--on-primary);
     font-size: 11px;
     font-weight: 900;
     width: 20px;

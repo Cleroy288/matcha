@@ -11,6 +11,7 @@ message sucess / error à adapter page login et page register
 
 message francais anglais mélangé
 
+Améliorer l'identité global de l'app => images svg ...
 
 			--- Obligatoir ---
 

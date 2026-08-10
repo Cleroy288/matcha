@@ -4,12 +4,13 @@
   gap: 6px;
   padding: 6px 12px;
   background-color: var(--accent);
-  border: 2px solid var(--black);
+  color: var(--on-accent);
+  border: 2px solid var(--card-border);
   font-family: var(--font-body);
   font-weight: 700;
   font-size: 0.85rem;
   text-transform: uppercase;
-  box-shadow: 2px 2px 0px var(--black);
+  box-shadow: 2px 2px 0px var(--card-border);
 }
 
 .TagChip-remove {
@@ -21,11 +22,11 @@
   background: none;
   border: none;
   box-shadow: none;
-  color: var(--black);
+  color: inherit;
 }
 
 .TagChip-remove:hover {
-  color: var(--purple);
+  color: var(--card-border);
   transform: none;
   box-shadow: none;
 }

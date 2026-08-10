@@ -33,12 +33,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [incomingMessage, setIncomingMessage] = useState<Message | null>(null)
 
-  // toute notification (like, visit, match, unlike, message) alimente le badge notifs
   const handleNotification = useCallback(() => {
     setUnreadCount(prev => prev + 1)
   }, [])
 
-  // message temps réel : badge messages + relai vers la page chat si ouverte
   const handleMessage = useCallback((message: Message) => {
     setIncomingMessage(message)
     setUnreadMessages(prev => prev + 1)
@@ -52,13 +50,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => {})
   }, [])
 
-  // passé directement à onClick dans la Topbar : ne doit jamais rejeter, sinon
-  // le navigateur logge un « Uncaught (in promise) » quand le backend est down
   const logout = async () => {
     try {
       await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
     } catch {
-      // backend injoignable : on déconnecte quand même côté client
     }
     setUser(null)
   }

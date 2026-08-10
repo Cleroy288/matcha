@@ -53,11 +53,13 @@
 }
 
 .chat-item:hover {
-  background: var(--matcha-light);
+  /* légère teinte du texte mélangée au fond : visible sur les 4 thèmes sans casser le contraste */
+  background: color-mix(in srgb, var(--text-color) 12%, var(--surface));
 }
 
 .chat-item--active {
   background: var(--accent);
+  color: var(--on-accent);
 }
 
 .chat-item-photo {
@@ -219,13 +221,15 @@
 .chat-bubble {
   max-width: 72%;
   border: 2px solid var(--border-color);
-  background: var(--matcha-light);
+  background: var(--card-bg);
+  color: var(--text-color);
   padding: 8px 12px;
   box-shadow: var(--brutal-shadow);
 }
 
 .chat-bubble--mine {
   background: var(--primary);
+  color: var(--on-primary);
 }
 
 .chat-bubble-text {
@@ -279,7 +283,7 @@
   font-size: 0.8rem;
   padding: 0 16px;
   cursor: pointer;
-  color: var(--text-color);
+  color: var(--on-primary);
 }
 
 .chat-send:disabled {

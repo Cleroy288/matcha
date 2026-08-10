@@ -36,7 +36,6 @@ export default function Search() {
     useEffect(() => {
         if (!isAuthenticated) return
         runSearch(filters)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated, runSearch])
 
     if (!isAuthenticated) {

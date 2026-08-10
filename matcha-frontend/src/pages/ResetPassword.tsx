@@ -12,8 +12,9 @@ export default function ResetPassword() {
         <div className="app-container">
             <Topbar></Topbar>
             <h1>Reset Password</h1>
-            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>} 
-            {success && <StatusMessage type="info" message={success} onClose={() => setSuccess(null)} duration={10000}/>} 
+            {error && <StatusMessage type="error" message={error} onClose={() => setError(null)}/>}
+            {success && <StatusMessage type="info" message={success} onClose={() => setSuccess(null)} duration={10000}/>}
+            {(error || success) && <div style={{ height: "1rem" }} />}
             <form onSubmit={handleSubmit} className="brutal-card">
                     <Input
                       type="email"

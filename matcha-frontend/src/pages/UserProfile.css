@@ -79,7 +79,7 @@
 .up-badge {
   background: var(--accent);
   border: 2px solid var(--border-color);
-  color: var(--border-color);
+  color: var(--on-accent);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 2px 10px;
@@ -89,6 +89,7 @@
 
 .up-badge-match {
   background: var(--primary);
+  color: var(--on-primary);
 }
 
 .up-badge-like {
@@ -124,10 +125,12 @@
 
 .up-btn-like {
   background: var(--primary);
+  color: var(--on-primary);
 }
 
 .up-btn-chat {
   background: var(--accent);
+  color: var(--on-accent);
 }
 
 /* ── Détails ── */
