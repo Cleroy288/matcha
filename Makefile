@@ -4,6 +4,9 @@ all:
 	@$(COMPOSE) up --build -d
 	@echo "Matcha : http://localhost:5173/login"
 
+generate:
+	@$(COMPOSE) exec backend python3 generator_profile.py
+
 clean:
 	@$(COMPOSE) down --remove-orphans
 
