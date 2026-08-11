@@ -2,12 +2,12 @@ DEFAULT_ERROR_STATUS = 400
 
 
 class AppError(Exception):
-    """Erreur métier attendue, dont le message est destiné à l'utilisateur.
+    """Expected business error whose message is meant for the end user.
 
-    Définie dans utils/ parce que c'est la seule couche importée à la fois par
-    les services et les contrôleurs. À l'étape 3, les services lèveront AppError
-    au lieu d'Exception et les contrôleurs n'attraperont plus qu'elle : tout le
-    reste remontera au handler global, logué et renvoyé en 500 générique."""
+    Defined in utils/ because it is the only layer imported by both the
+    services and the controllers. In step 3 the services will raise AppError
+    instead of Exception and the controllers will catch only this one:
+    everything else bubbles up to the global handler, logged and returned as a generic 500."""
 
     def __init__(self, message, status=DEFAULT_ERROR_STATUS):
         super().__init__(message)

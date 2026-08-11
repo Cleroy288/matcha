@@ -9,8 +9,8 @@ import "./DeleteAccountSection.css"
 const CONFIRM_PROMPT = "This will permanently delete your account and all your data. Type DELETE to confirm."
 const CONFIRM_WORD = "DELETE"
 
-/* Droit à l'effacement (RGPD art. 17) : suppression définitive du compte et de
-   toutes les données personnelles, confirmée par une saisie explicite. */
+/* Right to erasure (GDPR art. 17): permanent deletion of the account and of
+   every personal record, confirmed by an explicit typed input. */
 export default function DeleteAccountSection() {
   const navigate = useNavigate()
   const { setUser } = useAuth()
@@ -18,7 +18,7 @@ export default function DeleteAccountSection() {
   const [deleting, setDeleting] = useState(false)
 
   async function handleDelete() {
-    // 1 confirmation par saisie : un simple clic ne doit pas pouvoir tout effacer
+    // 1 typed confirmation: a single click must never be able to wipe everything
     if (window.prompt(CONFIRM_PROMPT) !== CONFIRM_WORD) {
       return
     }

@@ -6,16 +6,16 @@ from utils.photo_url import build_photo_url
 
 
 def browse_suggestions(user_id, raw_params):
-    """Liste de profils suggérés pour le feed : compatibles, non likés, non bloqués,
-    triés par score (tags communs + proximité + fame) par défaut."""
+    """Suggested profiles for the feed: compatible, not liked, not blocked,
+    sorted by score (common tags + proximity + fame) by default."""
     criteria = parse_criteria(raw_params)
     criteria["exclude_liked"] = True
     return run_candidates_query(user_id, criteria)
 
 
 def search_profiles(user_id, raw_params):
-    """Recherche avancée : mêmes candidats compatibles, critères explicites
-    (tranche d'âge, plage de fame, localisation, tags), profils likés inclus."""
+    """Advanced search: same compatible candidates, explicit criteria
+    (age range, fame range, location, tags), liked profiles included."""
     criteria = parse_criteria(raw_params)
     criteria["exclude_liked"] = False
     criteria["tags"] = parse_tags(raw_params.get("tags"))
@@ -23,7 +23,7 @@ def search_profiles(user_id, raw_params):
 
 
 def run_candidates_query(user_id, criteria):
-    """Charge mon profil (préférences + position) puis exécute la requête candidates."""
+    """Loads my profile (preferences + position) then runs the candidates query."""
     me = get_profile_by_user_id(user_id)
     if not me or not me.get("profile_complete"):
         raise Exception(ERR_PROFILE_INCOMPLETE)
@@ -40,10 +40,10 @@ def run_candidates_query(user_id, criteria):
     return candidates
 
 
-# ── Parsing des paramètres de requête ──
+# ── Query parameter parsing ──
 
 def parse_criteria(raw_params):
-    """Valide et convertit les filtres communs navigation / recherche."""
+    """Validates and converts the filters shared by browsing and search."""
     criteria = {
         "age_min": parse_number(raw_params.get("age_min"), int),
         "age_max": parse_number(raw_params.get("age_max"), int),
@@ -62,7 +62,7 @@ def parse_criteria(raw_params):
 
 
 def parse_number(value, cast):
-    """Convertit un paramètre numérique optionnel ; vide = absent, invalide = erreur."""
+    """Converts an optional numeric param; empty = absent, invalid = error."""
     if value is None or value == "":
         return None
     try:
@@ -72,7 +72,7 @@ def parse_number(value, cast):
 
 
 def parse_sort_by(value):
-    """N'accepte que les tris whitelistés par le model."""
+    """Accepts only the sorts whitelisted by the model."""
     if value is None or value == "":
         return None
     if value not in SORT_EXPRESSIONS:
@@ -81,13 +81,13 @@ def parse_sort_by(value):
 
 
 def parse_limit(value):
-    """Limite de pagination bornée."""
+    """Bounded pagination limit."""
     limit = parse_number(value, int) or BROWSE_DEFAULT_LIMIT
     return max(1, min(limit, BROWSE_MAX_LIMIT))
 
 
 def parse_tags(value):
-    """Liste de tags de recherche : chaîne 'a,b,c' → liste nettoyée, None si vide."""
+    """Search tag list: string 'a,b,c' → cleaned list, None when empty."""
     if not value:
         return None
     tags = [tag.strip() for tag in value.split(",") if tag.strip()]

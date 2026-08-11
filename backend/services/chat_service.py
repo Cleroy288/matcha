@@ -16,8 +16,8 @@ from utils.photo_url import build_photo_url
 
 
 def send_message(sender_id, receiver_id, content):
-    """Envoie un message : vérifie le match, insère, notifie le destinataire
-    en temps réel (event new_message + notification 'message')."""
+    """Sends a message: checks the match, inserts it, then notifies the
+    recipient in real time (new_message event + 'message' notification)."""
     content = validate_content(content)
     ensure_can_chat(sender_id, receiver_id)
 
@@ -31,14 +31,14 @@ def send_message(sender_id, receiver_id, content):
 
 
 def get_messages(user_id, other_id):
-    """Historique de la conversation ; marque les messages reçus comme lus."""
+    """Conversation history; marks the received messages as read."""
     ensure_can_chat(user_id, other_id)
     mark_conversation_read(user_id, other_id)
     return get_conversation_messages(user_id, other_id, CONVERSATION_MESSAGES_LIMIT)
 
 
 def list_conversations(user_id):
-    """Conversations = matchs, avec URL publique de la photo de profil."""
+    """Conversations = matches, with the public URL of the profile photo."""
     conversations = get_conversations(user_id)
     for conversation in conversations:
         conversation["profile_photo_url"] = build_photo_url(conversation.pop("profile_photo"))
@@ -52,7 +52,7 @@ def get_unread_total(user_id):
 # ── Helpers ──
 
 def ensure_can_chat(user_id, other_id):
-    """Chat autorisé uniquement entre users connectés (match) et non bloqués (sujet IV.6)."""
+    """Chat allowed only between connected users (match) who are not blocked (subject IV.6)."""
     if user_id == other_id:
         raise Exception(ERR_NOT_MATCHED)
     if is_blocked(user_id, other_id):
@@ -62,7 +62,7 @@ def ensure_can_chat(user_id, other_id):
 
 
 def validate_content(content):
-    """Message non vide et borné en taille."""
+    """Message must be non-empty and within the size limit."""
     content = (content or "").strip()
     if not content:
         raise Exception(ERR_MESSAGE_EMPTY)
@@ -72,7 +72,7 @@ def validate_content(content):
 
 
 def emit_new_message(receiver_id, message):
-    """Pousse le message dans la room privée du destinataire (délai < 10s garanti)."""
+    """Pushes the message into the recipient private room (< 10s guaranteed)."""
     socketio.emit(
         "new_message",
         serialize_message(message),
@@ -81,7 +81,7 @@ def emit_new_message(receiver_id, message):
 
 
 def serialize_message(message):
-    """Timestamps → ISO pour le payload socket (jsonify ne passe pas par là)."""
+    """Timestamps → ISO for the socket payload (jsonify is not involved here)."""
     serialized = dict(message)
     if serialized.get("created_at") is not None:
         serialized["created_at"] = serialized["created_at"].isoformat()

@@ -33,7 +33,7 @@ def remove_like(liker_id, liked_id):
     conn.close()
 
 def has_liked(liker_id, liked_id):
-    """Vrai si liker_id a déjà liké liked_id."""
+    """True if liker_id has already liked liked_id."""
     conn = get_connection()
     cur = conn.cursor()
 

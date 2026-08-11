@@ -25,6 +25,7 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["src"],
-
+  // the tests run under vitest, which ships its own types: including them
+  // here would break `npm run build` on an install without devDependencies
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

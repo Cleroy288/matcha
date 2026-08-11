@@ -1,7 +1,7 @@
 const DEFAULT_ERROR_MESSAGE = "Server error"
 
-/* Erreur portée par une réponse HTTP non-2xx, avec son statut.
-   Permet aux appelants de distinguer un 401 d'un 400 sans parser le message. */
+/* Error carried by a non-2xx HTTP response, along with its status.
+   Lets callers tell a 401 from a 400 without parsing the message. */
 export class ApiError extends Error {
   readonly status: number
 
@@ -12,8 +12,8 @@ export class ApiError extends Error {
   }
 }
 
-/* Lit le corps sans jamais laisser fuir un SyntaxError : une réponse d'erreur
-   peut être vide ou en HTML (page 413/503 de nginx, page d'erreur Flask). */
+/* Reads the body without ever leaking a SyntaxError: an error response can be
+   empty or in HTML (nginx 413/503 page, Flask error page). */
 async function readJsonBody(res: Response): Promise<unknown> {
   try {
     return await res.json()
@@ -22,7 +22,7 @@ async function readJsonBody(res: Response): Promise<unknown> {
   }
 }
 
-/* Extrait le message d'erreur du backend, qui répond toujours {"error": "..."} */
+/* Extracts the backend error message, which is always {"error": "..."} */
 function extractErrorMessage(body: unknown): string | null {
   if (!body || typeof body !== "object" || !("error" in body)) {
     return null
@@ -31,8 +31,8 @@ function extractErrorMessage(body: unknown): string | null {
   return typeof error === "string" && error.trim() ? error : null
 }
 
-/* Parse une réponse API : JSON si ok, sinon jette l'erreur renvoyée par le backend.
-   Source unique — ne pas redéfinir cette logique dans les services. */
+/* Parses an API response: JSON when ok, otherwise throws the backend error.
+   Single source of truth — do not redefine this logic in the services. */
 export async function handleResponse<T>(res: Response): Promise<T> {
   const body = await readJsonBody(res)
 
@@ -41,6 +41,8 @@ export async function handleResponse<T>(res: Response): Promise<T> {
   }
 
   if (body === null) {
+    // 2xx whose body cannot be used: a clean error rather than a raw
+    // SyntaxError shown to the user
     throw new ApiError(DEFAULT_ERROR_MESSAGE, res.status)
   }
 

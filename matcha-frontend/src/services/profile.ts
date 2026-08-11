@@ -34,7 +34,7 @@ export async function updateLocation(data: {
   return handleResponse<{ message: string }>(res)
 }
 
-/* Droit à l'effacement (RGPD) : supprime le compte et toutes les données liées */
+/* Right to erasure (GDPR): deletes the account and every related record */
 export async function deleteAccount(): Promise<{ message: string }> {
   const res = await fetchWithCredentials(`${API_URL}/profile`, {
     method: "DELETE"

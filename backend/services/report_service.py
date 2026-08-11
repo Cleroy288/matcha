@@ -9,7 +9,7 @@ def report_user(reporter_id, reported_id, reason=None):
 
     add_report(reporter_id, reported_id, reason)
 
-    # Un report bloque automatiquement
+    # A report automatically blocks the reported user
     add_block(reporter_id, reported_id)
     remove_like(reporter_id, reported_id)
     remove_like(reported_id, reporter_id)

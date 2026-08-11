@@ -20,7 +20,7 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: "common_tags", label: "Common tags" },
 ]
 
-/* Panneau tri + filtres partagé entre le feed (browse) et la recherche avancée */
+/* Sort + filter panel shared by the feed (browse) and the advanced search */
 export default function ProfileFilters({ variant, filters, onChange, onApply }: ProfileFiltersProps) {
   const [open, setOpen] = useState(false)
 

@@ -16,7 +16,7 @@ from services.constants import MIN_TAGS_FOR_COMPLETE, UPLOAD_DIR
 fake = Faker("fr_FR")
 fake_be = Faker("fr_BE")
 
-# (nom_ville, latitude, longitude) — centres réels
+# (city_name, latitude, longitude) — real city centers
 FRANCE_CITIES = (
     ("Paris", 48.8566, 2.3522), ("Marseille", 43.2965, 5.3698),
     ("Lyon", 45.7640, 4.8357), ("Toulouse", 43.6047, 1.4442),

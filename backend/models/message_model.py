@@ -4,7 +4,7 @@ from database.db import get_connection
 
 
 def create_message(sender_id, receiver_id, content):
-    """Insère un message et retourne la ligne créée."""
+    """Inserts a message and returns the created row."""
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -23,7 +23,7 @@ def create_message(sender_id, receiver_id, content):
 
 
 def get_conversation_messages(user_id, other_id, limit):
-    """Derniers messages échangés entre les deux users, du plus ancien au plus récent."""
+    """Last messages exchanged between the two users, oldest to newest."""
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -46,7 +46,7 @@ def get_conversation_messages(user_id, other_id, limit):
 
 
 def mark_conversation_read(user_id, other_id):
-    """Marque comme lus les messages reçus de other_id."""
+    """Marks the messages received from other_id as read."""
     conn = get_connection()
     cur = conn.cursor()
 
@@ -61,7 +61,7 @@ def mark_conversation_read(user_id, other_id):
 
 
 def count_unread_messages(user_id):
-    """Nombre total de messages non lus (badge toutes pages)."""
+    """Total number of unread messages (badge on every page)."""
     conn = get_connection()
     cur = conn.cursor()
 
@@ -78,8 +78,8 @@ def count_unread_messages(user_id):
 
 
 def get_conversations(user_id):
-    """Liste des matchs (likes mutuels, non bloqués) avec dernier message,
-    compteur de non-lus et statut en ligne, triée par activité récente."""
+    """Match list (mutual likes, not blocked) with last message, unread
+    count and online status, sorted by most recent activity."""
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 

@@ -31,6 +31,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
     root.classList.add(current.class);
 
+    // Fix for the iPhone status bar
     const meta = document.querySelector("meta[name='theme-color']");
     if (meta) meta.setAttribute("content", current.color);
   }, [theme]);
@@ -44,6 +45,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Custom hook for consuming the theme easily
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) throw new Error("useTheme must be used within ThemeProvider");

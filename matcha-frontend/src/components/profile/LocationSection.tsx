@@ -13,9 +13,9 @@ interface LocationSectionProps {
   onUpdate: (lat: number | null, lng: number | null, city: string, consent: boolean) => void
 }
 
-/* Localisation (sujet IV.2) sous consentement explicite RGPD : le GPS n'est
-   jamais interrogé tant que la case n'est pas cochée, et le décocher efface les
-   coordonnées. Sans GPS, la ville saisie à la main sert de position approchée. */
+/* Location (subject IV.2) under explicit GDPR consent: the GPS is never
+   queried until the box is checked, and unchecking it clears the coordinates.
+   Without GPS, the manually typed city acts as the approximate position. */
 export default function LocationSection({ latitude, longitude, city, gpsConsent, onUpdate }: LocationSectionProps) {
   const [lat, setLat] = useState(latitude)
   const [lng, setLng] = useState(longitude)
@@ -25,8 +25,8 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
   const [saving, setSaving] = useState(false)
   const [locating, setLocating] = useState(false)
 
-  /* Retrait du consentement : les coordonnées sont effacées immédiatement côté
-     UI, et le save suivant les remet à NULL en base. */
+  /* Consent withdrawal: the coordinates are cleared from the UI right away,
+     and the next save resets them to NULL in the database. */
   function handleConsentChange(granted: boolean) {
     setConsent(granted)
     setError("")
@@ -135,8 +135,8 @@ export default function LocationSection({ latitude, longitude, city, gpsConsent,
   )
 }
 
-/* Sans consentement, la ville devient obligatoire : le sujet exige une position
-   approchée pour que le matching fonctionne. Message d'erreur, ou "" si valide. */
+/* Without consent the city becomes mandatory: the subject requires an
+   approximate position for matching. Returns an error message, or "" if valid. */
 function validateLocation(
   consent: boolean,
   lat: number | null,

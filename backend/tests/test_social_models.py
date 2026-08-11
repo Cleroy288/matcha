@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from models import like_model, profile_view_model
+from models import like_model, profile_view_model, user_model
 
 
 def fake_database(rows):
@@ -30,3 +30,18 @@ def test_get_views_received_uses_valid_query(monkeypatch):
     query, params = cursor.execute.call_args.args
     assert "u.id = pv.viewer_id" in query
     assert params == (7,)
+
+
+def test_login_user_query_includes_profile_completion(monkeypatch):
+    connection, cursor = fake_database([])
+    cursor.fetchone.return_value = (
+        7, "ada@example.com", "ada", "hash", "Ada", "Lovelace", True, False,
+    )
+    monkeypatch.setattr(user_model, "get_connection", lambda: connection)
+
+    user = user_model.get_user_by_username("ada")
+
+    query, params = cursor.execute.call_args.args
+    assert "LEFT JOIN profiles" in query
+    assert params == ("ada",)
+    assert user["profile_complete"] is False

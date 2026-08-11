@@ -17,7 +17,7 @@ def like_user(liker_id, liked_id):
     if not profile or not profile.get("profile_complete"):
         raise Exception(ERR_PROFILE_INCOMPLETE)
 
-    # sujet IV.5 : sans photo de profil, impossible de liker
+    # subject IV.5: without a profile photo, liking is not allowed
     if not get_profile_photo(liker_id):
         raise Exception(ERR_PROFILE_PHOTO_REQUIRED)
 
@@ -26,7 +26,7 @@ def like_user(liker_id, liked_id):
     liked = add_like(liker_id, liked_id)
     if not liked:
         raise Exception(LikeMessage.LIKE_ALREADY)
-    
+
 
     if is_match(liker_id, liked_id):
         create_notification(liker_id, liked_id, "match")

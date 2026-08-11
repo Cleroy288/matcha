@@ -1,7 +1,7 @@
 import type { SuggestedProfile } from "../types/browse"
 import type { ProfileCardData } from "../components/ProfileCard"
 
-/* Adapte un profil suggéré (API) au format de la card tinder */
+/* Adapts a suggested profile (API) to the tinder card format */
 export function toCardData(profile: SuggestedProfile): ProfileCardData {
   const photoUrls = profile.photo_urls?.length
     ? profile.photo_urls

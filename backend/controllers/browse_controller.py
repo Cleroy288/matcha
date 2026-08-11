@@ -7,7 +7,7 @@ from utils.jwt_required import jwt_required
 
 @jwt_required
 def browse(payload):
-    """GET /browse — profils suggérés (tri/filtres via query params)."""
+    """GET /browse — suggested profiles (sort/filters via query params)."""
     try:
         profiles = browse_suggestions(payload["user_id"], request.args)
         return jsonify({"profiles": profiles}), HTTP_OK
@@ -17,7 +17,7 @@ def browse(payload):
 
 @jwt_required
 def search(payload):
-    """GET /search — recherche avancée (âge, fame, localisation, tags)."""
+    """GET /search — advanced search (age, fame, location, tags)."""
     try:
         profiles = search_profiles(payload["user_id"], request.args)
         return jsonify({"profiles": profiles}), HTTP_OK

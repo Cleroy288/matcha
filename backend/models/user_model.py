@@ -57,8 +57,11 @@ def get_user_by_username(username):
     cur = conn.cursor()
 
     query = """
-    SELECT id, email, username, password_hash, first_name, last_name, email_verified FROM users
-    WHERE username = %s
+    SELECT u.id, u.email, u.username, u.password_hash, u.first_name, u.last_name,
+           u.email_verified, COALESCE(p.profile_complete, FALSE)
+    FROM users u
+    LEFT JOIN profiles p ON p.user_id = u.id
+    WHERE u.username = %s
     """
     cur.execute(query, (username,))
 
@@ -75,7 +78,8 @@ def get_user_by_username(username):
             "password_hash": user[3],
             "first_name": user[4],
             "last_name": user[5],
-            "email_verified": user[6]
+            "email_verified": user[6],
+            "profile_complete": user[7]
         }
 
     return None
@@ -83,8 +87,14 @@ def get_user_by_username(username):
 def get_user_by_id(id):
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    
-    cur.execute("SELECT id, email, username, first_name, last_name FROM users WHERE id = %s", (id,))
+
+    cur.execute("""
+        SELECT u.id, u.email, u.username, u.first_name, u.last_name,
+               COALESCE(p.profile_complete, FALSE) AS profile_complete
+        FROM users u
+        LEFT JOIN profiles p ON p.user_id = u.id
+        WHERE u.id = %s
+    """, (id,))
     user = cur.fetchone()
 
     cur.close()
@@ -135,8 +145,8 @@ def confirm_user_email(user_id):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-        UPDATE users 
-        SET email_verified = TRUE, verification_token = NULL 
+        UPDATE users
+        SET email_verified = TRUE, verification_token = NULL
         WHERE id = %s
     """, (user_id,))
     conn.commit()
@@ -147,7 +157,7 @@ def set_token_reset_password_user_email(email, token):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-        UPDATE users 
+        UPDATE users
         SET verification_token = %s
         WHERE email = %s
     """, (token, email,))
@@ -156,8 +166,8 @@ def set_token_reset_password_user_email(email, token):
     conn.close()
 
 def delete_user(user_id):
-    """Supprime le compte ; toutes les tables liées cascadent (schema.sql).
-    Retourne False si l'user n'existe plus, pour ne pas confirmer une suppression fantôme."""
+    """Deletes the account; every related table cascades (schema.sql).
+    Returns False if the user is already gone, so a phantom deletion is never confirmed."""
     conn = get_connection()
     cur = conn.cursor()
 

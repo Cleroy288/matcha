@@ -6,8 +6,8 @@ DEFAULT_LOG_LEVEL = "INFO"
 
 
 def configure_logging():
-    """Configure le logging applicatif ; remplace les print() éparpillés.
+    """Configures application logging; replaces the scattered print() calls.
 
-    Appelé une seule fois au démarrage, avant l'enregistrement des blueprints."""
+    Called once at startup, before the blueprints are registered."""
     level = os.getenv("LOG_LEVEL", DEFAULT_LOG_LEVEL).upper()
     logging.basicConfig(level=level, format=LOG_FORMAT)

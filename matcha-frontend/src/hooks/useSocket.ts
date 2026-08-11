@@ -8,7 +8,7 @@ export interface SocketNotification {
   data: unknown
 }
 
-/* Connexion WebSocket authentifiée (cookie) : notifications + messages temps réel */
+/* Authenticated WebSocket connection (cookie): real-time notifications + messages */
 export function useSocket(
   onNotification: (notif: SocketNotification) => void,
   enabled = true,

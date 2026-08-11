@@ -29,8 +29,8 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
     const dragState = useRef({ active: false, startX: 0, currentX: 0 });
     const flyOutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // le like part 370 ms après le swipe : si la card disparaît entre-temps
-    // (navigation, rechargement du feed), le timer ne doit pas survivre
+    // the like fires 370 ms after the swipe: if the card disappears in the
+    // meantime (navigation, feed reload), the timer must not survive
     useEffect(() => () => {
         if (flyOutTimer.current) clearTimeout(flyOutTimer.current);
     }, []);
@@ -183,7 +183,7 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
             </>
         )}
 
-        {/* Ouvre la consultation du profil sans déclencher le drag */}
+        {/* Opens the profile view without triggering the drag */}
         {onOpenProfile && (
             <button
             className="pc-open-btn"
@@ -238,7 +238,7 @@ export function ProfileCard({profile, onLike, onDislike, onOpenProfile, stackInd
     );
 }
 
-/* ─── Action buttons (séparés pour réutilisation) ─── */
+/* ─── Action buttons (extracted for reuse) ─── */
 
 interface ProfileCardActionsProps {
   userId: number;
@@ -316,11 +316,11 @@ export function ProfileStack({
   return (
     <div className="pc-stack-wrapper">
     <div className="pc-stack">
-      {/* Cards décoratives vides — jamais de contenu visible */}
+      {/* Empty decorative cards — never any visible content */}
       <div className="pc-card pc-back2" />
       <div className="pc-card pc-back1" />
 
-      {/* Seulement la card front avec le vrai profil */}
+      {/* Only the front card carries the real profile */}
       <ProfileCard
         key={profiles[index].userId}
         profile={profiles[index]}

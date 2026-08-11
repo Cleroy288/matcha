@@ -1,4 +1,4 @@
-/* Permet de gérer l'affichage des svg en fonction de la taille de l'écran */
+/* Controls how the svg are displayed depending on the screen size */
 @media (max-width: 900px) {
   .sil { display: none; }
 }
@@ -7,7 +7,7 @@
   .sil { display: none; }
 }
 
-/* Réduit entre 900px et 1200px */
+/* Scaled down between 900px and 1200px */
 @media (max-width: 1200px) {
   .sil { max-width: 18vw; }
 }
@@ -69,7 +69,7 @@
 }
 
 .sil-float-sway {
-  animation: 
+  animation:
     float-slow  6s ease-in-out infinite,
     sway-slow   8s ease-in-out infinite;
 }
@@ -107,7 +107,7 @@
 }
 
 /* .sil-float-sway {
-  animation: 
+  animation:
     float-medium  8s ease-in-out infinite,
     sway-medium   12s ease-in-out infinite;
 } */
@@ -119,7 +119,7 @@
     /* shadow-color-shift  5s ease-in-out infinite; */
 }
 
-/* Effet "lumière qui tourne" — ombre suit le mouvement */
+/* "Rotating light" effect — the shadow follows the movement */
 .sil-float-shadow-sync {
   animation:
     float-slow   5s ease-in-out infinite,
@@ -188,14 +188,14 @@
 .sil-flip-y { transform: scaleY(-1); }
 .sil-flip-xy { transform: scale(-1, -1); }
 
-/* ── Opacité ── */
+/* ── Opacity ── */
 .sil-opacity-20  { opacity: 0.20; }
 .sil-opacity-40  { opacity: 0.40; }
 .sil-opacity-60  { opacity: 0.60; }
 .sil-opacity-80  { opacity: 0.80; }
 .sil-opacity-100 { opacity: 1; }
 
-/* ── Couleurs (suit le thème) ── */
+/* ── Colors (follow the theme) ── */
 .sil-primary  { color: var(--primary); }
 .sil-accent   { color: var(--accent); }
 .sil-black    { color: var(--black); }

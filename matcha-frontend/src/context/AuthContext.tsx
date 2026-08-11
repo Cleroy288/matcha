@@ -3,21 +3,15 @@ import { API_ROUTES, fetchWithCredentials } from "../config/api"
 import { useSocket } from "../hooks/useSocket"
 import { fetchUnreadMessages } from "../services/chat"
 import type { Message } from "../types/chat"
+import type { User } from "../types/auth"
 /* eslint-disable react-refresh/only-export-components */
-
-interface User {
-  id: number
-  username: string
-  email: string
-  first_name: string
-  last_name: string
-}
 
 interface AuthContextType {
   user: User | null
   setUser: (user: User | null) => void
-  logout: () => void
+  logout: () => Promise<void>
   isAuthenticated: boolean
+  authLoading: boolean
   unreadCount: number
   setUnreadCount: (count: number) => void
   unreadMessages: number
@@ -29,14 +23,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [unreadCount, setUnreadCount] = useState(0)
   const [unreadMessages, setUnreadMessages] = useState(0)
   const [incomingMessage, setIncomingMessage] = useState<Message | null>(null)
 
+  // every notification (like, visit, match, unlike, message) feeds the notification badge
   const handleNotification = useCallback(() => {
     setUnreadCount(prev => prev + 1)
   }, [])
 
+  // real-time message: message badge + relay to the chat page when it is open
   const handleMessage = useCallback((message: Message) => {
     setIncomingMessage(message)
     setUnreadMessages(prev => prev + 1)
@@ -50,11 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => {})
   }, [])
 
+  // passed straight to onClick in the Topbar: it must never reject, otherwise
+  // the browser logs an "Uncaught (in promise)" when the backend is down
   const logout = async () => {
-    try {
-      await fetchWithCredentials(API_ROUTES.logout, { method: "POST" })
-    } catch {
-    }
+    await fetchWithCredentials(API_ROUTES.logout, { method: "POST" }).catch(() => {})
     setUser(null)
   }
 
@@ -65,9 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             if (data) setUser(data.user)
         })
         .catch(() => {})
+        .finally(() => setAuthLoading(false))
   }, [])
 
-  // compteurs initiaux au login (notifs + messages non lus)
+  // initial counters at login (notifications + unread messages)
   useEffect(() => {
     if (!user) return
 
@@ -87,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser,
       logout,
       isAuthenticated: user !== null,
+      authLoading,
       unreadCount,
       setUnreadCount,
       unreadMessages,

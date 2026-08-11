@@ -20,6 +20,7 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
+    // below the threshold, no search runs (the list is cleared in handleQueryChange)
     if (query.length < MIN_SEARCH_LENGTH) {
       return
     }
@@ -38,7 +39,7 @@ export default function TagsSection({ tags, onUpdate }: TagsSectionProps) {
     }
   }, [query])
 
-  /* Saisie : met à jour la query et vide les suggestions dès qu'elle est trop courte */
+  /* Input: updates the query and clears the suggestions as soon as it is too short */
   function handleQueryChange(value: string) {
     setQuery(value)
     if (value.length < MIN_SEARCH_LENGTH) {

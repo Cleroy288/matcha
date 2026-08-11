@@ -12,8 +12,8 @@ SCHEMA_APPLY_RETRY_DELAY_S = 2
 
 
 def apply_schema():
-    """Applique schema.sql au démarrage (idempotent : CREATE IF NOT EXISTS partout).
-    Réessaie quelques fois le temps que la DB soit prête."""
+    """Applies schema.sql at startup (idempotent: CREATE IF NOT EXISTS everywhere).
+    Retries a few times while the DB becomes ready."""
     for attempt in range(SCHEMA_APPLY_RETRIES):
         try:
             run_schema_file()
@@ -27,7 +27,7 @@ def apply_schema():
 
 
 def run_schema_file():
-    """Exécute le contenu de schema.sql sur la DB."""
+    """Runs the contents of schema.sql against the DB."""
     with open(SCHEMA_PATH) as schema_file:
         schema_sql = schema_file.read()
 

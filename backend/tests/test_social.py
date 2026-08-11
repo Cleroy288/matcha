@@ -29,7 +29,7 @@ def client(app):
 
 @pytest.fixture()
 def auth_client(client, mocker):
-    """Client avec JWT mocké — simule un user connecté (id=1)."""
+    """Client with a mocked JWT — simulates a logged-in user (id=1)."""
     mocker.patch("utils.jwt_required.decode_token", return_value={"user_id": 1})
     client.set_cookie("auth_token", "fake-token")
     return client
@@ -65,7 +65,7 @@ class TestLikeRoutes:
         mocker.patch("controllers.like_controller.like_user",
                      side_effect=Exception("You cannot like yourself"))
         mocker.patch("controllers.like_controller.recalculate_fame")
-        res = auth_client.post("/like/1")  # user_id = 1 = soi-même
+        res = auth_client.post("/like/1")  # user_id = 1 = self
         data = json.loads(res.data)
 
         assert res.status_code == 400
@@ -101,7 +101,7 @@ class TestLikeRoutes:
         assert data["likes"][0]["username"] == "userB"
 
     def test_no_token(self, client):
-        """Sans cookie → 401."""
+        """Without a cookie → 401."""
         res = client.post("/like/2")
         assert res.status_code == 401
 
@@ -185,13 +185,13 @@ class TestReportRoutes:
         mocker.patch("controllers.report_controller.recalculate_fame")
         res = auth_client.post(
             "/report/1",
-            json={}  # ← force le cookie
+            json={}  # ← forces the cookie
         )
         print(res.data)
         assert res.status_code == 400
 
     def test_report_no_reason(self, auth_client, mocker):
-        """La raison est optionnelle — doit quand même fonctionner."""
+        """The reason is optional — it must still work."""
         mocker.patch("controllers.report_controller.report_user")
         mocker.patch("controllers.report_controller.recalculate_fame")
         res = auth_client.post("/report/2", json={})

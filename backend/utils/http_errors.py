@@ -7,11 +7,11 @@ logger = logging.getLogger(__name__)
 
 HTTP_INTERNAL_SERVER_ERROR = 500
 
-# Message générique : le détail d'un bug interne ne sort jamais vers le client,
-# il part dans les logs serveur.
+# Generic message: the details of an internal bug never reach the client,
+# they go to the server logs.
 ERR_INTERNAL = "Internal server error"
 
-# Descriptions Werkzeug remplacées par des messages courts et exploitables par le front.
+# Werkzeug descriptions replaced by short messages the frontend can use.
 ERROR_MESSAGES = {
     400: "Malformed request",
     404: "Resource not found",
@@ -22,11 +22,11 @@ ERROR_MESSAGES = {
 
 
 def register_error_handlers(app):
-    """Garantit qu'aucune réponse d'erreur ne sort en HTML.
+    """Guarantees that no error response is ever returned as HTML.
 
-    Sans ces handlers, Flask sert ses pages d'erreur Werkzeug (404, 405, 413 sur
-    MAX_CONTENT_LENGTH, 415 sur Content-Type manquant, 500) : le front appelle
-    res.json() dessus et lève une SyntaxError."""
+    Without these handlers Flask serves its Werkzeug error pages (404, 405, 413
+    on MAX_CONTENT_LENGTH, 415 on a missing Content-Type, 500): the frontend
+    calls res.json() on them and throws a SyntaxError."""
 
     @app.errorhandler(HTTPException)
     def handle_http_exception(error):
@@ -35,6 +35,6 @@ def register_error_handlers(app):
 
     @app.errorhandler(Exception)
     def handle_unexpected_exception(error):
-        # la stacktrace complète part dans les logs, jamais vers le client
+        # the full stacktrace goes to the logs, never to the client
         logger.exception("Unhandled exception on %s %s", request.method, request.path)
         return jsonify({"error": ERR_INTERNAL}), HTTP_INTERNAL_SERVER_ERROR

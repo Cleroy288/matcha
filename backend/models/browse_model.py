@@ -10,7 +10,7 @@ from services.constants import (
     SUGGESTION_WEIGHT_SAME_CITY,
 )
 
-# Tris autorisés (clé exposée à l'API → expression SQL sur la sous-requête candidates)
+# Allowed sorts (key exposed to the API → SQL expression on the candidates subquery)
 SORT_EXPRESSIONS = {
     "score":       "score",
     "age":         "age",
@@ -21,7 +21,7 @@ SORT_EXPRESSIONS = {
 
 
 def fetch_candidates(me, criteria):
-    """Retourne les profils compatibles avec `me`, filtrés/triés selon `criteria`.
+    """Returns the profiles compatible with `me`, filtered/sorted by `criteria`.
 
     me       : {id, gender, sexual_preference, latitude, longitude}
     criteria : {age_min, age_max, fame_min, fame_max, distance_max, city,
@@ -82,9 +82,9 @@ def fetch_candidates(me, criteria):
     return run_query(query, params)
 
 
-# ── Construction de la requête ──
+# ── Query construction ──
 
-# Haversine (km) entre moi et le candidat ; NULL si l'un des deux n'a pas de position
+# Haversine (km) between me and the candidate; NULL when either side has no position
 DISTANCE_SQL = """
     CASE WHEN p.latitude IS NULL OR p.longitude IS NULL
               OR %(me_lat)s::float IS NULL OR %(me_lng)s::float IS NULL
@@ -96,7 +96,7 @@ DISTANCE_SQL = """
     END
 """
 
-# Score de suggestion : tags communs + proximité géographique + fame
+# Suggestion score: common tags + geographic proximity + fame
 SCORE_SQL = f"""
     (common_tags * {SUGGESTION_WEIGHT_COMMON_TAG})
     + (fame_rating * {SUGGESTION_WEIGHT_FAME})
@@ -108,7 +108,7 @@ SCORE_SQL = f"""
 
 
 def build_base_params(me, criteria):
-    """Prépare les paramètres SQL communs ; préférence absente = bisexuel (sujet IV.3)."""
+    """Builds the shared SQL params; missing preference = bisexual (subject IV.3)."""
     preference = me.get("sexual_preference") or "bisexual"
     return {
         "me_id": me["id"],
@@ -123,7 +123,7 @@ def build_base_params(me, criteria):
 
 
 def build_inner_where(criteria):
-    """Clauses qui ne dépendent pas des colonnes calculées (likes déjà donnés)."""
+    """Clauses that do not depend on the computed columns (likes already given)."""
     if not criteria.get("exclude_liked"):
         return ""
     return """AND NOT EXISTS (SELECT 1 FROM likes l
@@ -131,7 +131,7 @@ def build_inner_where(criteria):
 
 
 def build_outer_where(criteria, params):
-    """Filtres sur les colonnes calculées : âge, fame, distance, ville, tags."""
+    """Filters on the computed columns: age, fame, distance, city, tags."""
     clauses = []
     append_range_filters(clauses, params, criteria)
     append_location_filters(clauses, params, criteria)
@@ -143,7 +143,7 @@ def build_outer_where(criteria, params):
 
 
 def append_range_filters(clauses, params, criteria):
-    """Filtres tranche d'âge et plage de fame."""
+    """Age range and fame range filters."""
     for key, clause in [
         ("age_min", "age >= %(age_min)s"),
         ("age_max", "age <= %(age_max)s"),
@@ -156,7 +156,7 @@ def append_range_filters(clauses, params, criteria):
 
 
 def append_location_filters(clauses, params, criteria):
-    """Filtres localisation : rayon en km et/ou nom de ville."""
+    """Location filters: radius in km and/or city name."""
     if criteria.get("distance_max") is not None:
         params["distance_max"] = criteria["distance_max"]
         clauses.append("distance_km <= %(distance_max)s")
@@ -167,7 +167,7 @@ def append_location_filters(clauses, params, criteria):
 
 
 def append_tag_filters(clauses, params, criteria):
-    """Filtres tags : nombre minimum de tags communs, ou liste de tags exigés."""
+    """Tag filters: minimum number of common tags, or a required tag list."""
     if criteria.get("min_common_tags") is not None:
         params["min_common_tags"] = criteria["min_common_tags"]
         clauses.append("common_tags >= %(min_common_tags)s")
@@ -181,7 +181,7 @@ def append_tag_filters(clauses, params, criteria):
 
 
 def build_order_clause(criteria):
-    """Tri whitelisté ; score de suggestion en tri par défaut et en départage."""
+    """Whitelisted sort; suggestion score as default sort and tie-breaker."""
     sort_by = criteria.get("sort_by") or "score"
     expression = SORT_EXPRESSIONS.get(sort_by, "score")
 
@@ -195,7 +195,7 @@ def build_order_clause(criteria):
 
 
 def run_query(query, params):
-    """Exécute la requête candidates et sérialise les lignes."""
+    """Runs the candidates query and serializes the rows."""
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 

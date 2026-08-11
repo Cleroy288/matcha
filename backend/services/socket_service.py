@@ -8,37 +8,37 @@ from services.profile_service import get_or_create_profile
 
 logger = logging.getLogger(__name__)
 
-# Un user peut ouvrir plusieurs onglets : on garde tous ses sockets pour ne le
-# passer hors ligne qu'à la fermeture du dernier.
+# A user can open several tabs: every socket is kept so the user only goes
+# offline once the last one is closed.
 connected_users = {}  # { user_id: set(socket_id) }
 
 
 def handle_connect(socketio, request):
-    """Appelé quand un user ouvre une connexion WebSocket : room privée + statut en ligne."""
+    """Called when a user opens a WebSocket connection: private room + online status."""
     try:
-        # On récupère le token depuis les cookies de la connexion WS
+        # Read the token from the WS connection cookies
         token = request.cookies.get("auth_token")
         if not token:
-            return False  # refuse la connexion
+            return False  # refuse the connection
 
         payload = decode_token(token)
         user_id = payload["user_id"]
 
-        # L'user rejoint sa room privée
+        # The user joins their private room
         join_room(f"user_{user_id}")
         register_socket(user_id, request.sid)
         logger.info("User %s connected via WebSocket", user_id)
 
     except Exception:
-        # distingue dans les logs un token invalide d'une vraie panne (DB, réseau)
+        # tells an invalid token apart from a real failure (DB, network) in the logs
         logger.warning("WebSocket connection refused", exc_info=True)
         return False  # token invalide → refuse
 
 
 def handle_disconnect(request):
-    """Appelé quand un user ferme un onglet : hors ligne au dernier onglet fermé."""
+    """Called when a user closes a tab: offline once the last tab is closed."""
     user_id = find_user_by_socket(request.sid)
-    # 1 socket refusé à la connexion (token invalide) : rien à nettoyer
+    # 1 socket refused at connection time (invalid token): nothing to clean up
     if user_id is None:
         return
 
@@ -48,7 +48,7 @@ def handle_disconnect(request):
 
 
 def register_socket(user_id, sid):
-    """Enregistre un onglet ; ne repasse en ligne qu'au tout premier ouvert."""
+    """Registers a tab; only goes back online on the very first one opened."""
     sockets = connected_users.setdefault(user_id, set())
     is_first_socket = len(sockets) == 0
     sockets.add(sid)
@@ -56,21 +56,21 @@ def register_socket(user_id, sid):
     if not is_first_socket:
         return
 
-    # la ligne profiles est créée paresseusement : sans elle, l'UPDATE du statut
-    # ne toucherait aucune ligne et l'user resterait invisible comme "en ligne"
+    # the profiles row is created lazily: without it the status UPDATE would
+    # touch no row and the user would never show up as "online"
     get_or_create_profile(user_id)
     set_online_status(user_id, True)
 
 
 def unregister_socket(user_id, sid):
-    """Retire un onglet ; ne passe hors ligne qu'une fois le dernier fermé."""
+    """Removes a tab; only goes offline once the last one is closed."""
     sockets = connected_users.get(user_id)
-    # 1 onglets déjà purgés par un logout explicite
+    # 1 tabs already purged by an explicit logout
     if sockets is None:
         return
 
     sockets.discard(sid)
-    # 2 d'autres onglets restent ouverts : l'user est toujours en ligne
+    # 2 other tabs are still open: the user is still online
     if sockets:
         return
 
@@ -79,13 +79,13 @@ def unregister_socket(user_id, sid):
 
 
 def disconnect_user(user_id):
-    """Force le statut hors ligne au logout, sans attendre la fermeture des sockets."""
+    """Forces the offline status at logout, without waiting for the sockets to close."""
     connected_users.pop(user_id, None)
     set_online_status(user_id, False)
 
 
 def find_user_by_socket(sid):
-    """Propriétaire d'un socket ; None si le socket n'a jamais été enregistré."""
+    """Owner of a socket; None if the socket was never registered."""
     return next(
         (user_id for user_id, sockets in connected_users.items() if sid in sockets),
         None
@@ -93,7 +93,7 @@ def find_user_by_socket(sid):
 
 
 def notify_user(socketio, user_id, notif_type, data=None):
-    """Envoie une notification temps réel à un user spécifique."""
+    """Sends a real-time notification to a specific user."""
     socketio.emit(
         "new_notification",
         {"type": notif_type, "data": data or {}},

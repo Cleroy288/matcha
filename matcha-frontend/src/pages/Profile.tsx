@@ -28,10 +28,6 @@ export default function Profile() {
     }
   }
 
-  if (!isAuthenticated) {
-    return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
-  }
-
   if (loading) {
     return (
       <div className="app-container">

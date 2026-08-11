@@ -28,7 +28,7 @@ DEFAULT_FRONTEND_URL = "http://localhost:5173"
 
 
 def get_secret_key():
-    """Échoue au démarrage plutôt qu'à la première signature de token."""
+    """Fails at startup rather than on the first token signature."""
     secret_key = os.getenv("SECRET_KEY")
     if not secret_key:
         raise RuntimeError("SECRET_KEY is not set: refusing to start")
@@ -74,8 +74,8 @@ app.register_blueprint(browse_routes)
 app.register_blueprint(chat_routes)
 
 if __name__ == "__main__":
-    apply_schema()  # idempotent : crée les tables manquantes (dont messages)
-    reset_all_online_status()  # purge les statuts en ligne laissés par l'instance précédente
+    apply_schema()  # idempotent: creates the missing tables (messages included)
+    reset_all_online_status()  # clears the online statuses left by the previous instance
     debug = is_debug_enabled()
     logger.info("Starting Matcha backend (debug=%s)", debug)
     socketio.run(app, host="0.0.0.0", port=5000, debug=debug)

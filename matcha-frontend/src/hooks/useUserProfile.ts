@@ -4,7 +4,7 @@ import {
 } from "../services/social"
 import type { PublicProfile } from "../types/profile"
 
-/* Logique de la page consultation de profil : chargement + visite + actions sociales */
+/* Profile view page logic: loading + visit tracking + social actions */
 export function useUserProfile(userId: number) {
   const [profile, setProfile] = useState<PublicProfile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -23,11 +23,11 @@ export function useUserProfile(userId: number) {
     }
   }, [userId])
 
-  // consultation = enregistrée dans l'historique de visites (sujet IV.5)
+  // a view is recorded in the visit history (subject IV.5)
   useEffect(() => {
-    // /user/abc → Number("abc") = NaN : la route backend <int:user_id> ne
-    // matche pas, on récupérait un 404 pour rien. La page affiche alors son
-    // « Profil introuvable » sans requête réseau.
+    // /user/abc → Number("abc") = NaN: the backend route <int:user_id> does
+    // not match, so we used to fetch a 404 for nothing. The page now shows its
+    // "Profile not found" state without any network request.
     if (!Number.isInteger(userId) || userId <= 0) {
       setProfile(null)
       setLoading(false)
@@ -36,8 +36,8 @@ export function useUserProfile(userId: number) {
     setLoading(true)
     load()
 
-    // StrictMode (dev) démonte/remonte le composant et ré-exécute cet effect ;
-    // ce ref survit au remount et évite d'enregistrer 2 visites pour le même userId.
+    // StrictMode (dev) unmounts/remounts the component and re-runs this effect;
+    // this ref survives the remount and avoids recording 2 visits for the same userId.
     if (visitedRef.current !== userId) {
       visitedRef.current = userId
       visitUser(userId).catch(() => {})

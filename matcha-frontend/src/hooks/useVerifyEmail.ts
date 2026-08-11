@@ -20,8 +20,8 @@ export function useVerifyEmail() {
       })
       .catch((err: unknown) => {
         setStatus("error")
-        // le backend explique pourquoi (lien expiré, déjà utilisé…) : ne pas
-        // écraser son message par un diagnostic réseau faux
+        // the backend explains why (expired link, already used…): do not
+        // overwrite its message with a wrong network diagnosis
         setMessage(err instanceof Error ? err.message : "Could not reach the server.")
       })
   }, [token, navigate])

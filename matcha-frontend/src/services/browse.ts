@@ -2,7 +2,7 @@ import { API_ROUTES, fetchWithCredentials } from "../config/api"
 import { handleResponse } from "./http"
 import type { BrowseFilters, SuggestedProfile } from "../types/browse"
 
-/* Sérialise les filtres en query string, en ignorant les champs vides */
+/* Serializes the filters into a query string, skipping empty fields */
 export function buildBrowseQuery(filters: BrowseFilters): string {
   const params = new URLSearchParams()
   Object.entries(filters).forEach(([key, value]) => {
@@ -12,12 +12,12 @@ export function buildBrowseQuery(filters: BrowseFilters): string {
   return params.toString()
 }
 
-/* Profils suggérés du feed (tri par score par défaut) */
+/* Suggested feed profiles (sorted by score by default) */
 export async function browseProfiles(filters: BrowseFilters): Promise<SuggestedProfile[]> {
   return fetchProfileList(API_ROUTES.browse, filters)
 }
 
-/* Recherche avancée (âge, fame, localisation, tags) */
+/* Advanced search (age, fame, location, tags) */
 export async function searchProfiles(filters: BrowseFilters): Promise<SuggestedProfile[]> {
   return fetchProfileList(API_ROUTES.search, filters)
 }

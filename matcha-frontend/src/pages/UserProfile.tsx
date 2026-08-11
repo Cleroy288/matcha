@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom"
 import Topbar from "../components/Topbar"
 import TagChip from "../components/TagChip"
 import StatusMessage from "../components/StatusMessage"
-import { useAuth } from "../context/AuthContext"
 import { useUserProfile } from "../hooks/useUserProfile"
 import type { PublicProfile } from "../types/profile"
 import "./UserProfile.css"
@@ -15,17 +14,12 @@ const PREFERENCE_LABELS: Record<string, string> = {
   male: "Men", female: "Women", bisexual: "Both",
 }
 
-/* Consultation de profil : toutes les infos publiques + like/unlike/block/report */
+/* Profile view: every public field + like/unlike/block/report */
 export default function UserProfile() {
   const { id } = useParams()
   const userId = Number(id)
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuth()
   const { profile, loading, error, feedback, setError, setFeedback, toggleLike, block, report } = useUserProfile(userId)
-
-  if (!isAuthenticated) {
-    return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
-  }
 
   const handleBlock = async () => {
     if (!window.confirm("Block this profile? It will no longer appear in your results.")) return
@@ -68,7 +62,7 @@ export default function UserProfile() {
   )
 }
 
-/* En-tête : photo de profil, identité, statut en ligne, badges relation */
+/* Header: profile photo, identity, online status, relation badges */
 function ProfileHeader({ profile }: { profile: PublicProfile }) {
   return (
     <div className="up-header brutal-card">
@@ -107,7 +101,7 @@ function ProfileHeader({ profile }: { profile: PublicProfile }) {
   )
 }
 
-/* Statut : en ligne, ou date/heure de dernière connexion (sujet IV.5) */
+/* Status: online, or date/time of the last connection (subject IV.5) */
 function OnlineStatus({ profile }: { profile: PublicProfile }) {
   if (profile.is_online) {
     return <p className="up-status up-status-online">● Online</p>
@@ -144,7 +138,7 @@ function ProfileActions({ profile, onToggleLike, onChat, onBlock, onReport }: Pr
   )
 }
 
-/* Bio, genre, préférence, tags */
+/* Bio, gender, preference, tags */
 function ProfileDetails({ profile }: { profile: PublicProfile }) {
   return (
     <div className="up-details brutal-card">
@@ -165,7 +159,7 @@ function ProfileDetails({ profile }: { profile: PublicProfile }) {
   )
 }
 
-/* Galerie de photos */
+/* Photo gallery */
 function ProfilePhotos({ profile }: { profile: PublicProfile }) {
   if (profile.photos.length === 0) return null
   return (

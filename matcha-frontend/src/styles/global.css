@@ -166,7 +166,7 @@ form.brutal-card button {
   margin: 0;
 }
 
-/* Pages à contenu long : contenu sous la topbar fixe, scroll vertical autorisé */
+/* Long-content pages: content sits under the fixed topbar, vertical scroll allowed */
 .page-scroll {
   justify-content: flex-start;
   padding-top: var(--topbar-height);

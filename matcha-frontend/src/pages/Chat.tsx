@@ -7,7 +7,7 @@ import { fetchConversations, fetchMessages, sendMessage } from "../services/chat
 import type { Conversation, Message } from "../types/chat"
 import "./Chat.css"
 
-/* Chat temps réel entre users connectés (match) : liste des conversations + fil de messages */
+/* Real-time chat between connected users (match): conversation list + message thread */
 export default function Chat() {
     const { id } = useParams()
     const openId = id ? Number(id) : null
@@ -33,7 +33,7 @@ export default function Chat() {
 
     const openConversation = useCallback(async (userId: number) => {
         try {
-            // le GET marque les messages reçus comme lus côté backend
+            // the GET marks the received messages as read on the backend
             setMessages(await fetchMessages(userId))
             refreshUnreadMessages()
             setConversations(prev => prev.map(conv =>
@@ -44,38 +44,34 @@ export default function Chat() {
         }
     }, [refreshUnreadMessages])
 
-    // 1 chargement initial de la liste des matchs
+    // 1 initial load of the match list
     useEffect(() => {
         if (!isAuthenticated) return
         loadConversations()
     }, [isAuthenticated, loadConversations])
 
-    // 2 ouverture d'une conversation via l'URL /chat/:id
+    // 2 opening a conversation through the /chat/:id URL
     useEffect(() => {
         if (!isAuthenticated || openId === null) return
         openConversation(openId)
     }, [isAuthenticated, openId, openConversation])
 
-    // 3 message reçu en temps réel via le socket
+    // 3 message received in real time through the socket
     useEffect(() => {
         if (!incomingMessage) return
         if (openId !== null && incomingMessage.sender_id === openId) {
             setMessages(prev => [...prev, incomingMessage])
-            openConversation(openId) // marque comme lu + resynchronise
+            openConversation(openId) // marks as read + resynchronizes
         } else {
-            loadConversations() // met à jour aperçus + compteurs
+            loadConversations() // refreshes previews + counters
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [incomingMessage])
 
-    // 4 scroll en bas du fil à chaque nouveau message
+    // 4 scroll to the bottom of the thread on every new message
     useEffect(() => {
         threadEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [messages])
-
-    if (!isAuthenticated) {
-        return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
-    }
 
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -128,7 +124,7 @@ interface ConversationListProps {
     onSelect: (userId: number) => void
 }
 
-/* Colonne de gauche : un item par match, aperçu du dernier message + non-lus */
+/* Left column: one item per match, last message preview + unread count */
 function ConversationList({ conversations, loading, activeId, onSelect }: ConversationListProps) {
     return (
         <aside className="chat-list">
@@ -177,7 +173,7 @@ interface ConversationThreadProps {
     threadEndRef: React.RefObject<HTMLDivElement | null>
 }
 
-/* Colonne de droite : fil de messages + zone de saisie */
+/* Right column: message thread + input area */
 function ConversationThread({
     conversation, messages, myUserId, draft, onDraftChange, onSend, onBack, threadEndRef,
 }: ConversationThreadProps) {
@@ -233,7 +229,7 @@ function ConversationThread({
     )
 }
 
-/* En ligne, ou dernière connexion du match */
+/* Online, or last connection of the match */
 function ThreadStatus({ conversation }: { conversation: Conversation }) {
     if (conversation.is_online) {
         return <span className="chat-thread-status chat-thread-status--online">Online</span>
@@ -247,7 +243,7 @@ function ThreadStatus({ conversation }: { conversation: Conversation }) {
     return <span className="chat-thread-status">Last seen {lastSeen}</span>
 }
 
-/* Bulle de message, alignée selon l'expéditeur */
+/* Message bubble, aligned according to the sender */
 function MessageBubble({ message, mine }: { message: Message; mine: boolean }) {
     const time = new Date(message.created_at).toLocaleTimeString("en-GB", {
         hour: "2-digit", minute: "2-digit",

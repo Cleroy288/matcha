@@ -84,17 +84,17 @@ def logout():
 
 
 def force_offline_from_cookie():
-    """Passe l'user hors ligne dès le logout : le socket peut mettre plusieurs
-    secondes à se fermer, voire rester ouvert si l'onglet n'est pas fermé."""
+    """Marks the user offline as soon as they log out: the socket can take
+    several seconds to close, or even stay open if the tab is not closed."""
     token = request.cookies.get("auth_token")
-    # 1 session déjà expirée côté client : il n'y a plus de statut à corriger
+    # 1 session already expired client-side: there is no status left to fix
     if not token:
         return
 
     try:
         disconnect_user(decode_token(token)["user_id"])
     except Exception:
-        # 2 token illisible : on supprime quand même le cookie, sans toucher au statut
+        # 2 unreadable token: clear the cookie anyway, without touching the status
         logger.info("Logout with an unusable token, online status left untouched")
 
 
@@ -136,9 +136,9 @@ def reset_password():
         return jsonify({"error": str(e)}), HTTP_BAD_REQUEST
 
 
-# TEST ca va disparaitre
-@jwt_required # A mettre au dessus d'un controller pour proteger sa route
+@jwt_required # put this above a controller to protect its route
 def testmiddleware(payload):
+    """GET /me: session identity used by the frontend auth bootstrap."""
     user_id = payload["user_id"]
     user = get_user_by_id(user_id)
 
@@ -149,6 +149,9 @@ def testmiddleware(payload):
         "user": {
             "id": user["id"],
             "username": user["username"],
-            "email": user["email"]
+            "email": user["email"],
+            "first_name": user["first_name"],
+            "last_name": user["last_name"],
+            "profile_complete": user["profile_complete"],
         }
     })

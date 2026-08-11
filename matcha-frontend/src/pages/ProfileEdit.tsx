@@ -63,21 +63,13 @@ export default function ProfileEdit() {
         return
       }
       setOnboarding(false)
+      if (user) setUser({ ...user, profile_complete: true })
       navigate("/home", { replace: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error checking profile")
     } finally {
       setFinishing(false)
     }
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="app-container">
-        <Topbar />
-        <h1>Please log in</h1>
-      </div>
-    )
   }
 
   if (loading) {
@@ -101,7 +93,7 @@ export default function ProfileEdit() {
   return (
     <div className="app-container page-scroll">
       <Topbar />
-      <ThemeSelector></ThemeSelector>
+      <ThemeSelector />
       <div className="ProfileEdit">
         <h1>{onboarding ? "Complete your profile" : "My profile"}</h1>
         {error && <p>{error}</p>}

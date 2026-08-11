@@ -29,11 +29,11 @@ from utils.profile_validator import (
 
 
 def get_public_profile_data(viewer_id, user_id):
-    """Consultation de profil : toutes les infos publiques (jamais email/mdp),
-    distance, statut en ligne et relation avec le viewer (like / match / block)."""
+    """Profile view: every public field (never email/password), distance,
+    online status and relation with the viewer (like / match / block)."""
     user = get_user_by_id(user_id)
     profile = get_profile_by_user_id(user_id)
-    # 1 profil inexistant ou bloqué dans un sens ou l'autre → invisible
+    # 1 missing profile, or blocked either way → invisible
     if not user or not profile:
         return None
     if viewer_id != user_id and is_blocked(viewer_id, user_id):
@@ -49,7 +49,7 @@ def get_public_profile_data(viewer_id, user_id):
 
 
 def build_public_fields(user, profile):
-    """Champs publics du profil ; email et mot de passe exclus (sujet IV.5)."""
+    """Public profile fields; email and password excluded (subject IV.5)."""
     birth_date = profile.get("birth_date")
     return {
         "user_id": user["id"],
@@ -69,7 +69,7 @@ def build_public_fields(user, profile):
 
 
 def build_photo_list(user_id):
-    """Photos du profil avec leur URL publique servie par nginx."""
+    """Profile photos with their public URL served by nginx."""
     photos = get_photos_by_user(user_id)
     for photo in photos:
         photo["url"] = build_photo_url(photo["file_path"])
@@ -77,12 +77,12 @@ def build_photo_list(user_id):
 
 
 def find_profile_photo_url(photos):
-    # profil sans photo de profil = cas légitime → None
+    # a profile without a profile photo is a legitimate case → None
     return next((p["url"] for p in photos if p["is_profile"]), None)
 
 
 def compute_viewer_distance(viewer_id, profile):
-    """Distance viewer → profil consulté ; None si une position manque."""
+    """Distance viewer → viewed profile; None when a position is missing."""
     viewer_profile = get_profile_by_user_id(viewer_id)
     if not viewer_profile:
         return None
@@ -93,7 +93,7 @@ def compute_viewer_distance(viewer_id, profile):
 
 
 def build_relation_fields(viewer_id, user_id):
-    """Relation entre le viewer et le profil : liké, me like, connectés (sujet IV.5)."""
+    """Relation between the viewer and the profile: liked, likes me, connected (subject IV.5)."""
     if viewer_id == user_id:
         return {"liked_by_me": False, "likes_me": False, "connected": False}
     return {
@@ -104,7 +104,7 @@ def build_relation_fields(viewer_id, user_id):
 
 
 def compute_age(birth_date):
-    # pas de date de naissance = profil incomplet → âge inconnu
+    # no birth date means an incomplete profile → unknown age
     if not birth_date:
         return None
     today = date.today()
@@ -131,6 +131,7 @@ def get_full_profile(user_id):
     profile["first_name"] = user["first_name"]
     profile["last_name"] = user["last_name"]
     profile["email"] = user["email"]
+    profile["birth_date"] = str(profile["birth_date"]) if profile.get("birth_date") else None
     profile["tags"] = tags
     profile["photos"] = photos
 

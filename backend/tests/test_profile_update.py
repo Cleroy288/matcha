@@ -1,3 +1,5 @@
+from datetime import date
+
 from models import browse_model
 from services import profile_service
 
@@ -31,6 +33,23 @@ def test_update_profile_saves_user_and_profile_fields(monkeypatch):
         "email": "ada@example.com",
     })]
     assert profile_updates == [(7, {"gender": "female"})]
+
+
+def test_full_profile_serializes_birth_date_for_html_input(monkeypatch):
+    profile = {"birth_date": date(2000, 1, 2)}
+    monkeypatch.setattr(profile_service, "get_or_create_profile", lambda _user_id: profile)
+    monkeypatch.setattr(profile_service, "check_profile_completeness", lambda _user_id: None)
+    monkeypatch.setattr(profile_service, "get_profile_by_user_id", lambda _user_id: profile)
+    monkeypatch.setattr(profile_service, "get_user_by_id", lambda _user_id: {
+        "username": "ada",
+        "first_name": "Ada",
+        "last_name": "Lovelace",
+        "email": "ada@example.com",
+    })
+    monkeypatch.setattr(profile_service, "get_user_tags", lambda _user_id: [])
+    monkeypatch.setattr(profile_service, "get_photos_by_user", lambda _user_id: [])
+
+    assert profile_service.get_full_profile(7)["birth_date"] == "2000-01-02"
 
 
 def test_manual_location_accepts_city_without_coordinates(monkeypatch):

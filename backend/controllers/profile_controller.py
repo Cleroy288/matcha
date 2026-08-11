@@ -30,7 +30,7 @@ def get_public_profile(payload, user_id):
 
 @jwt_required
 def delete_account(payload):
-    """DELETE /profile — droit à l'effacement RGPD : purge le compte et déconnecte."""
+    """DELETE /profile — GDPR right to erasure: purges the account and logs out."""
     user_id = payload["user_id"]
     try:
         delete_user_account(user_id)

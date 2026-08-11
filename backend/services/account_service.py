@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 def delete_user_account(user_id):
-    """Droit à l'effacement (RGPD art. 17) : supprime le compte et toutes les
-    données personnelles qui vont avec — profil, position GPS, photos, tags,
-    likes, visites, blocks, reports, messages et notifications.
+    """Right to erasure (GDPR art. 17): deletes the account and every personal
+    record that goes with it — profile, GPS position, photos, tags, likes,
+    visits, blocks, reports, messages and notifications.
 
-    Les fichiers sont listés avant le DELETE : les lignes photos disparaissent
-    en cascade et leurs chemins seraient alors introuvables."""
+    The files are listed before the DELETE: photo rows disappear through the
+    cascade and their paths would no longer be reachable."""
     photo_files = collect_photo_files(user_id)
 
     if not delete_user(user_id):
@@ -27,7 +27,7 @@ def delete_user_account(user_id):
 
 
 def collect_photo_files(user_id):
-    """Chemins disque des photos du user, avant que la cascade ne les efface."""
+    """Disk paths of the user photos, before the cascade wipes them."""
     return [
         os.path.join(UPLOAD_DIR, photo["file_path"])
         for photo in get_photos_by_user(user_id)
@@ -35,8 +35,8 @@ def collect_photo_files(user_id):
 
 
 def remove_photo_files(photo_files):
-    """Efface les fichiers du disque ; un échec ne doit pas annuler la suppression
-    du compte, qui est déjà commitée en base."""
+    """Removes the files from disk; a failure must not undo the account
+    deletion, which is already committed in the database."""
     for path in photo_files:
         try:
             if os.path.exists(path):

@@ -11,11 +11,13 @@ import { likeUser } from "../services/social"
 import { toCardData } from "../utils/profileCard"
 import type { BrowseFilters } from "../types/browse"
 
-/* Recherche avancée : tranche d'âge, popularité, localisation, tags — mêmes cards que le feed */
+const INITIAL_FILTERS: BrowseFilters = { sort_by: "score" }
+
+/* Advanced search: age range, popularity, location, tags — same cards as the feed */
 export default function Search() {
     const { isAuthenticated } = useAuth()
     const navigate = useNavigate()
-    const [filters, setFilters] = useState<BrowseFilters>({ sort_by: "score" })
+    const [filters, setFilters] = useState<BrowseFilters>(INITIAL_FILTERS)
     const [profiles, setProfiles] = useState<ProfileCardData[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -35,12 +37,8 @@ export default function Search() {
 
     useEffect(() => {
         if (!isAuthenticated) return
-        runSearch(filters)
+        runSearch(INITIAL_FILTERS)
     }, [isAuthenticated, runSearch])
-
-    if (!isAuthenticated) {
-        return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
-    }
 
     const handleLike = async (userId: number) => {
         setError(null)

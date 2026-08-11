@@ -8,18 +8,18 @@ ERR_MISSING_FIELD = "Missing or empty required field: {field}"
 
 
 def get_json_body():
-    """Corps JSON de la requête, sans jamais laisser Werkzeug lever un 415/400.
+    """JSON body of the request, without ever letting Werkzeug raise a 415/400.
 
-    request.json lève UnsupportedMediaType dès que le Content-Type n'est pas
-    application/json, et BadRequest sur un JSON malformé : deux erreurs que le
-    client déclenche trivialement, et que Flask rendait en HTML. On les convertit
-    en AppError, tout en distinguant les trois cas pour que le message reste
-    exploitable : corps absent, corps illisible, corps qui n'est pas un objet."""
+    request.json raises UnsupportedMediaType as soon as the Content-Type is not
+    application/json, and BadRequest on malformed JSON: two errors the client
+    triggers trivially, and that Flask used to render as HTML. They are turned
+    into AppError, keeping the three cases apart so the message stays usable:
+    missing body, unreadable body, body that is not an object."""
     body = request.get_json(silent=True)
     if body is None:
-        # un corps a bien été envoyé mais n'a pas pu être lu : mauvais
-        # Content-Type ou JSON malformé — le signaler plutôt que de le confondre
-        # avec des champs manquants
+        # a body was sent but could not be read: wrong Content-Type or
+        # malformed JSON — report it rather than confusing it with
+        # missing fields
         if request.get_data():
             raise AppError(ERR_UNREADABLE_JSON_BODY)
         return {}
@@ -29,10 +29,10 @@ def get_json_body():
 
 
 def require_fields(body, *fields):
-    """Vérifie que chaque champ est présent et vaut une chaîne non vide.
+    """Checks that every field is present and holds a non-empty string.
 
-    Évite à la fois les KeyError des contrôleurs et les TypeError des
-    validateurs (validate_email fait len(email) sans typer son entrée)."""
+    Prevents both the KeyError in the controllers and the TypeError in the
+    validators (validate_email calls len(email) without typing its input)."""
     for field in fields:
         value = body.get(field)
         if not isinstance(value, str) or not value.strip():

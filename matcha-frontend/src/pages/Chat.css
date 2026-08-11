@@ -13,7 +13,7 @@
   min-height: 420px;
 }
 
-/* ── Liste des conversations ── */
+/* ── Conversation list ── */
 .chat-list {
   border: var(--border-width) solid var(--border-color);
   box-shadow: var(--brutal-shadow);
@@ -128,7 +128,7 @@
   border: 2px solid var(--border-color);
 }
 
-/* ── Fil de messages ── */
+/* ── Message thread ── */
 .chat-thread {
   border: var(--border-width) solid var(--border-color);
   box-shadow: var(--brutal-shadow);
@@ -296,7 +296,7 @@
   box-shadow: var(--brutal-shadow-hover);
 }
 
-/* ── Mobile : une seule colonne, liste OU fil ── */
+/* ── Mobile: a single column, list OR thread ── */
 @media (max-width: 768px) {
   .chat-layout {
     grid-template-columns: 1fr;

@@ -76,7 +76,7 @@ def update_location(user_id, lat, lng, city, gps_consent):
 
 
 def set_online_status(user_id, is_online):
-    """Met à jour le statut en ligne ; horodate last_online au passage hors ligne."""
+    """Updates the online status; stamps last_online when going offline."""
     conn = get_connection()
     cur = conn.cursor()
 
@@ -97,9 +97,9 @@ def set_online_status(user_id, is_online):
 
 
 def reset_all_online_status():
-    """Repasse tout le monde hors ligne au démarrage : les sockets ouverts avant
-    un crash ou un redémarrage sont morts, leurs statuts en base sont des fantômes.
-    last_online n'est pas touché : on ne sait pas quand ces users sont vraiment partis."""
+    """Marks everyone offline at startup: sockets opened before a crash or a
+    restart are dead, and the statuses stored for them are ghosts.
+    last_online is left untouched: we do not know when those users really left."""
     conn = get_connection()
     cur = conn.cursor()
 

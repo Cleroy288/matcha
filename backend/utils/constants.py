@@ -39,7 +39,7 @@ ALLOWED_IMAGE_FORMATS = set(ALLOWED_IMAGE_EXTENSIONS.values())
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
 
-# Tous les messages rendus à l'utilisateur sont en anglais, comme l'interface.
+# Every message rendered to the user is in English, like the interface.
 class AuthMessages:
     EMAIL_VERIFIED        = "Email verified. You can now log in."
     EMAIL_SEND_SUCCESS    = "Email sent. Click the link inside it to change your password."

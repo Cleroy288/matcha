@@ -11,11 +11,13 @@ import { likeUser } from "../services/social"
 import { toCardData } from "../utils/profileCard"
 import type { BrowseFilters } from "../types/browse"
 
-/* Feed : profils suggérés par l'algo (tags communs + proximité + fame), swipe like/pass */
+const INITIAL_FILTERS: BrowseFilters = { sort_by: "score" }
+
+/* Feed: profiles suggested by the algorithm (common tags + proximity + fame), swipe like/pass */
 export default function Home() {
     const { isAuthenticated } = useAuth()
     const navigate = useNavigate()
-    const [filters, setFilters] = useState<BrowseFilters>({ sort_by: "score" })
+    const [filters, setFilters] = useState<BrowseFilters>(INITIAL_FILTERS)
     const [profiles, setProfiles] = useState<ProfileCardData[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -36,12 +38,8 @@ export default function Home() {
 
     useEffect(() => {
         if (!isAuthenticated) return
-        loadSuggestions(filters)
+        loadSuggestions(INITIAL_FILTERS)
     }, [isAuthenticated, loadSuggestions])
-
-    if (!isAuthenticated) {
-        return <div className="app-container"> <Topbar></Topbar><h1>Please log in</h1></div>
-    }
 
     const handleLike = async (userId: number) => {
         setError(null)

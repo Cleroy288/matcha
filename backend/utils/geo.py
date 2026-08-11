@@ -4,7 +4,7 @@ EARTH_RADIUS_KM = 6371
 
 
 def haversine_km(lat1, lng1, lat2, lng2):
-    """Distance en km entre deux points GPS ; None si une coordonnée manque."""
+    """Distance in km between two GPS points; None when a coordinate is missing."""
     if lat1 is None or lng1 is None or lat2 is None or lng2 is None:
         return None
 

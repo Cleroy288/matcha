@@ -13,8 +13,8 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  like:    "var(--primary)",
-  match:   "var(--accent)",
+  like:    "var(--primary)",    // pink
+  match:   "var(--accent)",     // neon green
   visit:   "var(--matcha-light)",
   unlike:  "#e0e0e0",
   message: "var(--primary)",
@@ -39,21 +39,13 @@ export default function Notifications() {
     fetchNotifications()
       .then(data => {
         setNotifications(data.notifications)
+        // marks everything as read + resets the badge
         return markNotificationsRead()
       })
       .then(() => setUnreadCount(0))
       .catch((e: unknown) => setError(e instanceof Error ? e.message : "Server error"))
       .finally(() => setLoading(false))
   }, [isAuthenticated, setUnreadCount])
-
-  if (!isAuthenticated) {
-    return (
-      <div className="app-container">
-        <Topbar />
-        <h1>Please log in</h1>
-      </div>
-    )
-  }
 
   return (
     <div className="app-container page-scroll">

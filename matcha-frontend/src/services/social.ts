@@ -50,7 +50,7 @@ export async function reportUser(userId: number, reason: string): Promise<void> 
   await handleResponse(res)
 }
 
-/* Profil public d'un autre user (toutes infos sauf email/mdp + relation like/match) */
+/* Public profile of another user (every field except email/password + like/match relation) */
 export async function fetchPublicProfile(userId: number): Promise<PublicProfile> {
   const res = await fetchWithCredentials(`${API_ROUTES.profile}/${userId}`)
   return handleResponse(res)
