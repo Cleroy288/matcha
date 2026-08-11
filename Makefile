@@ -2,7 +2,7 @@ COMPOSE := docker compose
 
 all:
 	@$(COMPOSE) up --build -d
-	@echo "Matcha : http://localhost:80/login"
+	@echo "Matcha : http://localhost:5173/login"
 
 clean:
 	@$(COMPOSE) down --remove-orphans
