@@ -1,3 +1,5 @@
+import pytest
+
 from utils.constants import AuthMessages
 
 PASSWORD = "Zxqv9!mN482"
@@ -96,6 +98,26 @@ def test_register_rejects_mismatched_passwords(client, mocker):
     assert response.status_code == 400
     assert response.get_json()["error"] == "Passwords do not match"
     create_user.assert_not_called()
+
+
+@pytest.mark.parametrize(("password", "status", "error"), [
+    ("Password123*", 400, AuthMessages.PASSWORD_TOO_COMMON),
+    ("Short1!", 400, AuthMessages.PASSWORD_INVALID_LEN),
+    ("lowercase9!", 400, AuthMessages.PASSWORD_INVALID_UP),
+    ("NoNumber!", 400, AuthMessages.PASSWORD_INVALID_NUMBER),
+    ("NoSpecial9", 400, AuthMessages.PASSWORD_INVALID_SPECIAL),
+    ("Summer2026!", 201, None),
+])
+def test_register_enforces_password_rules(client, mocker, monkeypatch, password, status, error):
+    monkeypatch.setenv("DISABLE_EMAIL_VERIFICATION", "TRUE")
+    fake_user_store(mocker)
+    body = {**REGISTER_BODY, "password": password, "confirm_password": password}
+
+    response = client.post("/register", json=body)
+
+    assert response.status_code == status
+    if error:
+        assert response.get_json()["error"] == error
 
 def test_register_reports_when_email_verification_is_disabled(client, mocker, monkeypatch):
     monkeypatch.setenv("DISABLE_EMAIL_VERIFICATION", "TRUE")
