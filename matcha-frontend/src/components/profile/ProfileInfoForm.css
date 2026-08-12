@@ -1,0 +1,22 @@
+.ProfileInfoForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--card-border);
+  box-shadow: var(--brutal-shadow);
+}
+
+.ProfileInfoForm label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.ProfileInfoForm-error {
+  color: var(--primary);
+  font-weight: 700;
+  margin: 0;
+}

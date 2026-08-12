@@ -1,0 +1,75 @@
+.PhotosSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--card-border);
+  box-shadow: var(--brutal-shadow);
+}
+
+.PhotosSection h3,
+.PhotosSection h4 {
+  margin: 0;
+}
+
+.PhotosSection-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.PhotosSection-standard {
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--card-border);
+}
+
+.PhotosSection-main .PhotoSlot {
+  width: 190px;
+  height: 190px;
+}
+
+.PhotosSection-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.PhotosSection-item {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.PhotosSection-primaryButton {
+  width: 100%;
+  min-height: 38px;
+  padding: 0.4rem;
+  border: 2px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.15;
+  cursor: pointer;
+}
+
+.PhotosSection-primaryButton:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+@media (max-width: 480px) {
+  .PhotosSection {
+    padding: 1rem;
+  }
+
+  .PhotosSection-main .PhotoSlot {
+    width: 170px;
+    height: 170px;
+  }
+}

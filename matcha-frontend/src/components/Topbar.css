@@ -1,0 +1,101 @@
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    height: 70px;
+    background-color: var(--topbar-bg);
+    border-bottom: var(--border-width) solid var(--topbar-border);
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.topbar-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.topbar-links {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    display: flex;
+    color: var(--hero-fg);
+    gap: 2rem;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: color 0.3s;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+}
+
+.nav-item {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--hero-fg);
+    border-bottom: var(--border-width) solid var(--topbar-border);
+    text-decoration: none;
+    padding: 8px 12px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    background-color: var(--accent);
+    border: 2px solid var(--border-color);
+    transform: translate(-2px, -2px);
+    box-shadow: 2px 2px 0px var(--border-color);
+    color: var(--on-accent);
+}
+
+.notif-btn {
+    position: relative;
+    background: var(--surface-alt);
+    border: var(--border-width) solid var(--border-color);
+    padding: 6px 14px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--brutal-shadow);
+    transition: all 0.1s;
+    color: var(--hero-fg);
+}
+
+.notif-btn--active {
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+.notif-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--brutal-shadow-hover);
+}
+
+.notif-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--primary);
+    border: 2px solid var(--border-color);
+    color: var(--on-primary);
+    font-size: 11px;
+    font-weight: 900;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

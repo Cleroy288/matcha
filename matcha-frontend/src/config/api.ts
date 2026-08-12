@@ -1,0 +1,41 @@
+// frontend/src/config/api.ts  ← dedicated file
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost"
+
+export const API_ROUTES = {
+    login:               `${API_BASE_URL}/login`,
+    register:            `${API_BASE_URL}/register`,
+    logout:              `${API_BASE_URL}/logout`,
+    verifyEmail:         `${API_BASE_URL}/verify-email`,
+    resetPassword:       `${API_BASE_URL}/reset-password`,
+    verifyResetPassword: `${API_BASE_URL}/verify-reset-password`,
+    notifications:       `${API_BASE_URL}/notifications`,
+    notificationsRead:   `${API_BASE_URL}/notifications/read`,
+    notificationsUnread: `${API_BASE_URL}/notifications/unread`,
+    like:    `${API_BASE_URL}/like`,
+    visit:   `${API_BASE_URL}/visit`,
+    block:   `${API_BASE_URL}/block`,
+    report:  `${API_BASE_URL}/report`,
+    likesReceived:         `${API_BASE_URL}/likes/received`,
+    viewsReceived:         `${API_BASE_URL}/views/received`,
+    me:                  `${API_BASE_URL}/me`,
+    profile:              `${API_BASE_URL}/profile`,
+    browse:              `${API_BASE_URL}/browse`,
+    search:              `${API_BASE_URL}/search`,
+    chatConversations:   `${API_BASE_URL}/chat/conversations`,
+    chatMessages:        `${API_BASE_URL}/chat/messages`,
+    chatUnread:          `${API_BASE_URL}/chat/unread`,
+}
+
+export const fetchWithCredentials = (url: string, options: RequestInit = {}) => {
+    const headers = new Headers(options.headers)
+
+    if (!(options.body instanceof FormData) && !headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/json")
+    }
+
+    return fetch(url, {
+        ...options,
+        credentials: "include",
+        headers
+    })
+}

@@ -1,0 +1,122 @@
+name: CI
+on:
+  push:
+    branches: [pitroin]
+  pull_request:
+    branches: [pitroin]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: matcha_test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # ---------------- BACKEND ----------------
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install backend deps
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest pytest-mock pytest-ruff psycopg2-binary
+
+      - name: Init database schema
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d matcha_test_db -c "
+          CREATE TABLE IF NOT EXISTS users (
+              id SERIAL PRIMARY KEY,
+              email VARCHAR(255) UNIQUE NOT NULL,
+              username VARCHAR(50) UNIQUE NOT NULL,
+              first_name VARCHAR(100),
+              last_name VARCHAR(100),
+              password_hash TEXT NOT NULL,
+              email_verified BOOLEAN DEFAULT FALSE,
+              verification_token VARCHAR(255),
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+          CREATE TABLE IF NOT EXISTS likes (
+              id SERIAL PRIMARY KEY,
+              liker_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              liked_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              UNIQUE (liker_id, liked_id)
+          );
+          CREATE TABLE IF NOT EXISTS profile_views (
+              id SERIAL PRIMARY KEY,
+              viewer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              viewed_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+          CREATE TABLE IF NOT EXISTS blocks (
+              id SERIAL PRIMARY KEY,
+              blocker_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              blocked_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              UNIQUE (blocker_id, blocked_id)
+          );
+          CREATE TABLE IF NOT EXISTS reports (
+              id SERIAL PRIMARY KEY,
+              reporter_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              reported_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              reason TEXT,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              UNIQUE (reporter_id, reported_id)
+          );
+          CREATE TABLE IF NOT EXISTS notifications (
+              id SERIAL PRIMARY KEY,
+              user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+              from_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+              type VARCHAR(20) NOT NULL,
+              is_read BOOLEAN DEFAULT FALSE,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );"
+
+      - name: Run tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: matcha_test_db
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          cd backend
+          PYTHONPATH=. pytest -x --disable-warnings -q
+
+      # ---------------- FRONTEND ----------------
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: matcha-frontend/package-lock.json
+
+      - name: Install frontend
+        run: |
+          cd matcha-frontend
+          npm ci
+
+      - name: Build frontend
+        run: |
+          cd matcha-frontend
+          npm run build

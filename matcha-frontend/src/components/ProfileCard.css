@@ -1,0 +1,323 @@
+/* ── Stack wrapper ── */
+.pc-stack-wrapper {
+  --pc-card-width: clamp(360px, min(40vw, 60vh), 760px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pc-stack {
+  position: relative;
+  width: var(--pc-card-width);
+  aspect-ratio: 2 / 3;
+}
+
+/* ── Card base ── */
+.pc-card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--border-color);
+  box-shadow: var(--brutal-shadow);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  border-radius: 4px;
+  background: var(--surface);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.pc-card:active {
+  cursor: grabbing;
+}
+
+/* ── Stack positions ── */
+.pc-front {
+  z-index: 3;
+  transform: rotate(0deg) translate(0, 0);
+}
+
+.pc-front:hover {
+  box-shadow: var(--brutal-shadow-hover);
+  transform: translate(-2px, -2px);
+}
+
+.pc-back1 {
+  z-index: 2;
+  transform: rotate(1.5deg) translate(4px, 4px);
+  background: var(--primary);
+  cursor: default;
+}
+
+.pc-back2 {
+  z-index: 1;
+  transform: rotate(-2.5deg) translate(-6px, 8px);
+  background: var(--accent);
+  cursor: default;
+}
+
+/* ── Photo ── */
+.pc-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.pc-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--topbar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+}
+
+.pc-photo-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  width: 48px;
+  height: 64px;
+  /* transform: translateY(-50%); */
+  border: 2px solid var(--border-color);
+  background: var(--surface-alt, var(--bg-color));
+  box-shadow: var(--brutal-shadow);
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pc-photo-nav:hover {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.pc-photo-nav-left {
+  left: 12px;
+}
+
+.pc-photo-nav-right {
+  right: 12px;
+}
+
+/* ── Bouton consultation profil ── */
+.pc-open-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  background: var(--surface-alt, var(--bg-color));
+  border: 2px solid var(--border-color);
+  box-shadow: var(--brutal-shadow);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.pc-open-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--brutal-shadow-hover);
+}
+
+/* ── Statut en ligne + badges secondaires ── */
+.pc-online-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 10px;
+  border-radius: 50%;
+  background: #3ddc84;
+  border: 2px solid var(--border-color);
+}
+
+.pc-meta-secondary {
+  margin-top: 6px;
+}
+
+.pc-badge {
+  background: var(--accent);
+  border: 2px solid var(--border-color);
+  color: var(--on-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-body);
+}
+
+/* ── Swipe hints ── */
+.pc-hint {
+  position: absolute;
+  top: 50%;
+  font-family: var(--font-title);
+  font-size: 2.4rem;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  pointer-events: none;
+  padding: 6px 14px;
+  border: 3px solid;
+  transition: opacity 0.1s;
+}
+
+.pc-hint-like {
+  left: 16px;
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: rotate(-12deg) translateY(-50%);
+}
+
+.pc-hint-nope {
+  right: 16px;
+  color: var(--color2);
+  border-color: var(--color2);
+  transform: rotate(12deg) translateY(-50%);
+}
+
+/* ── Gradient overlay + infos ── */
+.pc-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 1.2rem 1.4rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.4) 65%,
+    transparent 100%
+  );
+}
+
+.pc-name {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+}
+
+.pc-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pc-age {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.pc-dist {
+  background: var(--color2);
+  border: 2px solid var(--border-color);
+  color: var(--on-accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-body);
+}
+
+/* ── Action buttons ── */
+.pc-actions {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+.pc-action-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pc-btn {
+  width: 64px;
+  height: 64px;
+  border: 3px solid var(--border-color);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--bg-color);
+  box-shadow: var(--brutal-shadow);
+  border-radius: 0;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.pc-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--brutal-shadow-hover);
+}
+
+.pc-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--border-color);
+}
+
+.pc-btn-like {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.pc-btn-dislike {
+  background: var(--color2);
+  color: var(--on-accent);
+}
+
+.pc-btn-label {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+/* ── Empty state ── */
+.pc-empty {
+  width: clamp(360px, min(40vw, 60vh), 760px);
+  aspect-ratio: 2 / 3;
+  border: 3px solid var(--border-color);
+  box-shadow: var(--brutal-shadow);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pc-empty-text {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: -0.5px;
+}
+
+@media (max-width: 768px) {
+  .pc-stack-wrapper {
+    --pc-card-width: min(320px, 86vw);
+  }
+
+  .pc-empty {
+    width: min(320px, 86vw);
+  }
+}

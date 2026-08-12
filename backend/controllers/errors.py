@@ -1,0 +1,10 @@
+ERR_MISSING_TOKEN = "Missing token"
+ERR_MISSING_EMAIL = "Missing email"
+ERR_USER_NOT_FOUND = "User not found"
+
+MSG_EMAIL_VERIFIED = "Email verified successfully"
+MSG_PASSWORD_CHANGED = "Password changed successfully"
+MSG_RESET_EMAIL_SENT = "Reset email sent successfully"
+MSG_LOCATION_UPDATED = "Location updated"
+MSG_PHOTO_DELETED = "Photo deleted"
+MSG_PROFILE_PHOTO_UPDATED = "Profile photo updated"

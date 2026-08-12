@@ -1,0 +1,15 @@
+.ProfileEdit {
+  width: 100%;
+  max-width: 700px;
+  padding: 100px 1rem 2rem;
+}
+
+.ProfileEdit h1 {
+  margin-bottom: 1.5rem;
+}
+
+.ProfileEdit-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

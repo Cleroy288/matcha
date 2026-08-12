@@ -1,0 +1,32 @@
+.TagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: var(--accent);
+  color: var(--on-accent);
+  border: 2px solid var(--card-border);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  box-shadow: 2px 2px 0px var(--card-border);
+}
+
+.TagChip-remove {
+  all: unset;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 0.75rem;
+  padding: 0 2px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+.TagChip-remove:hover {
+  color: var(--card-border);
+  transform: none;
+  box-shadow: none;
+}

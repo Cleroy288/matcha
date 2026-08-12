@@ -1,0 +1,82 @@
+.LocationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border: var(--border-width) solid var(--card-border);
+  box-shadow: var(--brutal-shadow);
+}
+
+.LocationSection label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.LocationSection-notice {
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--matcha-light);
+  border: 2px solid var(--black);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+.LocationSection-consent {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  text-transform: none;
+}
+
+.LocationSection-consent input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.LocationSection-modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.LocationSection-modes button {
+  min-height: 42px;
+  padding: 0.6rem;
+  border: 2px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.LocationSection-modes button + button {
+  border-left: 0;
+}
+
+.LocationSection-modes button.is-active {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.LocationSection-coords {
+  font-weight: 600;
+  font-family: monospace;
+  margin: 0;
+  padding: 8px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 2px solid var(--card-border);
+}
+
+.LocationSection-error {
+  color: var(--primary);
+  font-weight: 700;
+  margin: 0;
+}
