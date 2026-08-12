@@ -7,6 +7,10 @@ all:
 generate:
 	@$(COMPOSE) exec backend python3 generator_profile.py
 
+test:
+	@$(COMPOSE) exec backend sh -c "python3 -m pytest && ruff check ."
+	@$(COMPOSE) exec frontend sh -c "npm test && npm run lint"
+
 clean:
 	@$(COMPOSE) down --remove-orphans
 
@@ -15,4 +19,4 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all generate test clean fclean re
