@@ -4,11 +4,12 @@ import sys
 import pytest
 
 sys.path.insert(0, os.path.dirname(__file__))
+TEST_SECRET_KEY = "test-secret-key-for-pytest-32bytes!"
+os.environ["SECRET_KEY"] = TEST_SECRET_KEY
 
 
 @pytest.fixture()
 def app():
-    os.environ.setdefault("SECRET_KEY", "test-secret-key-for-pytest-32bytes!")
     os.environ.setdefault("JWT_EXP_DELTA_SECONDS", "3600")
     os.environ.setdefault("POSTGRES_DB", "matcha_test")
     os.environ.setdefault("POSTGRES_USER", "test")
@@ -18,7 +19,7 @@ def app():
     from app import app as flask_app
 
     flask_app.config["TESTING"] = True
-    flask_app.config["SECRET_KEY"] = "test-secret-key-for-pytest-32bytes!"
+    flask_app.config["SECRET_KEY"] = TEST_SECRET_KEY
     return flask_app
 
 
