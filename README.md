@@ -1,5 +1,7 @@
 # Matcha
 
-Matcha est une application web de rencontre réalisée pour le projet 42. Elle permet de créer un profil, rechercher des personnes selon leur localisation, leurs intérêts et leur popularité, puis de liker, matcher et discuter en temps réel.
+Matcha is a dating web application built for the 42 school project. Users can create and verify an account, complete a profile with photos and interests, and discover compatible people based on location, shared tags, and popularity.
 
-Technologies : React, Flask, PostgreSQL, Socket.IO, Nginx et Docker.
+Main features include advanced profile search, likes, mutual matches, real-time chat, notifications, profile visits, blocking, and reporting.
+
+Built with React, Flask, PostgreSQL, Socket.IO, Nginx, and Docker.
