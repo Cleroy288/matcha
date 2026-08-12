@@ -41,7 +41,7 @@ def validate_password(password):
     if not isinstance(password, str):
         return False, AuthMessages.PASSWORD_INVALID
 
-    if contains_common_password_word(password):
+    if is_known_password(password):
         return False, AuthMessages.PASSWORD_TOO_COMMON
 
     if len(password) < 8:
@@ -59,14 +59,9 @@ def validate_password(password):
     return True, None
 
 
-def contains_common_password_word(password):
+def is_known_password(password):
     normalized_password = normalize_password_text(password)
-    raw_password = password.lower()
-
-    for word in load_password_denylist():
-        if word in normalized_password or word in raw_password:
-            return True
-    return False
+    return normalized_password in load_password_denylist()
 
 
 def normalize_password_text(value):
